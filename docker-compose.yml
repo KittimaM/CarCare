@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+ 
+  #mysql
+  db:
+    image: mysql
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: carcare
+      MYSQL_DATABASE: carcare
+    ports:
+      - '3307:3306'
+    networks:
+      - dev_networks
+
+  #phpmyadmin
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: carcare
+    networks:
+      - dev_networks
+
+  node-api:
+    build:
+      context: ./node-api
+    restart: always
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+
+  react-web:
+    build:
+      context: ./react-web
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - node-api
+
+
+networks:
+  dev_networks:
+  
+volumes:
+  db_data:
+
+
+
