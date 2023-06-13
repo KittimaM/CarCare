@@ -3,7 +3,7 @@ version: '3'
 services:
  
   #mysql
-  db:
+  carcare_db:
     image: mysql
     volumes:
       - db_data:/var/lib/mysql
@@ -19,13 +19,13 @@ services:
   #phpmyadmin
   phpmyadmin:
     depends_on:
-      - db
+      - carcare_db
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
       - '8080:80'
     environment:
-      PMA_HOST: db
+      PMA_HOST: carcare_db
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: carcare
     networks:
@@ -34,20 +34,26 @@ services:
   node-api:
     build:
       context: ./node-api
+      dockerfile: Dockerfile
     restart: always
     ports:
       - 5000:5000
     depends_on:
-      - db
+      - carcare_db
+    networks:
+      - dev_networks
 
   react-web:
     build:
       context: ./react-web
+      dockerfile: Dockerfile
     restart: always
     ports:
       - 3000:3000
     depends_on:
       - node-api
+    networks:
+      - dev_networks
 
 
 networks:

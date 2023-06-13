@@ -1,13 +1,24 @@
-var express = require('express')
-var cors = require('cors')
-var app = express()
+const express = require("express");
+const mysql = require("mysql2");
 
-app.use(cors())
+const app = express();
 
-app.get('/products/:id', function (req, res, next) {
-  res.json({msg: 'This is CORS-enabled for all origins!'})
-})
+require("dotenv").config();
 
-app.listen(5000, function () {
-  console.log('CORS-enabled web server listening on port 5000')
-})
+//test db
+app.get("/", function (req, res, next) {
+  const Conn = require("./db");
+
+  Conn.execute("SELECT * FROM customer", function (err, results) {
+    if (err) {
+      res.json({ err: err });
+    } else {
+      res.json({ success: results });
+    }
+  });
+});
+
+// Start the server
+app.listen(process.env.API_PORT, () => {
+  console.log(`Server is running on port ${process.env.API_PORT}`);
+});
