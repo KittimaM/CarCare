@@ -1,4 +1,4 @@
-var Conn = require("../../db");
+const Conn = require("../../db");
 
 const GetRole = (req, res, next) => {
   Conn.execute(`SELECT * FROM role`, function (error, results) {

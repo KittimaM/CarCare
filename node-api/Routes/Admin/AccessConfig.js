@@ -1,6 +1,7 @@
 var express = require("express");
-const { UpdateAccessConfig } = require("../../Controller/Admin/AccessConfig");
 var router = express.Router();
+
+const { UpdateAccessConfig } = require("../../Controller/Admin/AccessConfig");
 
 // PUT /accessconfig/:id
 router.put("/:id", UpdateAccessConfig);
