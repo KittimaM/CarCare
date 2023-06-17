@@ -1,23 +1,18 @@
-import logo from './logo.svg';
+import { BrowserRouter, NavLink, Routes, Route } from "react-router-dom";
 import './App.css';
+
+import SidebarNav from "./Navbar/SidebarNav";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          test new carcare
-        </a>
-      </header>
+       <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<SidebarNav/>} />
+          </Routes>
+
+      </BrowserRouter>
+   
     </div>
   );
 }
