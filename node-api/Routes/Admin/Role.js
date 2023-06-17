@@ -11,6 +11,7 @@ router.delete("/:id", DeleteRole);
 // POST /role
 router.post("/", AddRole);
 
+// PUT /role/:id
 router.put("/:id", UpdateRole);
 
 module.exports = router;
