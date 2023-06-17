@@ -1,22 +1,14 @@
 const express = require("express");
-const mysql = require("mysql2");
-
+const cors = require("cors");
 const app = express();
-
+const bodyParser = require("body-parser");
 require("dotenv").config();
+app.use(cors());
+app.use(bodyParser.json());
 
-//test db
-app.get("/", function (req, res, next) {
-  const Conn = require("./db");
 
-  Conn.execute("SELECT * FROM customer", function (err, results) {
-    if (err) {
-      res.json({ err: err });
-    } else {
-      res.json({ success: results });
-    }
-  });
-});
+const RoleRoute = require("./Routes/Admin/Role");
+app.use("/role", RoleRoute);
 
 // Start the server
 app.listen(process.env.API_PORT, () => {
