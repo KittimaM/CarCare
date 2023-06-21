@@ -6,6 +6,8 @@ require("dotenv").config();
 app.use(cors());
 app.use(bodyParser.json());
 
+const AccessConfigRoute = require("./Routes/Admin/AccessConfig");
+app.use("/accessconfig", AccessConfigRoute);
 
 const RoleRoute = require("./Routes/Admin/Role");
 app.use("/role", RoleRoute);
