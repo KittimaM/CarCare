@@ -6,8 +6,13 @@ require("dotenv").config();
 app.use(cors());
 app.use(bodyParser.json());
 
+
 const StaffRoute = require("./Routes/Admin/Staff");
 app.use("/staff", StaffRoute);
+
+const AccessConfigRoute = require("./Routes/Admin/AccessConfig");
+app.use("/accessconfig", AccessConfigRoute);
+
 
 const RoleRoute = require("./Routes/Admin/Role");
 app.use("/role", RoleRoute);
