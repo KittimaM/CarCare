@@ -8,19 +8,19 @@ app.use(bodyParser.json());
 
 
 const StaffRoute = require("./Routes/Admin/Staff");
-app.use("/staff", StaffRoute);
+app.use("/api/admin/staff", StaffRoute);
 
 const AccessConfigRoute = require("./Routes/Admin/AccessConfig");
-app.use("/accessconfig", AccessConfigRoute);
+app.use("/api/admin/accessconfig", AccessConfigRoute);
 
 const RoleRoute = require("./Routes/Admin/Role");
-app.use("/role", RoleRoute);
+app.use("/api/admin/role", RoleRoute);
 
 const LoginAdminRoute = require("./Routes/Admin/LoginAdmin");
-app.use("/admin/login", LoginAdminRoute);
+app.use("/api/admin/login", LoginAdminRoute);
 
 const LoginRoute = require("./Routes/Customer/Login")
-app.use("/login", LoginRoute);
+app.use("/api/login", LoginRoute);
 
 // Start the server
 app.listen(process.env.API_PORT, () => {
