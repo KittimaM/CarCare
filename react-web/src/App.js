@@ -1,24 +1,25 @@
-import logo from './logo.svg';
+import Navbar from "./NavbarFirstpage/Navbar";
+import GlobalStyle from "./NavbarFirstpage/globalStyles";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          test new carcare
-        </a>
-      </header>
-    </div>
+    <>
+     <BrowserRouter>
+          <GlobalStyle />
+          <Routes>
+            
+            <Route path="/" element={<Navbar/>} />
+            <Route path="/about" element={<Navbar/>} />
+            <Route path="/services" element={<Navbar/>} />
+            <Route path="/login" element={<Navbar/>} />
+
+          </Routes>
+
+      </BrowserRouter>
+      
+    </>
   );
 }
 
