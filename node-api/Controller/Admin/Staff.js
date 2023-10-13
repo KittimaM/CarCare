@@ -7,7 +7,7 @@ const GetStaff = (req, res, next) => {
     if (error) {
       res.json({ msg: "ERROR", error });
     } else {
-      res.json({ msg: "SUCCESS", results });
+      res.json({ msg: "SUCCESS", results: results, token: token });
     }
   });
 };
