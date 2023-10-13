@@ -2,7 +2,7 @@ import React from 'react'
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const CustomerRegister = () => {
+const AdminRegister = () => {
     const navigate = useNavigate();
     const handleRegister = (event) => {
       event.preventDefault();
@@ -13,14 +13,17 @@ const CustomerRegister = () => {
         password: data.get("password"),
       };
       axios
-        .post("http://localhost:5000/api/customer/register", jsonData, {
+        .post("http://localhost:5000/api/admin/register", jsonData, {
           headers: {
             "Content-Type": "application/json",
           },
         })
         .then((response) => {
           const { msg } = response.data;
-          navigate('/customer');
+          alert(msg);
+          if (msg === "SUCCESS") {
+            navigate('/admin');
+          }
         });
     };
     return (
@@ -36,4 +39,4 @@ const CustomerRegister = () => {
     );
 }
 
-export default CustomerRegister
+export default AdminRegister

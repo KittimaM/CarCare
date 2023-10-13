@@ -28,11 +28,19 @@ app.use(bodyParser.json());
 // const RegisterRoute = require("./Routes/Register");
 // app.use("/api/register", RegisterRoute);
 
+// customer
 const CustomerRegisterRoute = require("./Routes/Customer/CustomerRegister");
 app.use("/api/customer/register", CustomerRegisterRoute);
 
 const CustomerLoginRoute = require("./Routes/Customer/CustomerLogin");
 app.use("/api/customer/login", CustomerLoginRoute);
+
+//admin
+const AdminRegisterRoute = require("./Routes/Admin/AdminRegister");
+app.use("/api/admin/register", AdminRegisterRoute);
+
+const AdminLoginRoute = require("./Routes/Admin/AdminLogin");
+app.use("/api/admin/login", AdminLoginRoute);
 
 // Start the server
 app.listen(process.env.API_PORT, () => {

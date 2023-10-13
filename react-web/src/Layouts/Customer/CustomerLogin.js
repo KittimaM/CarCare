@@ -20,6 +20,9 @@ const CustomerLogin = () => {
       .then((response) => {
         const { msg } = response.data;
         alert(msg);
+        if (msg === "SUCCESS") {
+          navigate('/customer');
+        }
       });
   };
   return (
