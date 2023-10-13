@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Login from "./Layouts/Login";
+import SelectCar from "./Layouts/SelectCar";
+import CustomerIndex from "./Layouts/Customer/CustomerIndex";
+import CustomerRegister from "./Layouts/Customer/CustomerRegister";
+import CustomerLogin from "./Layouts/Customer/CustomerLogin";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          test new carcare
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        {/* customer */}
+        <Route path="/customer/register" element={<CustomerRegister />} />
+        <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route path="/customer" element={<CustomerIndex/>}/>
+        <Route path="/select-car" element={<SelectCar/>} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -1,6 +1,6 @@
 var express = require("express");
 var router = express.Router();
-const { Login } = require("../../Controller/Customer/Login")
+const { Login } = require("../Controller/Login");
 
 router.post("/", Login);
 

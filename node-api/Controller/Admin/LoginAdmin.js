@@ -20,7 +20,7 @@ const LoginAdmin = (req, res, next) => {
             } else {
               if (compareResults) {
                 const token = jwt.sign(
-                  { staff: results[0] },
+                  { data: results[0] },
                   secret,
                   { expiresIn: "20h" }
                 );

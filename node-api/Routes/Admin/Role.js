@@ -1,5 +1,6 @@
 var express = require("express");
 var router = express.Router();
+const {Auth} = require("./Auth");
 const {
   GetRole,
   DeleteRole,
@@ -8,7 +9,7 @@ const {
 } = require("../../Controller/Admin/Role");
 
 // GET /role
-router.get("/", GetRole);
+router.get("/", Auth, GetRole);
 
 // DELETE /role/:id
 router.delete("/:id", DeleteRole);
