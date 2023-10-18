@@ -9,21 +9,23 @@ import CustomerLogin from "./Layouts/Customer/CustomerLogin";
 import AdminRegister from "./Layouts/Admin/AdminRegister";
 import AdminLogin from "./Layouts/Admin/AdminLogin";
 import AdminIndex from "./Layouts/Admin/AdminIndex";
+import Index from "./Layouts/Index";
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<Index />} />
+
         {/* customer */}
         <Route path="/customer/register" element={<CustomerRegister />} />
         <Route path="/customer/login" element={<CustomerLogin />} />
-        <Route path="/customer" element={<CustomerIndex/>}/>
+        <Route path="/customer" element={<CustomerIndex />} />
 
         {/* admin */}
         <Route path="/admin/register" element={<AdminRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminIndex />} />
-        
       </Routes>
     </Router>
   );
