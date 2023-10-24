@@ -18,9 +18,9 @@ const AdminLogin = () => {
           },
         })
         .then((response) => {
-          const { msg } = response.data;
-          alert(msg);
-          if (msg === "SUCCESS") {
+          const { status } = response.data;
+          alert(status);
+          if (status === "SUCCESS") {
             navigate('/admin');
           }
         });
