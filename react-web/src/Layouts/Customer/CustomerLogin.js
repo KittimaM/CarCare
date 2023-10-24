@@ -18,10 +18,11 @@ const CustomerLogin = () => {
         },
       })
       .then((response) => {
-        const { msg } = response.data;
-        alert(msg);
-        if (msg === "SUCCESS") {
-          navigate('/customer');
+        const { status } = response.data;
+        alert(status);
+        if (status === "SUCCESS") {
+          localStorage.setItem("username", jsonData.username);
+          navigate("/customer/booking");
         }
       });
   };

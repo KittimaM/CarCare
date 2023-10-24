@@ -9,12 +9,12 @@ const AdminLogin = (req, res, next) => {
     "SELECT * FROM staff_user WHERE username = ? AND password = ? LIMIT 1", [username, password],
     function (error, results) {
       if (error) {
-        res.json({ msg: "ERROR", error });
+        res.json({ status: "ERROR", error });
       } 
       if (results.length == 0) {
-        res.json({msg: "NOT FOUND"})
+        res.json({status: "NOT FOUND"})
       } else {
-        res.json({msg : "SUCCESS", results});
+        res.json({status : "SUCCESS", results});
       }
     }
   );
