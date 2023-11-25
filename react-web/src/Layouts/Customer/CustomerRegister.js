@@ -9,7 +9,7 @@ const CustomerRegister = () => {
       const data = new FormData(event.currentTarget);
       const jsonData = {
         name: data.get("name"),
-        username: data.get("username"),
+        phone: data.get("phone"),
         password: data.get("password"),
       };
       axios
@@ -25,8 +25,8 @@ const CustomerRegister = () => {
     };
     return (
       <form onSubmit={handleRegister}>
-        <label for="username">username</label>
-        <input type="text" name="username" required />
+        <label for="phone">phone</label>
+        <input type="text" name="phone" required />
         <label for="name">name</label>
         <input type="text" name="name" required />
         <label for="password">password</label>

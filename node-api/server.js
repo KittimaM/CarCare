@@ -6,7 +6,6 @@ require("dotenv").config();
 app.use(cors());
 app.use(bodyParser.json());
 
-
 // const StaffRoute = require("./Routes/Admin/Staff");
 // app.use("/api/admin/staff", StaffRoute);
 
@@ -35,12 +34,18 @@ app.use("/api/customer/register", CustomerRegisterRoute);
 const CustomerLoginRoute = require("./Routes/Customer/CustomerLogin");
 app.use("/api/customer/login", CustomerLoginRoute);
 
+const CustomerBookingRoute = require("./Routes/Customer/CustomerBooking");
+app.use("/api/customer/booking", CustomerBookingRoute);
+
 //admin
 const AdminRegisterRoute = require("./Routes/Admin/AdminRegister");
 app.use("/api/admin/register", AdminRegisterRoute);
 
 const AdminLoginRoute = require("./Routes/Admin/AdminLogin");
 app.use("/api/admin/login", AdminLoginRoute);
+
+const AdminBookingRoute = require("./Routes/Admin/AdminBooking");
+app.use("/api/admin/booking", AdminBookingRoute);
 
 // Start the server
 app.listen(process.env.API_PORT, () => {

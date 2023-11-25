@@ -8,7 +8,7 @@ const CustomerLogin = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      username: data.get("username"),
+      phone: data.get("phone"),
       password: data.get("password"),
     };
     axios
@@ -18,18 +18,18 @@ const CustomerLogin = () => {
         },
       })
       .then((response) => {
-        const { status } = response.data;
+        const { status, token } = response.data;
         alert(status);
         if (status === "SUCCESS") {
-          localStorage.setItem("username", jsonData.username);
+          localStorage.setItem("token", token);
           navigate("/customer/booking");
         }
       });
   };
   return (
     <form onSubmit={handleLogin}>
-      <label for="username">username</label>
-      <input type="text" name="username" required />
+      <label for="phone">phone</label>
+      <input type="text" name="phone" required />
       <label for="password">password</label>
       <input type="password" name="password" required />
       <button type="submit">Submit</button>
