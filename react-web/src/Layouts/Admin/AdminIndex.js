@@ -39,7 +39,7 @@ const AdminIndex = () => {
           <div>
             {booking.map((item) => (
               <p>
-                {item.id} , {item.car_no} , {item.service_date} ,{" "}
+                {item.id} , {item.car_no} , {item.service_date} ,
                 {item.service_type}
               </p>
             ))}

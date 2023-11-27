@@ -1,7 +1,7 @@
 const Conn = require("../../db");
 
-const AdminBooking = (req, res, next) => {
-  Conn.execute("SELECT * FROM booking", function (error, results) {
+const AdminUser = (req, res, next) => {
+  Conn.execute("SELECT * FROM staff_user", function (error, results) {
     if (error) {
       res.json({ status: "ERROR", error });
     }
@@ -14,5 +14,5 @@ const AdminBooking = (req, res, next) => {
 };
 
 module.exports = {
-  AdminBooking,
+  AdminUser,
 };

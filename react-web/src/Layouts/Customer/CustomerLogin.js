@@ -22,7 +22,7 @@ const CustomerLogin = () => {
         alert(status);
         if (status === "SUCCESS") {
           localStorage.setItem("token", token);
-          navigate("/customer/booking");
+          navigate("/customer/index");
         }
       });
   };

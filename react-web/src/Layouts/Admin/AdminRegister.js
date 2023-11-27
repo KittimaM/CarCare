@@ -21,9 +21,6 @@ const AdminRegister = () => {
         .then((response) => {
           const { status } = response.data;
           alert(status);
-          if (status === "SUCCESS") {
-            navigate('/admin');
-          }
         });
     };
     return (

@@ -37,6 +37,9 @@ app.use("/api/customer/login", CustomerLoginRoute);
 const CustomerBookingRoute = require("./Routes/Customer/CustomerBooking");
 app.use("/api/customer/booking", CustomerBookingRoute);
 
+const CustomerIndexRoute = require("./Routes/Customer/CustomerIndex");
+app.use("/api/customer/index", CustomerIndexRoute);
+
 //admin
 const AdminRegisterRoute = require("./Routes/Admin/AdminRegister");
 app.use("/api/admin/register", AdminRegisterRoute);
@@ -46,6 +49,10 @@ app.use("/api/admin/login", AdminLoginRoute);
 
 const AdminBookingRoute = require("./Routes/Admin/AdminBooking");
 app.use("/api/admin/booking", AdminBookingRoute);
+
+const AdminUserRoute = require("./Routes/Admin/AdminUser");
+app.use("/api/admin/user", AdminUserRoute);
+
 
 // Start the server
 app.listen(process.env.API_PORT, () => {
