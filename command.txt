@@ -1,1 +1,4 @@
 docker-compose up --build 
+
+แก้เรื่อง customer register 
+แก้เรื่อง show record customer

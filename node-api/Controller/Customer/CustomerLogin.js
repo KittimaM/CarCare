@@ -4,22 +4,38 @@ const Conn = require("../../db");
 const secret = process.env.SECRET_WORD;
 
 const CustomerLogin = (req, res, next) => {
-  const { username, password } = req.body;
+  const { phone, password } = req.body;
   Conn.execute(
-    "SELECT * FROM customer_user WHERE username = ? AND password = ? LIMIT 1", [username, password],
-    function (error, results) {
+    "SELECT id, password FROM customer_user WHERE phone = ?",
+    [phone],
+    function (error, result) {
       if (error) {
         res.json({ status: "ERROR", error });
-      } 
-      if (results.length == 0) {
-        res.json({status: "NOT FOUND"})
+      }
+      if (result.length == 0) {
+        res.json({ status: "NOT FOUND" });
       } else {
-        res.json({status : "SUCCESS", results});
+        const customerId = result[0].id;
+        const customerPassword = result[0].password;
+        bcrypt.compare(password, customerPassword, function (error, result) {
+          if (error) {
+            res.json({ status: "ERROR", msg: error });
+          } else {
+            if (result) {
+              const token = jwt.sign({ id: customerId }, secret, {
+                expiresIn: "1h",
+              });
+              res.json({ status: "SUCCESS", token });
+            } else {
+              res.json({ status: "ERROR", msg: "try again" });
+            }
+          }
+        });
       }
     }
   );
 };
 
 module.exports = {
-  CustomerLogin
+  CustomerLogin,
 };
