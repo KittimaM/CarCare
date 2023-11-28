@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const CustomerIndex = () => {
   const [bookingRecord, setBookingRecord] = useState(null);
   const token = localStorage.getItem("token");
-  console.log(token);
+  const Button = ({ to, name }) => {
+    return (
+      <Link to={to}>
+        <button>{name}</button>
+      </Link>
+    );
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(
           "http://localhost:5000/api/customer/index",
-          token,
           {
             headers: {
               "Content-Type": "application/json",
@@ -18,11 +25,11 @@ const CustomerIndex = () => {
             },
           }
         );
-        const { status, results, msg } = response.data;
+        const { status, msg } = response.data;
         if (status == "SUCCESS") {
-          setBookingRecord(results);
-        } else if (status == "ERROR") {
-          alert(msg);
+          setBookingRecord(msg);
+        } else {
+          alert(status);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -33,17 +40,19 @@ const CustomerIndex = () => {
   }, []);
   return (
     <div>
-      {/* {bookingRecord ? (
+      <Button to="/customer/booking" name="Booking" />
+      {bookingRecord ? (
         <div>
           {bookingRecord.map((item) => (
-            <p>
-              {item.id}, {item.car_no}, {item.status}
+            <p key={item.id}>
+              {item.id}, {item.car_no}, {item.service_type}, {item.service_date}
+              , {item.status}
             </p>
           ))}
         </div>
       ) : (
         <p>NO BOOKING RECORD</p>
-      )} */}
+      )}
     </div>
   );
 };

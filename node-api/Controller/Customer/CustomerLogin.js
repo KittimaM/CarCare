@@ -22,7 +22,7 @@ const CustomerLogin = (req, res, next) => {
             res.json({ status: "ERROR", msg: error });
           } else {
             if (result) {
-              const token = jwt.sign({ id: customerId }, secret, {
+              const token = jwt.sign({ id: customerId, phone: phone }, secret, {
                 expiresIn: "1h",
               });
               res.json({ status: "SUCCESS", token });
