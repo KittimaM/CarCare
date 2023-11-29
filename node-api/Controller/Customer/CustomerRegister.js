@@ -1,8 +1,6 @@
 var bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 const Conn = require("../../db");
 const saltRounds = 10;
-const secret = process.env.SECRET_WORD;
 
 const CustomerRegister = (req, res, next) => {
   const { phone, name, password } = req.body;

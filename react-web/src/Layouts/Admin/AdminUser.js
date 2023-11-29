@@ -36,7 +36,7 @@ const AdminUser = () => {
       {user ? (
         <div>
           {user.map((item) => (
-            <p>
+            <p key={item.id}>
               {item.id} , {item.username} , {item.name}
             </p>
           ))}

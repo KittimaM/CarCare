@@ -1,39 +1,40 @@
-import React from 'react'
+import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
-    const navigate = useNavigate();
-    const handleLogin = (event) => {
-      event.preventDefault();
-      const data = new FormData(event.currentTarget);
-      const jsonData = {
-        username: data.get("username"),
-        password: data.get("password"),
-      };
-      axios
-        .post("http://localhost:5000/api/admin/login", jsonData, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-        .then((response) => {
-          const { status } = response.data;
-          alert(status);
-          if (status === "SUCCESS") {
-            navigate('/admin');
-          }
-        });
+  const navigate = useNavigate();
+  const handleLogin = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      username: data.get("username"),
+      password: data.get("password"),
     };
-    return (
-      <form onSubmit={handleLogin}>
-        <label for="username">username</label>
-        <input type="text" name="username" required />
-        <label for="password">password</label>
-        <input type="password" name="password" required />
-        <button type="submit">Submit</button>
-      </form>
-    );
-}
+    axios
+      .post("http://localhost:5000/api/admin/login", jsonData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        const { status, msg } = response.data;
+        alert(status);
+        console.log(msg);
+        if (status === "SUCCESS") {
+          navigate("/admin");
+        }
+      });
+  };
+  return (
+    <form onSubmit={handleLogin}>
+      <label for="username">username</label>
+      <input type="text" name="username" required />
+      <label for="password">password</label>
+      <input type="password" name="password" required />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
 
-export default AdminLogin
+export default AdminLogin;

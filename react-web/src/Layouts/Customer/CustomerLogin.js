@@ -18,10 +18,10 @@ const CustomerLogin = () => {
         },
       })
       .then((response) => {
-        const { status, token } = response.data;
+        const { status, msg } = response.data;
         alert(status);
         if (status === "SUCCESS") {
-          localStorage.setItem("token", token);
+          localStorage.setItem("token", msg);
           navigate("/customer/index");
         }
       });

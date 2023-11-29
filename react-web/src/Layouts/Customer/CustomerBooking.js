@@ -1,38 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DatePicker from "react-datepicker";
+import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 const CustomerBooking = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookingId, setBookingId] = useState(null);
-
-  useEffect(() => {
-    const customerId = localStorage.getItem("token");
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "http://localhost:5000/api/customer/${customerId}",
-          customerId,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const { status, results } = response.data;
-        if (status == "SUCCESS") {
-        } else {
-          alert(status);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -41,7 +17,6 @@ const CustomerBooking = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      token: localStorage.getItem("token"),
       car_no: data.get("car_no"),
       car_size: data.get("car_size"),
       service_type: data.get("service_type"),
@@ -53,15 +28,19 @@ const CustomerBooking = () => {
       .post("http://localhost:5000/api/customer/booking", jsonData, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
         const { status, msg } = response.data;
+        alert(status);
         if (status == "SUCCESS") {
-          alert("SUCCESS");
           setBookingId(msg);
         } else if (status == "ERROR") {
-          alert(msg);
+          console.log(msg);
+          if (msg == "token expired") {
+            navigate("/");
+          }
         }
       });
   };
