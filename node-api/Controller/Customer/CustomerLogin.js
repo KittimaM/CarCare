@@ -25,9 +25,9 @@ const CustomerLogin = (req, res, next) => {
               const token = jwt.sign({ id: customerId, phone: phone }, secret, {
                 expiresIn: "1h",
               });
-              res.json({ status: "SUCCESS", token });
+              res.json({ status: "SUCCESS", msg: token });
             } else {
-              res.json({ status: "ERROR", msg: "try again" });
+              res.json({ status: "ERROR", msg: "Wrong Password" });
             }
           }
         });

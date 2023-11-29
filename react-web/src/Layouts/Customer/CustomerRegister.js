@@ -19,7 +19,8 @@ const CustomerRegister = () => {
           },
         })
         .then((response) => {
-          const { msg } = response.data;
+          const { status } = response.data;
+          alert(status);
           navigate('/customer');
         });
     };
