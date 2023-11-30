@@ -1,0 +1,3 @@
+docker-compose up --build 
+
+เพิ่ม bcrypt ใน admin password
