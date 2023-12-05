@@ -18,9 +18,9 @@ const AdminIndex = () => {
         const response = await axios.get(
           "http://localhost:5000/api/admin/booking"
         );
-        const { status, results } = response.data;
+        const { status, msg } = response.data;
         if (status == "SUCCESS") {
-          setBooking(results);
+          setBooking(msg);
         } else {
           alert(status);
         }
@@ -34,6 +34,7 @@ const AdminIndex = () => {
   return (
     <div>
       <Button to="/admin/user" name="User" />
+      <Button to="/admin/carsize" name="Car Size" />
       <div>
         {booking ? (
           <div>

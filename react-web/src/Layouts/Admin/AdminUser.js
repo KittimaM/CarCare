@@ -17,9 +17,9 @@ const AdminUser = () => {
         const response = await axios.get(
           "http://localhost:5000/api/admin/user"
         );
-        const { status, results } = response.data;
+        const { status, msg } = response.data;
         if (status == "SUCCESS") {
-          setUser(results);
+          setUser(msg);
         } else {
           alert(status);
         }

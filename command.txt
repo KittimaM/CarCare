@@ -1,3 +1,5 @@
-docker-compose up --build 
+ครั้งแรกใช้ docker-compose up
+docker-compose up --build -d
+docker-compose up --build
 
-เพิ่ม bcrypt ใน admin password
+ทำ register staff ให้เหมือน add car size
