@@ -46,7 +46,7 @@ const AdminIndex = () => {
             ))}
           </div>
         ) : (
-          <h1>NO BOOKING</h1>
+          <h1>NO BOOKING eiei</h1>
         )}
       </div>
     </div>
