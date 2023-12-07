@@ -45,10 +45,13 @@ const AdminCarSize = () => {
       .then((response) => {
         const { status, msg } = response.data;
         alert(status);
-        console.log(msg);
+        if (status == "SUCCESS") {
+          fetchData();
+        } else {
+          console.log(msg);
+        }
       });
     setAddCarSize(false);
-    fetchData();
   };
 
   return (
