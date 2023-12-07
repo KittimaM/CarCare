@@ -35,6 +35,7 @@ const AdminIndex = () => {
     <div>
       <Button to="/admin/user" name="User" />
       <Button to="/admin/carsize" name="Car Size" />
+      <Button to="/admin/service" name="Service" />
       <div>
         {booking ? (
           <div>
