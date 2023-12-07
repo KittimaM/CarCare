@@ -5,12 +5,38 @@ import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 const CustomerBooking = () => {
+  const [carSize, setCarSize] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookingId, setBookingId] = useState(null);
+  const [selectedCarSize, setSelectedCarSize] = useState();
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseCarSize = await axios.get(
+          "http://localhost:5000/api/admin/carsize"
+        );
+        if (responseCarSize.data.status == "SUCCESS") {
+          setCarSize(responseCarSize.data.msg);
+        } else {
+          console.log(responseCarSize.data.msg);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
+  };
+
+  const handleSelectedCarSize = (event) => {
+    setSelectedCarSize(event.target.value);
   };
 
   const handleSubmit = (event) => {
@@ -22,8 +48,9 @@ const CustomerBooking = () => {
       service_type: data.get("service_type"),
       service_date: data.get("service_date"),
       payment_type: data.get("payment_type"),
+      car_size: data.get("car_size"),
     };
-
+    console.log("jsonData : ", jsonData);
     axios
       .post("http://localhost:5000/api/customer/booking", jsonData, {
         headers: {
@@ -51,7 +78,15 @@ const CustomerBooking = () => {
         <label for="car_no">Car NO</label>
         <input type="text" name="car_no" required />
         <label for="car_size">Car Size</label>
-        <input type="text" name="car_size" required />
+        {carSize.length > 0 ? (
+          <select name="car_size">
+            {carSize.map((item) => (
+              <option value={item.id}>{item.size}</option>
+            ))}
+          </select>
+        ) : (
+          <div> cannot select car size</div>
+        )}
         <label for="service_type">Service type</label>
         <input type="text" name="service_type" required />
         <label for="service_date">Service Time</label>
