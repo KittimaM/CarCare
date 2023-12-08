@@ -54,7 +54,7 @@ const CustomerBooking = () => {
       payment_type: data.get("payment_type"),
       car_size: data.get("car_size"),
     };
-    console.log("jsonData : ", jsonData);
+
     axios
       .post("http://localhost:5000/api/customer/booking", jsonData, {
         headers: {
