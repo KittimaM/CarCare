@@ -25,7 +25,7 @@ const AdminCarSize = () => {
     fetchData();
   }, []);
 
-  const toggleAddCarSize = (event) => {
+  const toggleAddCarSize = () => {
     setAddCarSize(!addCarSize);
   };
 

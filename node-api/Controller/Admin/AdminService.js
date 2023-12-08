@@ -13,6 +13,22 @@ const AdminService = (req, res, next) => {
   });
 };
 
+const AdminAddService = (req, res, next) => {
+  const { service } = req.body;
+  Conn.execute(
+    `INSERT INTO service(service) VALUES(?)`,
+    [service],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS" });
+      }
+    }
+  );
+};
+
 module.exports = {
   AdminService,
+  AdminAddService,
 };
