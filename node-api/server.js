@@ -59,6 +59,9 @@ app.use("/api/admin/booking", AdminBookingRoute);
 const AdminUserRoute = require("./Routes/Admin/AdminUser");
 app.use("/api/admin/user", AdminUserRoute);
 
+const AdminServiceRoute = require("./Routes/Admin/AdminService");
+app.use("/api/admin/service", AdminServiceRoute);
+
 // Start the server
 app.listen(process.env.API_PORT, () => {
   console.log(`Server is running on port ${process.env.API_PORT}`);

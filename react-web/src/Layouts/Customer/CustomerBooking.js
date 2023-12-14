@@ -5,10 +5,40 @@ import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 
 const CustomerBooking = () => {
+  const [carSize, setCarSize] = useState({});
+  const [service, setService] = useState({});
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [bookingId, setBookingId] = useState(null);
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const responseCarSize = await axios.get(
+          "http://localhost:5000/api/admin/carsize"
+        );
+        if (responseCarSize.data.status == "SUCCESS") {
+          setCarSize(responseCarSize.data.msg);
+        } else {
+          console.log(responseCarSize.data.msg);
+        }
+        const responseService = await axios.get(
+          "http://localhost:5000/api/admin/service"
+        );
+        if (responseService.data.status == "SUCCESS") {
+          setService(responseService.data.msg);
+        } else {
+          console.log(responseService.data.msg);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
@@ -22,6 +52,7 @@ const CustomerBooking = () => {
       service_type: data.get("service_type"),
       service_date: data.get("service_date"),
       payment_type: data.get("payment_type"),
+      car_size: data.get("car_size"),
     };
 
     axios
@@ -50,10 +81,30 @@ const CustomerBooking = () => {
       <form onSubmit={handleSubmit}>
         <label for="car_no">Car NO</label>
         <input type="text" name="car_no" required />
-        <label for="car_size">Car Size</label>
-        <input type="text" name="car_size" required />
-        <label for="service_type">Service type</label>
-        <input type="text" name="service_type" required />
+        <div id="car_size">
+          <label for="car_size">Car Size</label>
+          {carSize.length > 0 ? (
+            <select name="car_size">
+              {carSize.map((item) => (
+                <option value={item.id}>{item.size}</option>
+              ))}
+            </select>
+          ) : (
+            <div> cannot select car size</div>
+          )}
+        </div>
+        <div id="service">
+          <label for="service_type">Service type</label>
+          {service.length > 0 ? (
+            <select name="service_type">
+              {service.map((item) => (
+                <option value={item.id}>{item.service}</option>
+              ))}
+            </select>
+          ) : (
+            <div> cannot select service</div>
+          )}
+        </div>
         <label for="service_date">Service Time</label>
         <DatePicker
           selected={selectedDate}
