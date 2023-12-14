@@ -29,7 +29,7 @@ const CustomerIndex = () => {
         if (status == "SUCCESS") {
           setBookingRecord(msg);
         } else {
-          alert(status);
+          console.log(msg);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -41,6 +41,7 @@ const CustomerIndex = () => {
   return (
     <div>
       <Button to="/customer/booking" name="Booking" />
+      <Button to="/customer/car" name="Customer Car" />
       {bookingRecord ? (
         <div>
           {bookingRecord.map((item) => (

@@ -40,6 +40,9 @@ app.use("/api/customer/booking", CustomerBookingRoute);
 const CustomerIndexRoute = require("./Routes/Customer/CustomerIndex");
 app.use("/api/customer/index", CustomerIndexRoute);
 
+const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
+app.use("/api/customer/car", CustomerCarRoute);
+
 //admin
 const AdminCarSizeRoute = require("./Routes/Admin/AdminCarSize");
 app.use("/api/admin/carsize", AdminCarSizeRoute);

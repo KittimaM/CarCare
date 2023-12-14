@@ -11,6 +11,7 @@ import CustomerBooking from "./Layouts/Customer/CustomerBooking";
 import AdminUser from "./Layouts/Admin/AdminUser";
 import CustomerIndex from "./Layouts/Customer/CustomerIndex";
 import AdminCarSize from "./Layouts/Admin/AdminCarSize";
+import CustomerCar from "./Layouts/Customer/CustomerCar";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/customer/booking" element={<CustomerBooking />} />
         <Route path="/customer/register" element={<CustomerRegister />} />
         <Route path="/customer/login" element={<CustomerLogin />} />
+        <Route path="/customer/car" element={<CustomerCar />} />
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
