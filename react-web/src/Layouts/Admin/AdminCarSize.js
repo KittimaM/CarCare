@@ -69,7 +69,7 @@ const AdminCarSize = () => {
         <div>
           {carSize.map((item) => (
             <p key={item.id}>
-              {item.id} , {item.size} , {item.description}
+              {item.id} , {item.size} , {item.description}, {item.is_available == 1 ? "available" : "not available"}
             </p>
           ))}
         </div>

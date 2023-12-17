@@ -24,9 +24,26 @@ const CustomerBooking = (req, res, next) => {
   } catch (error) {
     res.json({ status: "ERROR", msg: "token expired" });
   }
+};
 
+const CustomerGetServiceChoice = (req, res, next) => {
+  const { car_size_id } = req.body;
+  Conn.execute(
+    `SELECT * FROM service WHERE car_size_id = ? AND is_available = 1`,
+    [car_size_id],
+    function (error, results) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else if (results.length == 0) {
+        res.json({ status: "NO DATA", msg: "NO DATA" });
+      } else {
+        res.json({ status: "SUCCESS", msg: results });
+      }
+    }
+  );
 };
 
 module.exports = {
   CustomerBooking,
+  CustomerGetServiceChoice,
 };

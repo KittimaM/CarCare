@@ -2,4 +2,5 @@
 docker-compose up --build -d
 docker-compose up --build
 
-ทำ register staff ให้เหมือน add car size
+แยก function มาไว้ในไฟล์ module (function ที่เรียกใช้ซ้ำ ๆ)
+แก้ booking 
