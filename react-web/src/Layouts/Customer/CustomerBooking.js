@@ -57,6 +57,7 @@ const CustomerBooking = () => {
         if (status == "SUCCESS") {
           setService(msg);
         } else {
+          setService(null);
           console.log(msg);
         }
       });
