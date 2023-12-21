@@ -5,6 +5,7 @@ const AdminService = () => {
   const [carSize, setCarSize] = useState();
   const [service, setService] = useState();
   const fetchService = async () => {
+
     try {
       const response = await axios.get(
         "http://localhost:5000/api/admin/service"
@@ -19,6 +20,7 @@ const AdminService = () => {
       console.error("Error fetching data:", error);
     }
   };
+
   const fetchCarSize = async () => {
     try {
       const response = await axios.get(
@@ -40,6 +42,7 @@ const AdminService = () => {
   }, []);
 
   const handleAdminAddService = (event) => {
+
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
@@ -48,6 +51,7 @@ const AdminService = () => {
       car_size_id: data.get("car_size").split(",")[0],
       car_size: data.get("car_size").split(",")[1],
       used_time: data.get("used_time"),
+
     };
     axios
       .post("http://localhost:5000/api/admin/service", jsonData, {

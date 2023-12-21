@@ -34,6 +34,7 @@ function App() {
         <Route path="/admin/register" element={<AdminRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/carSize" element={<AdminCarSize />} />
+        <Route path="/admin/service" element={<AdminService />} />
         <Route path="/admin" element={<AdminIndex />} />
       </Routes>
     </Router>

@@ -186,6 +186,7 @@ const CustomerBooking = () => {
           type="datetime-local"
           name="service_time"
           value={selectedDateTime}
+
           onChange={handleDateChange}
         />
         <button type="submit">Select Time</button>
