@@ -6,7 +6,7 @@ const secret = process.env.SECRET_WORD;
 const CustomerLogin = (req, res, next) => {
   const { phone, password } = req.body;
   Conn.execute(
-    "SELECT id, password, name FROM customer WHERE phone = ?",
+    "SELECT password, name FROM customer WHERE phone = ?",
     [phone],
     function (error, result) {
       if (error) {
@@ -15,7 +15,6 @@ const CustomerLogin = (req, res, next) => {
       if (result.length == 0) {
         res.json({ status: "NOT FOUND" });
       } else {
-        const customerId = result[0].id;
         const customerPassword = result[0].password;
         const customerName = result[0].name;
         bcrypt.compare(password, customerPassword, function (error, result) {
@@ -24,7 +23,7 @@ const CustomerLogin = (req, res, next) => {
           } else {
             if (result) {
               const token = jwt.sign(
-                { id: customerId, phone: phone, name: customerName },
+                { phone: phone, name: customerName },
                 secret,
                 {
                   expiresIn: "1h",

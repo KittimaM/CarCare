@@ -6,15 +6,15 @@ const secret = process.env.SECRET_WORD;
 const CustomerIndex = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const { id } = jwt.verify(token, secret);
+    const { phone } = jwt.verify(token, secret);
     Conn.execute(
-      "SELECT * FROM booking WHERE customer_user_id = ?",
-      [id],
+      "SELECT * FROM booking WHERE customer_phone = ?",
+      [phone],
       function (error, result) {
         if (error) {
           res.json({ status: "ERROR", msg: error });
         } else if (result.length == 0) {
-          res.json({ status: "NOT FOUND" });
+          res.json({ status: "NO DATA" , msg: "NO DATA"});
         } else {
           res.json({ status: "SUCCESS", msg: result });
         }

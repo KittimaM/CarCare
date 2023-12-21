@@ -29,6 +29,7 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/service" element={<AdminService />} />
         <Route path="/admin/user" element={<AdminUser />} />
         <Route path="/admin/register" element={<AdminRegister />} />
         <Route path="/admin/login" element={<AdminLogin />} />

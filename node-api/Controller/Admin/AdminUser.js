@@ -6,7 +6,7 @@ const AdminUser = (req, res, next) => {
       res.json({ status: "ERROR", msg: error });
     }
     if (results.length == 0) {
-      res.json({ status: "NOT FOUND" });
+      res.json({ status: "NO DATA", msg: "NO DATA" });
     } else {
       res.json({ status: "SUCCESS", msg: results });
     }

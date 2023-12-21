@@ -1,4 +1,7 @@
+var bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
 const Conn = require("../../db");
+const secret = process.env.SECRET_WORD;
 
 const AdminService = (req, res, next) => {
   Conn.execute("SELECT * FROM service", function (error, results) {
@@ -14,10 +17,10 @@ const AdminService = (req, res, next) => {
 };
 
 const AdminAddService = (req, res, next) => {
-  const { service } = req.body;
+  const { service, description, car_size_id, car_size, used_time } = req.body;
   Conn.execute(
-    `INSERT INTO service(service) VALUES(?)`,
-    [service],
+    "INSERT INTO service (service, description, car_size_id, car_size, used_time) VALUES (?, ?, ?, ? ,?)",
+    [service, description, car_size_id, car_size, used_time],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
