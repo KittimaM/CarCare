@@ -28,9 +28,9 @@ const CustomerLogin = () => {
   };
   return (
     <form onSubmit={handleLogin}>
-      <label for="phone">phone</label>
+      <label name="phone">phone</label>
       <input type="text" name="phone" required />
-      <label for="password">password</label>
+      <label name="password">password</label>
       <input type="password" name="password" required />
       <button type="submit">Submit</button>
     </form>
