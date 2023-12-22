@@ -22,15 +22,16 @@ const AdminLogin = () => {
         alert(status);
         console.log(msg);
         if (status === "SUCCESS") {
+          localStorage.setItem("token", msg);
           navigate("/admin");
         }
       });
   };
   return (
     <form onSubmit={handleLogin}>
-      <label for="username">username</label>
+      <label name="username">username</label>
       <input type="text" name="username" required />
-      <label for="password">password</label>
+      <label name="password">password</label>
       <input type="password" name="password" required />
       <button type="submit">Submit</button>
     </form>

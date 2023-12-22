@@ -75,7 +75,7 @@ const AdminService = () => {
         <input type="text" name="description" />
         {carSize && (
           <div>
-            <label for="car_size">car_size</label>
+            <label name="car_size">car_size</label>
             <select name="car_size">
               {carSize.map(
                 (item) =>

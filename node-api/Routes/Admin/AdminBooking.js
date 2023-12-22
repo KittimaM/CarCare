@@ -1,7 +1,11 @@
 var express = require("express");
-const { AdminBooking } = require("../../Controller/Admin/AdminBooking");
+const {
+  AdminBooking,
+  AdminAddBooking,
+} = require("../../Controller/Admin/AdminBooking");
 var router = express.Router();
 
 router.get("/", AdminBooking);
+router.post("/", AdminAddBooking);
 
 module.exports = router;

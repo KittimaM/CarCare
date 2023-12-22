@@ -1,28 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button } from "../Module";
 
-const CustomerBooking = () => {
-  const [car, setCar] = useState();
+const AdminBooking = () => {
   const [service, setService] = useState();
   const [selectedService, setSelectedService] = useState([]);
   const [booking, setBooking] = useState([]);
+  const [carSize, setCarSize] = useState();
   const token = localStorage.getItem("token");
 
-  const fetchCustomerCar = async () => {
+  const fetchCarSize = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/customer/car",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        "http://localhost:5000/api/admin/carsize"
       );
       const { status, msg } = response.data;
       if (status == "SUCCESS") {
-        setCar(msg);
+        setCarSize(msg);
       } else {
         console.log(msg);
       }
@@ -32,21 +25,21 @@ const CustomerBooking = () => {
   };
 
   useEffect(() => {
-    fetchCustomerCar();
+    fetchCarSize();
   }, []);
 
-  const handleSubmitSelectedCar = (event) => {
+  const handleSubmitCar = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      ...booking,
-      car_no: data.get("car_no").split(",")[0],
-      car_size_id: data.get("car_no").split(",")[1],
-      car_size: data.get("car_no").split(",")[2],
-      car_color: data.get("car_no").split(",")[3],
-      customer_phone: data.get("car_no").split(",")[4],
-      customer_name: data.get("car_no").split(",")[5],
+      car_no: data.get("car_no"),
+      car_size_id: data.get("car_size").split(",")[0],
+      car_size: data.get("car_size").split(",")[1],
+      car_color: data.get("car_color"),
+      customer_name: data.get("customer_name"),
+      customer_phone: data.get("customer_phone"),
     };
+
     axios
       .post("http://localhost:5000/api/customer/booking/service", jsonData, {
         headers: {
@@ -109,7 +102,7 @@ const CustomerBooking = () => {
     event.preventDefault();
     console.log("booking : ", booking);
     axios
-      .post("http://localhost:5000/api/customer/booking", booking, {
+      .post("http://localhost:5000/api/admin/booking", booking, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -122,31 +115,33 @@ const CustomerBooking = () => {
 
   return (
     <div>
-      <label name="car_no">car_no</label>
-      {car ? (
-        <form onSubmit={handleSubmitSelectedCar}>
-          <select name="car_no">
-            {car.map((item) => (
-              <option
-                key={item.car_no}
-                value={[
-                  item.car_no,
-                  item.car_size_id,
-                  item.car_size,
-                  item.car_color,
-                  item.customer_phone,
-                  item.customer_name,
-                ]}
-              >
-                {item.car_no}
-              </option>
-            ))}
-          </select>
-          <button type="submit">Select Car</button>
-        </form>
-      ) : (
-        <Button to="/customer/car" name="add car" />
-      )}
+      <form onSubmit={handleSubmitCar}>
+        <label name="customer_name">Customer_name</label>
+        <input type="text" name="customer_name" />
+        <label name="customer_phone">Customer_phone</label>
+        <input type="text" name="customer_phone" />
+        <label name="car_no">car_no</label>
+        <input type="text" name="car_no" />
+        <label name="car_color">car_color</label>
+        <input type="text" name="car_color" />
+        {carSize && (
+          <div>
+            <label name="car_size">car_size</label>
+            <select name="car_size">
+              {carSize.map(
+                (item) =>
+                  item.is_available == 1 && (
+                    <option key={item.id} value={[item.id, item.size]}>
+                      {item.size}
+                    </option>
+                  )
+              )}
+            </select>
+          </div>
+        )}
+        <button type="submit">Selected Car</button>
+      </form>
+
       {service && (
         <div>
           <form onSubmit={handleSelectedService}>
@@ -189,4 +184,4 @@ const CustomerBooking = () => {
   );
 };
 
-export default CustomerBooking;
+export default AdminBooking;

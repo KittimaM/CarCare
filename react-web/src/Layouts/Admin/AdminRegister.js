@@ -23,11 +23,11 @@ const AdminRegister = () => {
   };
   return (
     <form onSubmit={handleRegister}>
-      <label for="username">username</label>
+      <label name="username">username</label>
       <input type="text" name="username" required />
-      <label for="name">name</label>
+      <label name="name">name</label>
       <input type="text" name="name" required />
-      <label for="password">password</label>
+      <label name="password">password</label>
       <input type="password" name="password" required />
       <button type="submit">Submit</button>
     </form>
