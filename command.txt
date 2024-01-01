@@ -2,3 +2,4 @@
 docker-compose up --build -d
 docker-compose up --build
 
+check end time if in booked time or not

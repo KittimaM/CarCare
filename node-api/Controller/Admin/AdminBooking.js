@@ -8,7 +8,7 @@ const AdminBooking = (req, res, next) => {
       res.json({ status: "ERROR", msg: error });
     }
     if (results.length == 0) {
-      res.json({ status: "NOT FOUND" });
+      res.json({ status: "NOT FOUND", msg: "NO BOOKING" });
     } else {
       res.json({ status: "SUCCESS", msg: results });
     }
@@ -33,7 +33,7 @@ const AdminAddBooking = (req, res, next) => {
     } = req.body;
 
     Conn.execute(
-      `INSERT INTO booking(car_no, car_size_id, car_size, customer_name, customer_phone, service, service_time, payment_type, created_by_id, created_by, car_color) 
+      `INSERT INTO walk_in(car_no, car_size_id, car_size, customer_name, customer_phone, service, service_time, payment_type, created_by_id, created_by, car_color) 
       VALUES(?,?,?,?,?,?,?,?,?,?,?)`,
       [
         car_no,
