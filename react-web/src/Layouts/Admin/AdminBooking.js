@@ -6,7 +6,18 @@ const AdminBooking = () => {
   const [selectedService, setSelectedService] = useState([]);
   const [booking, setBooking] = useState([]);
   const [carSize, setCarSize] = useState();
+  const [usedTime, setUsedTime] = useState(0);
   const token = localStorage.getItem("token");
+  const [timeOptions, setTimeOptions] = useState([
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+  ]);
 
   const fetchCarSize = async () => {
     try {
@@ -66,6 +77,7 @@ const AdminBooking = () => {
       service_type: data.get("service").split(",")[1],
       used_time: data.get("service").split(",")[2],
     };
+    setUsedTime(usedTime + parseInt(jsonData.used_time));
     setSelectedService([...selectedService, jsonData]);
   };
 
@@ -75,6 +87,7 @@ const AdminBooking = () => {
       ...booking,
       service: selectedService,
     };
+    console.log("all time use : ", usedTime);
     setBooking(jsonData);
   };
 
@@ -85,6 +98,9 @@ const AdminBooking = () => {
       ...booking,
       service_time: data.get("service_time"),
     };
+    const finishTime = new Date(jsonData.service_time);
+    finishTime.setMinutes(finishTime.getMinutes() + usedTime);
+    console.log("finish time : ", finishTime.toISOString().slice(0, 16));
     setBooking(jsonData);
   };
 
