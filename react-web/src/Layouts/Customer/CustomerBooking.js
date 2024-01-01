@@ -206,6 +206,8 @@ const CustomerBooking = () => {
         (item) => !bookedTime.includes(item)
       );
       setTimeOptions(newTimeOptions);
+    } else {
+      setTimeOptions(defaultTimeOptions);
     }
   };
 
