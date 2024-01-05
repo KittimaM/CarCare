@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button } from "../Module";
+import { Button, TimeFormat } from "../Module";
 
 const CustomerBooking = () => {
   const token = localStorage.getItem("token");
@@ -46,21 +46,31 @@ const CustomerBooking = () => {
       if (status == "SUCCESS") {
         let bookedDateTime = {};
         msg.map((item) => {
-          const { id, start_service_datetime, service_usetime } = item;
-          const [date, time] = start_service_datetime.split("T");
-          const [hour, mins] = time.split(".")[0].split(":");
-          const service_time = hour + ":" + mins;
-          if (bookedDateTime[date]) {
-            bookedDateTime[date].push({
+          const {
+            id,
+            start_service_datetime,
+            end_service_datetime,
+            service_usetime,
+          } = item;
+          const [startDate, startTime] = start_service_datetime.split("T");
+          const [startHour, startMins] = startTime.split(".")[0].split(":");
+          const start_service_time = startHour + ":" + startMins;
+          const [endDate, endTime] = end_service_datetime.split("T");
+          const [endHour, endMins] = endTime.split(".")[0].split(":");
+          const end_service_time = endHour + ":" + endMins;
+          if (bookedDateTime[startDate]) {
+            bookedDateTime[startDate].push({
               id: id,
-              service_time: service_time,
+              start_service_time: start_service_time,
+              end_service_time: end_service_time,
               service_usetime: service_usetime,
             });
           } else {
-            bookedDateTime[date] = [
+            bookedDateTime[startDate] = [
               {
                 id: id,
-                service_time: service_time,
+                start_service_time: start_service_time,
+                end_service_time: end_service_time,
                 service_usetime: service_usetime,
               },
             ];
@@ -96,16 +106,10 @@ const CustomerBooking = () => {
     newTimeOptions.setHours(8, 0, 0);
     let tempMaxTime = new Date();
     tempMaxTime.setHours(17, 30, 0);
-    const [maxHour, maxMins] = tempMaxTime
-      .toLocaleTimeString("th-TH", { hour12: false })
-      .split(":");
-    let maxTime = `${maxHour}:${maxMins}`;
+    let maxTime = TimeFormat(tempMaxTime);
 
     do {
-      const [hour, mins] = newTimeOptions
-        .toLocaleTimeString("th-TH", { hour12: false })
-        .split(":");
-      const dateToInput = `${hour}:${mins}`;
+      const dateToInput = TimeFormat(newTimeOptions);
       tempTimeOptions.push(dateToInput);
       newTimeOptions.setMinutes(newTimeOptions.getMinutes() + 30);
     } while (!tempTimeOptions.includes(maxTime));
@@ -182,22 +186,19 @@ const CustomerBooking = () => {
     setSelectedDate(dateSelected);
 
     if (bookedDateTimeOptions && bookedDateTimeOptions[dateSelected]) {
-      const bookedData = bookedDateTimeOptions[dateSelected];
       let bookedTime = [];
-      bookedData.map((item) => {
-        const { service_time, service_usetime } = item;
+      bookedDateTimeOptions[dateSelected].map((item) => {
+        const { start_service_time, service_usetime } = item;
+        let initialTime = service_usetime;
+        let newTimeOptions = new Date();
+        const [hour, mins] = start_service_time.split(":");
+        bookedTime.push(`${hour}:${mins}`);
+
         if (service_usetime > 30) {
-          let initialTime = service_usetime;
-          let newTimeOptions = new Date();
-          const [hour, mins] = service_time.split(":");
-          bookedTime.push(`${hour}:${mins}`);
           newTimeOptions.setHours(hour, mins, 0);
           while (initialTime > 30) {
             newTimeOptions.setMinutes(newTimeOptions.getMinutes() + 30);
-            const [hour, mins] = newTimeOptions
-              .toLocaleTimeString("th-TH", { hour12: false })
-              .split(":");
-            bookedTime.push(`${hour}:${mins}`);
+            bookedTime.push(TimeFormat(newTimeOptions));
             initialTime = initialTime - 30;
           }
         }
@@ -213,19 +214,60 @@ const CustomerBooking = () => {
 
   const handleSubmitSelectedTime = (event) => {
     event.preventDefault();
-    const service_date = selectedDate;
-    const service_time = event.target.value;
-    const [hour, mins] = service_time.split(":");
+    let service_date = new Date();
+    service_date = selectedDate;
+    let service_time = new Date();
+    service_time = event.target.value;
+    let [hour, mins] = service_time.split(":");
     let endTime = new Date();
     endTime.setHours(hour, mins, 0);
     endTime.setMinutes(endTime.getMinutes() + serviceUseTime);
-    endTime = endTime.toLocaleTimeString("th-TH", { hour12: false });
-    const jsonData = {
-      ...booking,
-      start_service_datetime: service_date + "T" + service_time,
-      end_service_datetime: service_date + "T" + endTime,
-    };
-    setBooking(jsonData);
+    endTime = TimeFormat(endTime);
+
+    let closeTime = new Date();
+    closeTime.setHours(18, 0, 0);
+    closeTime = TimeFormat(closeTime);
+    if (endTime <= closeTime) {
+      if (bookedDateTimeOptions && bookedDateTimeOptions[service_date]) {
+        let result = bookedDateTimeOptions[service_date]
+          .map((item) => {
+            const { start_service_time, end_service_time } = item;
+            let booked_start_time = new Date();
+            booked_start_time = start_service_time;
+            let booked_end_time = new Date();
+            booked_end_time = end_service_time;
+
+            if (booked_start_time < endTime && endTime < booked_end_time) {
+              return false;
+            }
+            if (service_time < booked_start_time && booked_end_time <= endTime) {
+              return false;
+            }
+            return true;
+          })
+          .every((value) => value);
+
+        if (result) {
+          const jsonData = {
+            ...booking,
+            start_service_datetime: service_date + "T" + service_time,
+            end_service_datetime: service_date + "T" + endTime,
+          };
+          setBooking(jsonData);
+        } else {
+          alert("please select other time");
+        }
+      } else {
+        const jsonData = {
+          ...booking,
+          start_service_datetime: service_date + "T" + service_time,
+          end_service_datetime: service_date + "T" + endTime,
+        };
+        setBooking(jsonData);
+      }
+    } else {
+      alert("please select other time");
+    }
   };
 
   const handleSubmitPaymentType = (event) => {
