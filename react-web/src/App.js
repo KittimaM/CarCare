@@ -16,6 +16,7 @@ import AdminService from "./Layouts/Admin/AdminService";
 import AdminBooking from "./Layouts/Admin/AdminBooking";
 
 function App() {
+  console.log(new Date());
   return (
     <Router>
       <Routes>
