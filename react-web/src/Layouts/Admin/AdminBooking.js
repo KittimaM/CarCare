@@ -1,51 +1,46 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {
+  FetchBooking,
+  DefaultTimeOptions,
+  FetchCarSize,
+  TimeFormat,
+} from "../Module";
 
 const AdminBooking = () => {
+  const token = localStorage.getItem("token");
+  const defaultTime = new Date();
   const [service, setService] = useState();
   const [selectedService, setSelectedService] = useState([]);
   const [booking, setBooking] = useState([]);
   const [carSize, setCarSize] = useState();
   const [usedTime, setUsedTime] = useState(0);
-  const token = localStorage.getItem("token");
-  const [timeOptions, setTimeOptions] = useState([
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-  ]);
-
-  const fetchCarSize = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/carsize"
-      );
-      const { status, msg } = response.data;
-      if (status == "SUCCESS") {
-        setCarSize(msg);
-      } else {
-        console.log(msg);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
+  const [serviceUseTime, setServiceUseTime] = useState(0);
+  const [bookedDateTimeOptions, setBookedDateTimeOptions] = useState(null);
+  const [timeOptions, setTimeOptions] = useState([]);
 
   useEffect(() => {
-    fetchCarSize();
+    FetchCarSize().then((data) => setCarSize(data));
+    FetchBooking().then((data) => setBookedDateTimeOptions(data));
+
+    let defaultTimeOptions = DefaultTimeOptions();
+    const newTimeOptions = defaultTimeOptions.filter(
+      (item) => item > TimeFormat(defaultTime)
+    );
+    newTimeOptions.length > 0
+      ? setDefaultTimeOptions(newTimeOptions)
+      : setDefaultTimeOptions(DefaultTimeOptions());
   }, []);
 
   const handleSubmitCar = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const [car_size_id, car_size] = data.get("car_size").split(",");
     const jsonData = {
       car_no: data.get("car_no"),
-      car_size_id: data.get("car_size").split(",")[0],
-      car_size: data.get("car_size").split(",")[1],
+      car_size_id: car_size_id,
+      car_size: car_size,
       car_color: data.get("car_color"),
       customer_name: data.get("customer_name"),
       customer_phone: data.get("customer_phone"),
@@ -72,12 +67,15 @@ const AdminBooking = () => {
   const handleSelectedService = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const [service_id, service_type, used_time] = data
+      .get("service")
+      .split(",");
     const jsonData = {
-      service_id: data.get("service").split(",")[0],
-      service_type: data.get("service").split(",")[1],
-      used_time: data.get("service").split(",")[2],
+      service_id: service_id,
+      service_type: service_type,
+      used_time: used_time,
     };
-    setUsedTime(usedTime + parseInt(jsonData.used_time));
+    setServiceUseTime(parseInt(serviceUseTime) + parseInt(used_time));
     setSelectedService([...selectedService, jsonData]);
   };
 
@@ -86,22 +84,96 @@ const AdminBooking = () => {
     const jsonData = {
       ...booking,
       service: selectedService,
+      service_usetime: serviceUseTime,
     };
-    console.log("all time use : ", usedTime);
     setBooking(jsonData);
+
+    const tempDate = new Date();
+    const [date, time] = tempDate.toISOString().split("T");
+    if (bookedDateTimeOptions && bookedDateTimeOptions[date]) {
+      let bookedTime = [];
+      bookedDateTimeOptions[date].map((item) => {
+        const { start_service_time, service_usetime } = item;
+        let initialTime = service_usetime;
+        let newTimeOptions = new Date();
+        const [hour, mins] = start_service_time.split(":");
+        bookedTime.push(`${hour}:${mins}`);
+
+        if (service_usetime > 30) {
+          newTimeOptions.setHours(hour, mins, 0);
+          while (initialTime > 30) {
+            newTimeOptions.setMinutes(newTimeOptions.getMinutes() + 30);
+            bookedTime.push(TimeFormat(newTimeOptions));
+            initialTime = initialTime - 30;
+          }
+        }
+      });
+      const newTimeOptions = defaultTimeOptions.filter(
+        (item) => !bookedTime.includes(item)
+      );
+      setTimeOptions(newTimeOptions);
+    } else {
+      setTimeOptions(defaultTimeOptions);
+    }
   };
 
   const handleSubmitSelectedTime = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const jsonData = {
-      ...booking,
-      service_time: data.get("service_time"),
-    };
-    const finishTime = new Date(jsonData.service_time);
-    finishTime.setMinutes(finishTime.getMinutes() + usedTime);
-    console.log("finish time : ", finishTime.toISOString().slice(0, 16));
-    setBooking(jsonData);
+    const [date, time] = defaultTime.toISOString().split("T");
+    let service_time = event.target.value;
+    let [hour, mins] = service_time.split(":");
+    let endTime = new Date();
+    endTime.setHours(hour, mins, 0);
+    endTime.setMinutes(endTime.getMinutes() + serviceUseTime);
+    endTime = TimeFormat(endTime);
+
+    let closeTime = new Date();
+    closeTime.setHours(18, 0, 0);
+    closeTime = TimeFormat(closeTime);
+    if (endTime <= closeTime) {
+      if (bookedDateTimeOptions && bookedDateTimeOptions[date]) {
+        let result = bookedDateTimeOptions[date]
+          .map((item) => {
+            const { start_service_time, end_service_time } = item;
+            let booked_start_time = new Date();
+            booked_start_time = start_service_time;
+            let booked_end_time = new Date();
+            booked_end_time = end_service_time;
+
+            if (booked_start_time < endTime && endTime < booked_end_time) {
+              return false;
+            }
+            if (
+              service_time < booked_start_time &&
+              booked_end_time <= endTime
+            ) {
+              return false;
+            }
+            return true;
+          })
+          .every((value) => value);
+
+        if (result) {
+          const jsonData = {
+            ...booking,
+            start_service_datetime: date + "T" + service_time,
+            end_service_datetime: date + "T" + endTime,
+          };
+          setBooking(jsonData);
+        } else {
+          alert("please select other time");
+        }
+      } else {
+        const jsonData = {
+          ...booking,
+          start_service_datetime: date + "T" + service_time,
+          end_service_datetime: date + "T" + endTime,
+        };
+        setBooking(jsonData);
+      }
+    } else {
+      alert("please select other time");
+    }
   };
 
   const handleSubmitPaymentType = (event) => {
@@ -176,7 +248,7 @@ const AdminBooking = () => {
           {selectedService && (
             <div>
               {selectedService.map((item) => (
-                <p>{item.service_type}</p>
+                <p key={item.id}>{item.service_type}</p>
               ))}
               <button onClick={handleSubmitSelectedService}>
                 Done Select Service
@@ -185,11 +257,12 @@ const AdminBooking = () => {
           )}
         </div>
       )}
-      <form onSubmit={handleSubmitSelectedTime}>
-        <label>Select Date and Time:</label>
-        <input type="datetime-local" name="service_time" />
-        <button type="submit">Select Time</button>
-      </form>
+      {timeOptions &&
+        timeOptions.map((item) => (
+          <button onClick={handleSubmitSelectedTime} key={item} value={item}>
+            {item}
+          </button>
+        ))}
       <form onSubmit={handleSubmitPaymentType}>
         <label name="payment_type">Payment Type</label>
         <input type="text" name="payment_type" />

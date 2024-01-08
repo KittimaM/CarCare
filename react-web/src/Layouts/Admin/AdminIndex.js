@@ -22,7 +22,7 @@ const AdminIndex = () => {
         if (status == "SUCCESS") {
           setBooking(msg);
         } else {
-          alert(status);
+         console.log(status);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -41,7 +41,7 @@ const AdminIndex = () => {
         {booking ? (
           <div>
             {booking.map((item) => (
-              <p>
+              <p key={item.id}>
                 {item.id} , {item.car_no} , {item.service_date} ,
                 {item.service_type}
               </p>

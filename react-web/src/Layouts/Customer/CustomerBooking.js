@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, TimeFormat } from "../Module";
+import {
+  Button,
+  FetchBooking,
+  TimeFormat,
+  DefaultTimeOptions,
+} from "../Module";
 
 const CustomerBooking = () => {
   const token = localStorage.getItem("token");
@@ -37,57 +42,11 @@ const CustomerBooking = () => {
     }
   };
 
-  const fetchBooking = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/booking"
-      );
-      const { status, msg } = response.data;
-      if (status == "SUCCESS") {
-        let bookedDateTime = {};
-        msg.map((item) => {
-          const {
-            id,
-            start_service_datetime,
-            end_service_datetime,
-            service_usetime,
-          } = item;
-          const [startDate, startTime] = start_service_datetime.split("T");
-          const [startHour, startMins] = startTime.split(".")[0].split(":");
-          const start_service_time = startHour + ":" + startMins;
-          const [endDate, endTime] = end_service_datetime.split("T");
-          const [endHour, endMins] = endTime.split(".")[0].split(":");
-          const end_service_time = endHour + ":" + endMins;
-          if (bookedDateTime[startDate]) {
-            bookedDateTime[startDate].push({
-              id: id,
-              start_service_time: start_service_time,
-              end_service_time: end_service_time,
-              service_usetime: service_usetime,
-            });
-          } else {
-            bookedDateTime[startDate] = [
-              {
-                id: id,
-                start_service_time: start_service_time,
-                end_service_time: end_service_time,
-                service_usetime: service_usetime,
-              },
-            ];
-          }
-          setBookedDateTimeOptions(bookedDateTime);
-        });
-      } else {
-        console.log(msg);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   useEffect(() => {
     fetchCustomerCar();
-    fetchBooking();
+    FetchBooking().then((data) => {
+      setBookedDateTimeOptions(data);
+    });
 
     let tempDateOptions = [];
     let newDateOptions = new Date();
@@ -101,20 +60,8 @@ const CustomerBooking = () => {
     } while (!tempDateOptions.includes(maxDate));
     setDateOptions(tempDateOptions);
 
-    let tempTimeOptions = [];
-    let newTimeOptions = new Date();
-    newTimeOptions.setHours(8, 0, 0);
-    let tempMaxTime = new Date();
-    tempMaxTime.setHours(17, 30, 0);
-    let maxTime = TimeFormat(tempMaxTime);
-
-    do {
-      const dateToInput = TimeFormat(newTimeOptions);
-      tempTimeOptions.push(dateToInput);
-      newTimeOptions.setMinutes(newTimeOptions.getMinutes() + 30);
-    } while (!tempTimeOptions.includes(maxTime));
-    setTimeOptions(tempTimeOptions);
-    setDefaultTimeOptions(tempTimeOptions);
+    setTimeOptions(DefaultTimeOptions());
+    setDefaultTimeOptions(DefaultTimeOptions());
   }, []);
 
   const handleSubmitSelectedCar = (event) => {
@@ -240,7 +187,10 @@ const CustomerBooking = () => {
             if (booked_start_time < endTime && endTime < booked_end_time) {
               return false;
             }
-            if (service_time < booked_start_time && booked_end_time <= endTime) {
+            if (
+              service_time < booked_start_time &&
+              booked_end_time <= endTime
+            ) {
               return false;
             }
             return true;
