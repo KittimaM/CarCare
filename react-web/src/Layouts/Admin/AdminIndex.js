@@ -1,56 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Button } from "../Module";
+import { GetPermission } from "../Api";
 
 const AdminIndex = () => {
-  const [booking, setBooking] = useState(null);
-  const Button = ({ to, name }) => {
-    return (
-      <Link to={to}>
-        <button>{name}</button>
-      </Link>
-    );
-  };
-
+  const [permission, setPermission] = useState();
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/admin/booking"
-        );
-        const { status, msg } = response.data;
-        if (status == "SUCCESS") {
-          setBooking(msg);
-        } else {
-         console.log(status);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    GetPermission().then((data) => setPermission(data));
   }, []);
+
   return (
     <div>
-      <Button to="/admin/user" name="User" />
-      <Button to="/admin/carsize" name="Car Size" />
-      <Button to="/admin/service" name="Service" />
-      <Button to="/admin/booking" name="Booking" />
-      <div>
-        {booking ? (
-          <div>
-            {booking.map((item) => (
-              <p key={item.id}>
-                {item.id} , {item.car_no} , {item.service_date} ,
-                {item.service_type}
-              </p>
-            ))}
-          </div>
-        ) : (
-          <h1>NO BOOKING</h1>
-        )}
-      </div>
+      {permission && permission.have_staff_user_access == 1 && (
+        <Button to="/admin/user" name="User" />
+      )}
+      {permission && permission.have_car_size_access == 1 && (
+        <Button to="/admin/carsize" name="Car Size" />
+      )}
+      {permission && permission.have_service_access == 1 && (
+        <Button to="/admin/service" name="Service" />
+      )}
+      {permission && permission.have_booking_access == 1 && (
+        <Button to="/admin/booking" name="Booking" />
+      )}
+      {permission && permission.have_role_access == 1 && (
+        <Button to="/admin/role" name="Role" />
+      )}
     </div>
   );
 };
