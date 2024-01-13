@@ -1,3 +1,5 @@
 ครั้งแรกใช้ docker-compose up
 docker-compose up --build -d
 docker-compose up --build
+
+fix token 

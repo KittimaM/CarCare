@@ -4,25 +4,25 @@ const Conn = require("../../db");
 const secret = process.env.SECRET_WORD;
 
 const AdminLogin = (req, res, next) => {
-  const { username, password } = req.body;
+  const userName = req.body.username;
+  const passWord = req.body.password;
   Conn.execute(
-    `SELECT id, password FROM staff_user WHERE username = ? LIMIT 1`,
-    [username],
+    `SELECT * FROM staff_user WHERE username = ? LIMIT 1`,
+    [userName],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
       } else if (result.length == 0) {
         res.json({ status: "NOT FOUND" });
       } else {
-        const staffPassword = result[0].password;
-        const staffId = result[0].id;
-        bcrypt.compare(password, staffPassword, function (error, result) {
+        const { id, username, password, role_id, role } = result[0];
+        bcrypt.compare(passWord, password, function (error, result) {
           if (error) {
             res.json({ status: "ERROR", msg: error });
           } else {
             if (result) {
               const token = jwt.sign(
-                { id: staffId, username: username },
+                { id: id, username: username, role_id: role_id, role: role },
                 secret,
                 { expiresIn: "10h" }
               );
