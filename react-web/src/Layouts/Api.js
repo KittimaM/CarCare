@@ -2,46 +2,42 @@ import axios from "axios";
 
 const token = localStorage.getItem("token");
 
-const postApi = async (url, jsonData, token = null) => {
+const postApi = async (url, jsonData, isUseToken = false) => {
   try {
     const headers = {
       "Content-Type": "application/json",
     };
-    if (token) {
+    if (isUseToken) {
       headers.Authorization = `Bearer ${token}`;
     }
     const response = await axios.post(url, jsonData, { headers });
     const { status, msg } = response.data;
-    if (status == "SUCCESS") {
-      return msg;
-    } else {
-      console.log("status : ", status, " , msg : ", msg);
-    }
+    return { status: status, msg: msg };
   } catch (error) {
     console.error("Error fetching data:", error);
   }
 };
 
-const getApi = async (url, token = null) => {
-  try {
-    let headers = {};
-    if (token) {
-      headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-    }
-    const response = await axios.post(url, { headers });
-    const { status, msg } = response.data;
-    if (status == "SUCCESS") {
-      return msg;
-    } else {
-      console.log("status : ", status, " , msg : ", msg);
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
+// const getApi = async (url, token = null) => {
+//   try {
+//     let headers = {};
+//     if (token) {
+//       headers = {
+//         "Content-Type": "application/json",
+//         Authorization: `Bearer ${token}`,
+//       };
+//     }
+//     const response = await axios.post(url, { headers });
+//     const { status, msg } = response.data;
+//     if (status == "SUCCESS") {
+//       return msg;
+//     } else {
+//       console.log("status : ", status, " , msg : ", msg);
+//     }
+//   } catch (error) {
+//     console.error("Error fetching data:", error);
+//   }
+// };
 
 export const GetPermission = async () => {
   try {
@@ -81,10 +77,14 @@ export const GetAllRole = async () => {
   }
 };
 
-export const PostAddRole = async (jsonData, token = null) => {
+export const PostAddRole = (jsonData) => {
   return postApi("http://localhost:5000/api/admin/role", jsonData);
 };
 
-export const PostAddStaffUser = async (jsonData, token = null) => {
+export const PostAddStaffUser = (jsonData) => {
   return postApi("http://localhost:5000/api/admin/user/add", jsonData);
+};
+
+export const PostLogin = (jsonData) => {
+  return postApi("http://localhost:5000/api/admin/login", jsonData);
 };
