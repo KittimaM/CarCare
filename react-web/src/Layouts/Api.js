@@ -1,13 +1,12 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
-
 const postApi = async (url, jsonData, isUseToken = false) => {
   try {
     const headers = {
       "Content-Type": "application/json",
     };
     if (isUseToken) {
+      const token = localStorage.getItem("token");
       headers.Authorization = `Bearer ${token}`;
     }
     const response = await axios.post(url, jsonData, { headers });
@@ -18,47 +17,30 @@ const postApi = async (url, jsonData, isUseToken = false) => {
   }
 };
 
-// const getApi = async (url, token = null) => {
-//   try {
-//     let headers = {};
-//     if (token) {
-//       headers = {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       };
-//     }
-//     const response = await axios.post(url, { headers });
-//     const { status, msg } = response.data;
-//     if (status == "SUCCESS") {
-//       return msg;
-//     } else {
-//       console.log("status : ", status, " , msg : ", msg);
-//     }
-//   } catch (error) {
-//     console.error("Error fetching data:", error);
-//   }
-// };
-
-export const GetPermission = async () => {
+const getApi = async (url, options = null, isUseToken = true) => {
   try {
-    const response = await axios.get(
-      "http://localhost:5000/api/admin/permission",
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const { status, msg } = response.data;
-    if (status == "SUCCESS") {
-      return msg;
-    } else {
-      console.log(msg);
+    let headers = {};
+    if (isUseToken) {
+      const token = localStorage.getItem("token");
+      headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
     }
+    if (options) {
+      headers.params = options;
+    }
+    const response = await axios.get(url, { headers });
+    const { status, msg } = response.data;
+    return { status: status, msg: msg };
   } catch (error) {
     console.error("Error fetching data:", error);
   }
+};
+
+export const GetPermission = () => {
+  const isUseToken = true;
+  return getApi("http://localhost:5000/api/admin/permission", isUseToken);
 };
 
 export const GetAllRole = async () => {
@@ -77,6 +59,10 @@ export const GetAllRole = async () => {
   }
 };
 
+export const GetAllBooking = (options = null) => {
+  return getApi("http://localhost:5000/api/admin/booking", options);
+};
+
 export const PostAddRole = (jsonData) => {
   return postApi("http://localhost:5000/api/admin/role", jsonData);
 };
@@ -87,4 +73,11 @@ export const PostAddStaffUser = (jsonData) => {
 
 export const PostLogin = (jsonData) => {
   return postApi("http://localhost:5000/api/admin/login", jsonData);
+};
+
+export const PostUpDateBookingStatus = (jsonData) => {
+  return postApi(
+    "http://localhost:5000/api/admin/booking/update-status",
+    jsonData
+  );
 };

@@ -3,12 +3,16 @@ const Conn = require("../../db");
 const secret = process.env.SECRET_WORD;
 
 const AdminBooking = (req, res, next) => {
-  Conn.execute("SELECT * FROM booking", function (error, results) {
+  let sql = "SELECT * FROM booking";
+  if (req.headers.params) {
+    sql = sql + " " + req.headers.params;
+  }
+  Conn.execute(sql, function (error, results) {
     if (error) {
       res.json({ status: "ERROR", msg: error });
     }
     if (results.length == 0) {
-      res.json({ status: "NOT FOUND", msg: "NO BOOKING" });
+      res.json({ status: "NO DATA", msg: "NO DATA" });
     } else {
       res.json({ status: "SUCCESS", msg: results });
     }
@@ -35,8 +39,8 @@ const AdminAddBooking = (req, res, next) => {
     } = req.body;
 
     Conn.execute(
-      `INSERT INTO booking(car_no, car_size_id, car_size, customer_name, customer_phone, service, payment_type, created_by_id, created_by, car_color, start_service_datetime, end_service_datetime, service_usetime, processing_status) 
-      VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      `INSERT INTO booking(car_no, car_size_id, car_size, customer_name, customer_phone, service, payment_type, created_by_id, created_by, car_color, start_service_datetime, end_service_datetime, service_usetime) 
+      VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         car_no,
         car_size_id,
@@ -51,7 +55,6 @@ const AdminAddBooking = (req, res, next) => {
         start_service_datetime,
         end_service_datetime,
         service_usetime,
-        "Walk-In"
       ],
       function (error, result) {
         if (error) {
@@ -67,7 +70,23 @@ const AdminAddBooking = (req, res, next) => {
   }
 };
 
+const AdminUpdateStatusBooking = (req, res, next) => {
+  const { bookingId, processing_status } = req.body;
+  Conn.execute(
+    `UPDATE booking SET processing_status = ? WHERE id = ?`,
+    [processing_status, bookingId],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
 module.exports = {
   AdminBooking,
   AdminAddBooking,
+  AdminUpdateStatusBooking,
 };

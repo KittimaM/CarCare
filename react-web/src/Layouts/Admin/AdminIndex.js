@@ -3,9 +3,16 @@ import { Button } from "../Module";
 import { GetPermission } from "../Api";
 
 const AdminIndex = () => {
-  const [permission, setPermission] = useState();
+  const [permission, setPermission] = useState(null);
   useEffect(() => {
-    GetPermission().then((data) => setPermission(data));
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg);
+      } else {
+        alert(msg);
+      }
+    });
   }, []);
 
   return (
@@ -24,6 +31,12 @@ const AdminIndex = () => {
       )}
       {permission && permission.have_role_access == 1 && (
         <Button to="/admin/role" name="Role" />
+      )}
+      {permission && permission.have_account_access == 1 && (
+        <Button to="/admin/account" name="Account Management" />
+      )}
+      {permission && permission.have_schedule_access == 1 && (
+        <Button to="/admin/schedule" name="Schedule" />
       )}
     </div>
   );
