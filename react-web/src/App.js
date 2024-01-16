@@ -15,6 +15,8 @@ import CustomerCar from "./Layouts/Customer/CustomerCar";
 import AdminService from "./Layouts/Admin/AdminService";
 import AdminBooking from "./Layouts/Admin/AdminBooking";
 import AdminRole from "./Layouts/Admin/AdminRole";
+import AdminAccount from "./Layouts/Admin/AdminAccount";
+import AdminSchedule from "./Layouts/Admin/AdminSchedule";
 
 function App() {
   console.log(new Date());
@@ -32,6 +34,8 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/schedule" element={<AdminSchedule />} />
+        <Route path="/admin/account" element={<AdminAccount />} />
         <Route path="/admin/role" element={<AdminRole />} />
         <Route path="/admin/booking" element={<AdminBooking />} />
         <Route path="/admin/service" element={<AdminService />} />
