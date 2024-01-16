@@ -9,7 +9,7 @@ const CustomerRegister = (req, res, next) => {
       res.json({ status: "ERROR", msg: "in hash" });
     } else {
       Conn.execute(
-        `INSERT INTO customer (phone, name , password, created_at) VALUES (?,?,?, NOW())`,
+        `INSERT INTO customer (phone, name , password) VALUES (?,?,?)`,
         [phone, name, hash],
         function (error, result) {
           if (error) {
