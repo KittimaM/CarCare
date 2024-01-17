@@ -51,7 +51,7 @@ const AdminService = () => {
       car_size_id: data.get("car_size").split(",")[0],
       car_size: data.get("car_size").split(",")[1],
       used_time: data.get("used_time"),
-
+      price: data.get("price"),
     };
     axios
       .post("http://localhost:5000/api/admin/service", jsonData, {
@@ -90,6 +90,8 @@ const AdminService = () => {
         )}
         <label name="used_time">used_time</label>
         <input type="text" name="used_time" />
+        <label name="price">price</label>
+        <input type="text" name="price" />
         <button type="submit">Submit</button>
       </form>
       {service ? (

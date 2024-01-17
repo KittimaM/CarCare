@@ -19,6 +19,7 @@ const CustomerBooking = () => {
   const [timeOptions, setTimeOptions] = useState([]);
   const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
   const [serviceUseTime, setServiceUseTime] = useState(0);
+  const [servicePrice, setServicePrice] = useState(0);
 
   const fetchCustomerCar = async () => {
     try {
@@ -105,14 +106,17 @@ const CustomerBooking = () => {
   const handleSelectedService = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const [service_id, service_type, used_time] = data
+    const [service_id, service_type, used_time, price] = data
       .get("service")
       .split(",");
     const jsonData = {
       service_id: service_id,
       service_type: service_type,
+      used_time: used_time,
+      price: price,
     };
     setServiceUseTime(parseInt(serviceUseTime) + parseInt(used_time));
+    setServicePrice(parseInt(servicePrice) + parseInt(price));
     setSelectedService([...selectedService, jsonData]);
   };
 
@@ -122,8 +126,8 @@ const CustomerBooking = () => {
       ...booking,
       service: selectedService,
       service_usetime: serviceUseTime,
+      service_price: servicePrice,
     };
-    console.log("serviceUseTime : ", serviceUseTime);
     setBooking(jsonData);
   };
 
@@ -279,7 +283,7 @@ const CustomerBooking = () => {
               {service.map((item) => (
                 <option
                   key={item.id}
-                  value={[item.id, item.service, item.used_time]}
+                  value={[item.id, item.service, item.used_time, item.price]}
                 >
                   {item.service}
                 </option>
