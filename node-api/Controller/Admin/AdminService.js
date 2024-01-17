@@ -17,10 +17,11 @@ const AdminService = (req, res, next) => {
 };
 
 const AdminAddService = (req, res, next) => {
-  const { service, description, car_size_id, car_size, used_time } = req.body;
+  const { service, description, car_size_id, car_size, used_time, price } =
+    req.body;
   Conn.execute(
-    "INSERT INTO service (service, description, car_size_id, car_size, used_time) VALUES (?, ?, ?, ? ,?)",
-    [service, description, car_size_id, car_size, used_time],
+    "INSERT INTO service (service, description, car_size_id, car_size, used_time, price) VALUES (?, ?, ?, ? ,?, ?)",
+    [service, description, car_size_id, car_size, used_time, price],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });

@@ -14,11 +14,11 @@ const AdminBooking = () => {
   const [selectedService, setSelectedService] = useState([]);
   const [booking, setBooking] = useState([]);
   const [carSize, setCarSize] = useState();
-  const [usedTime, setUsedTime] = useState(0);
   const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
   const [serviceUseTime, setServiceUseTime] = useState(0);
   const [bookedDateTimeOptions, setBookedDateTimeOptions] = useState(null);
   const [timeOptions, setTimeOptions] = useState([]);
+  const [servicePrice, setServicePrice] = useState(0);
 
   useEffect(() => {
     FetchCarSize().then((data) => setCarSize(data));
@@ -67,15 +67,17 @@ const AdminBooking = () => {
   const handleSelectedService = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const [service_id, service_type, used_time] = data
+    const [service_id, service_type, used_time, price] = data
       .get("service")
       .split(",");
     const jsonData = {
       service_id: service_id,
       service_type: service_type,
       used_time: used_time,
+      price: price,
     };
     setServiceUseTime(parseInt(serviceUseTime) + parseInt(used_time));
+    setServicePrice(parseInt(servicePrice) + parseInt(price));
     setSelectedService([...selectedService, jsonData]);
   };
 
@@ -85,6 +87,7 @@ const AdminBooking = () => {
       ...booking,
       service: selectedService,
       service_usetime: serviceUseTime,
+      service_price: servicePrice,
     };
     setBooking(jsonData);
 
@@ -237,7 +240,7 @@ const AdminBooking = () => {
               {service.map((item) => (
                 <option
                   key={item.id}
-                  value={[item.id, item.service, item.used_time]}
+                  value={[item.id, item.service, item.used_time, item.price]}
                 >
                   {item.service}
                 </option>

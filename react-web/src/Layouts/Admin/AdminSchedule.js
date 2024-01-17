@@ -47,7 +47,6 @@ const AdminSchedule = () => {
       processing_status: status,
       bookingId: bookingId,
     };
-    console.log("jsonData : ", jsonData);
     PostUpDateBookingStatus(jsonData).then((updatedResponse) => {
       if (updatedResponse.status == "SUCCESS") {
         GetAllBooking(
@@ -73,34 +72,34 @@ const AdminSchedule = () => {
 
   return (
     <table>
+      <thead>
+        <tr>
+          <td>id</td>
+          <td>car_no</td>
+          <td>date</td>
+          <td>time</td>
+          <td>status</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </thead>
       <tbody>
         {todaySchedule &&
           todaySchedule.map((item) => (
             <tr key={item.id}>
               <td>{item.id}</td>
               <td>{item.car_no}</td>
-              <td>{item.start_service_datetime}</td>
+              <td>{item.start_service_datetime.split("T")[0]}</td>
+              <td>{item.start_service_datetime.split("T")[1]}</td>
               <td>{item.processing_status}</td>
               <td>
                 {item.processing_status == "Waiting" && (
-                  <tr>
-                    <td>
-                      <button
-                        onClick={handleUpdateStatus}
-                        value={[item.id, item.processing_status]}
-                      >
-                        Start Service
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        onClick={handleUpdateStatus}
-                        value={[item.id, "Cancel"]}
-                      >
-                        Cancel
-                      </button>
-                    </td>
-                  </tr>
+                  <button
+                    onClick={handleUpdateStatus}
+                    value={[item.id, item.processing_status]}
+                  >
+                    Start Service
+                  </button>
                 )}
                 {item.processing_status == "Service in process" && (
                   <button
@@ -121,6 +120,16 @@ const AdminSchedule = () => {
                 {item.processing_status == "Paid" && <p>Done</p>}
                 {item.processing_status == "Cancel" && <p>Cancel</p>}
               </td>
+              {item.processing_status == "Waiting" && (
+                <td>
+                  <button
+                    onClick={handleUpdateStatus}
+                    value={[item.id, "Cancel"]}
+                  >
+                    Cancel
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
       </tbody>
