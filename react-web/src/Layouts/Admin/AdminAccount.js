@@ -3,10 +3,11 @@ import { GetAllBooking, GetAllExpense, PostExpense } from "../Api";
 
 const AdminAccount = () => {
   const [list, setList] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [totalSummary, setTotalSummary] = useState(0);
 
   const getAllList = () => {
     let jsonData = [];
+    let total = 0;
     GetAllBooking('WHERE processing_status = "Paid"').then((response) => {
       const { status, msg } = response;
       if (status == "SUCCESS") {
@@ -18,7 +19,7 @@ const AdminAccount = () => {
             isIncome: true,
             isExpense: false,
           };
-          setTotal(parseInt(total) + parseInt(item.service_price));
+          total = total + parseInt(item.service_price);
           jsonData.push(dataToInsert);
         });
         GetAllExpense().then((response) => {
@@ -32,16 +33,17 @@ const AdminAccount = () => {
                 isIncome: false,
                 isExpense: true,
               };
-              setTotal(parseInt(total) - parseInt(item.expense));
+              total = total - parseInt(item.expense);
               jsonData.push(dataToInsert);
             });
+            setTotalSummary(total);
             setList(jsonData);
           } else {
             console.log("status: ", status, ", msg: ", msg);
           }
         });
       } else {
-        console.log("status: ", status, ", msg: ", msg);
+        console.log("status: ", status, ", msg: ", msg); 
       }
     });
   };
@@ -105,7 +107,7 @@ const AdminAccount = () => {
             ))}
         </tbody>
       </table>
-      <p>total : {total && total}</p>
+      <p>total : {totalSummary && totalSummary}</p>
     </div>
   );
 };
