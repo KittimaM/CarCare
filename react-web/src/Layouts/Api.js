@@ -59,6 +59,15 @@ export const GetAllRole = async () => {
   }
 };
 
+export const GetAllExpense = () => {
+  return getApi("http://localhost:5000/api/admin/expense");
+};
+
+export const PostExpense = (jsonData) => {
+  return postApi("http://localhost:5000/api/admin/expense", jsonData)
+}
+
+
 export const GetAllBooking = (options = null) => {
   return getApi("http://localhost:5000/api/admin/booking", options);
 };

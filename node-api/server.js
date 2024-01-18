@@ -44,6 +44,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminExpenseRoute = require("./Routes/Admin/AdminExpense");
+app.use("/api/admin/expense", AdminExpenseRoute);
+
 const AdminCarSizeRoute = require("./Routes/Admin/AdminCarSize");
 app.use("/api/admin/carsize", AdminCarSizeRoute);
 
