@@ -2,5 +2,7 @@
 docker-compose up --build -d
 docker-compose up --build
 
+เพิ่ม อัพเดทเวลา ตอนเปลี่ยนสถานะ กับตอนเพิ่ม expense
+สร้างตารางเพื่อเพิ่ม Income
 จัดการบัญชี
 จัดการpayment
