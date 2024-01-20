@@ -73,10 +73,10 @@ const AdminAddBooking = (req, res, next) => {
 };
 
 const AdminUpdateStatusBooking = (req, res, next) => {
-  const { bookingId, processing_status } = req.body;
+  const { booking_id, processing_status } = req.body;
   Conn.execute(
     `UPDATE booking SET processing_status = ? WHERE id = ?`,
-    [processing_status, bookingId],
+    [processing_status, booking_id],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });

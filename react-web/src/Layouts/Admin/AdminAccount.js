@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { GetAllBooking, GetAllExpense, PostExpense } from "../Api";
+import {
+  GetAllIncome,
+  GetAllExpense,
+  PostAddExpense,
+  PostAddIncome,
+} from "../Api";
+import { TimeFormat } from "../Module";
 
 const AdminAccount = () => {
   const [list, setList] = useState([]);
@@ -8,42 +14,46 @@ const AdminAccount = () => {
   const getAllList = () => {
     let jsonData = [];
     let total = 0;
-    GetAllBooking('WHERE processing_status = "Paid"').then((response) => {
+    GetAllIncome().then((response) => {
       const { status, msg } = response;
       if (status == "SUCCESS") {
         msg.map((item) => {
           let dataToInsert = {
-            list: item.car_no,
-            income: item.service_price,
+            list: item.list,
+            income: item.income,
             expense: 0,
             isIncome: true,
             isExpense: false,
+            date: item.created_at.split("T")[0],
+            time: item.created_at.split("T")[1],
           };
-          total = total + parseInt(item.service_price);
+          total = total + parseInt(item.income);
           jsonData.push(dataToInsert);
         });
-        GetAllExpense().then((response) => {
-          const { status, msg } = response;
-          if (status == "SUCCESS") {
-            msg.map((item) => {
-              let dataToInsert = {
-                list: item.list,
-                income: 0,
-                expense: item.expense,
-                isIncome: false,
-                isExpense: true,
-              };
-              total = total - parseInt(item.expense);
-              jsonData.push(dataToInsert);
-            });
-            setTotalSummary(total);
-            setList(jsonData);
-          } else {
-            console.log("status: ", status, ", msg: ", msg);
-          }
-        });
       } else {
-        console.log("status: ", status, ", msg: ", msg); 
+        console.log("status: ", status, ", msg: ", msg);
+      }
+    });
+    GetAllExpense().then((response) => {
+      const { status, msg } = response;
+      if (status == "SUCCESS") {
+        msg.map((item) => {
+          let dataToInsert = {
+            list: item.list,
+            income: 0,
+            expense: item.expense,
+            isIncome: false,
+            isExpense: true,
+            date: item.created_at.split("T")[0],
+            time: item.created_at.split("T")[1],
+          };
+          total = total - parseInt(item.expense);
+          jsonData.push(dataToInsert);
+        });
+        setTotalSummary(total);
+        setList(jsonData);
+      } else {
+        console.log("status: ", status, ", msg: ", msg);
       }
     });
   };
@@ -54,7 +64,16 @@ const AdminAccount = () => {
   const handleAddIncome = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data.get("income"));
+    const jsonData = {
+      list: data.get("list"),
+      income: data.get("income"),
+    };
+    PostAddIncome(jsonData).then((response) => {
+      const { status, msg } = response;
+      if (status == "SUCCESS") {
+        getAllList();
+      }
+    });
   };
 
   const handleAddExpense = (event) => {
@@ -64,7 +83,7 @@ const AdminAccount = () => {
       list: data.get("list"),
       expense: data.get("expense"),
     };
-    PostExpense(jsonData).then((response) => {
+    PostAddExpense(jsonData).then((response) => {
       const { status, msg } = response;
       if (status == "SUCCESS") {
         getAllList();
@@ -94,6 +113,8 @@ const AdminAccount = () => {
             <td>list</td>
             <td>income</td>
             <td>expense</td>
+            <td>date</td>
+            <td>time</td>
           </tr>
         </thead>
         <tbody>
@@ -103,6 +124,8 @@ const AdminAccount = () => {
                 <td>{item.list}</td>
                 <td>{item.isIncome && item.income}</td>
                 <td>{item.isExpense && item.expense}</td>
+                <td>{item.date}</td>
+                <td>{item.time}</td>
               </tr>
             ))}
         </tbody>

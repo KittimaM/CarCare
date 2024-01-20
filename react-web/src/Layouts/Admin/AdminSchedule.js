@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { GetAllBooking, PostUpDateBookingStatus } from "../Api";
+import {
+  GetAllBooking,
+  PostAddIncome,
+  PostUpDateBookingStatus,
+} from "../Api";
 
 const AdminSchedule = () => {
   const [todaySchedule, setTodaySchedule] = useState([]);
@@ -20,7 +24,8 @@ const AdminSchedule = () => {
   const handleUpdateStatus = (event) => {
     event.preventDefault();
     const { value } = event.target;
-    const [bookingId, processing_status] = value.split(",");
+    const [booking_id, car_no, service_price, processing_status] =
+      value.split(",");
     let status = "";
     switch (processing_status) {
       case "Waiting":
@@ -45,7 +50,7 @@ const AdminSchedule = () => {
 
     const jsonData = {
       processing_status: status,
-      bookingId: bookingId,
+      booking_id: booking_id,
     };
     PostUpDateBookingStatus(jsonData).then((updatedResponse) => {
       if (updatedResponse.status == "SUCCESS") {
@@ -68,6 +73,14 @@ const AdminSchedule = () => {
         );
       }
     });
+
+    if (status == "Paid") {
+      const jsonData = {
+        list: car_no,
+        income: service_price,
+      };
+      PostAddIncome(jsonData).then((data) => console.log(data));
+    }
   };
 
   return (
@@ -96,7 +109,12 @@ const AdminSchedule = () => {
                 {item.processing_status == "Waiting" && (
                   <button
                     onClick={handleUpdateStatus}
-                    value={[item.id, item.processing_status]}
+                    value={[
+                      item.id,
+                      item.car_no,
+                      item.service_price,
+                      item.processing_status,
+                    ]}
                   >
                     Start Service
                   </button>
@@ -104,7 +122,12 @@ const AdminSchedule = () => {
                 {item.processing_status == "Service in process" && (
                   <button
                     onClick={handleUpdateStatus}
-                    value={[item.id, item.processing_status]}
+                    value={[
+                      item.id,
+                      item.car_no,
+                      item.service_price,
+                      item.processing_status,
+                    ]}
                   >
                     Finish Service
                   </button>
@@ -112,7 +135,12 @@ const AdminSchedule = () => {
                 {item.processing_status == "Finish Service" && (
                   <button
                     onClick={handleUpdateStatus}
-                    value={[item.id, item.processing_status]}
+                    value={[
+                      item.id,
+                      item.car_no,
+                      item.service_price,
+                      item.processing_status,
+                    ]}
                   >
                     Pay
                   </button>
