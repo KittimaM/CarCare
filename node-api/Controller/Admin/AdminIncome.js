@@ -3,8 +3,8 @@ var jwt = require("jsonwebtoken");
 const Conn = require("../../db");
 const secret = process.env.SECRET_WORD;
 
-const AdminExpense = (req, res, next) => {
-  Conn.execute("SELECT * FROM expense", function (error, results) {
+const AdminIncome = (req, res, next) => {
+  Conn.execute("SELECT * FROM income", function (error, results) {
     if (error) {
       res.json({ status: "ERROR", msg: error });
     }
@@ -16,11 +16,11 @@ const AdminExpense = (req, res, next) => {
   });
 };
 
-const AdminAddExpense = (req, res, next) => {
-  const { list, expense } = req.body;
+const AdminAddIncome = (req, res, next) => {
+  const { list, income } = req.body;
   Conn.execute(
-    "INSERT INTO expense(list, expense, created_at) VALUES(?,?,NOW())",
-    [list, expense],
+    "INSERT INTO income(list, income, created_at) VALUES(?,?,NOW())",
+    [list, income],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -33,6 +33,6 @@ const AdminAddExpense = (req, res, next) => {
 };
 
 module.exports = {
-  AdminExpense,
-  AdminAddExpense,
+  AdminIncome,
+  AdminAddIncome,
 };
