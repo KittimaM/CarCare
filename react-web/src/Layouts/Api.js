@@ -97,3 +97,19 @@ export const PostUpDateBookingStatus = (jsonData) => {
     jsonData
   );
 };
+
+export const GetAllStaff = () => {
+  return getApi("http://localhost:5000/api/admin/user");
+};
+
+export const PostAddDayOff = (jsonData) => {
+  return postApi("http://localhost:5000/api/admin/worktable/add", jsonData);
+};
+
+export const GetAllDayOff = () => {
+  return getApi("http://localhost:5000/api/admin/worktable");
+};
+
+export const PostUpdateDayOff = (jsonData) => {
+  return postApi("http://localhost:5000/api/admin/worktable/update", jsonData);
+};

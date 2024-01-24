@@ -41,6 +41,9 @@ const AdminIndex = () => {
       {permission && permission.have_payment_access == 1 && (
         <Button to="/admin/payment" name="Payment" />
       )}
+      {permission && permission.have_worktable_access == 1 && (
+        <Button to="/admin/worktable" name="Work Table" />
+      )}
     </div>
   );
 };
