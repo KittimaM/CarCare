@@ -18,6 +18,7 @@ import AdminRole from "./Layouts/Admin/AdminRole";
 import AdminAccount from "./Layouts/Admin/AdminAccount";
 import AdminSchedule from "./Layouts/Admin/AdminSchedule";
 import AdminPayment from "./Layouts/Admin/AdminPayment";
+import AdminWorkTable from "./Layouts/Admin/AdminWorkTable";
 
 function App() {
   console.log(new Date());
@@ -35,6 +36,7 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/worktable" element={<AdminWorkTable />} />
         <Route path="/admin/payment" element={<AdminPayment />} />
         <Route path="/admin/schedule" element={<AdminSchedule />} />
         <Route path="/admin/account" element={<AdminAccount />} />
