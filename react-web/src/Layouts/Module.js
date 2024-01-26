@@ -5,7 +5,7 @@ import axios from "axios";
 export const Button = ({ to, name }) => {
   return (
     <Link to={to}>
-      <button>{name}</button>
+      <button className="btn">{name}</button>
     </Link>
   );
 };
