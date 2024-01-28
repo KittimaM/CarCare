@@ -15,7 +15,8 @@ const CustomerRegister = (req, res, next) => {
           if (error) {
             res.json({ status: "ERROR", msg, error });
           } else {
-            res.json({ status: "SUCCESS" });
+            const insertId = result.insertId;
+            res.json({ status: "SUCCESS", msg: insertId });
           }
         }
       );

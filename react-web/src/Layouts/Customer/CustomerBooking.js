@@ -271,7 +271,9 @@ const CustomerBooking = () => {
               </option>
             ))}
           </select>
-          <button type="submit">Select Car</button>
+          <button type="submit" className="btn">
+            Select Car
+          </button>
         </form>
       ) : (
         <Button to="/customer/car" name="add car" />
@@ -289,14 +291,16 @@ const CustomerBooking = () => {
                 </option>
               ))}
             </select>
-            <button type="submit">Select Service</button>
+            <button type="submit" className="btn">
+              Select Service
+            </button>
           </form>
           {selectedService && (
             <div>
               {selectedService.map((item) => (
                 <p key={item.id}>{item.service_type}</p>
               ))}
-              <button onClick={handleSubmitSelectedService}>
+              <button onClick={handleSubmitSelectedService} className="btn">
                 Done Select Service
               </button>
             </div>
@@ -305,23 +309,37 @@ const CustomerBooking = () => {
       )}
       {dateOptions &&
         dateOptions.map((item) => (
-          <button onClick={handleSubmitSelectedDate} value={item} key={item}>
+          <button
+            onClick={handleSubmitSelectedDate}
+            value={item}
+            key={item}
+            className="btn"
+          >
             {item}
           </button>
         ))}
       {selectedDate &&
         timeOptions &&
         timeOptions.map((item) => (
-          <button onClick={handleSubmitSelectedTime} key={item} value={item}>
+          <button
+            onClick={handleSubmitSelectedTime}
+            key={item}
+            value={item}
+            className="btn"
+          >
             {item}
           </button>
         ))}
       <form onSubmit={handleSubmitPaymentType}>
         <label name="payment_type">Payment Type</label>
         <input type="text" name="payment_type" />
-        <button type="submit">Select Payment Type</button>
+        <button type="submit" className="btn">
+          Select Payment Type
+        </button>
       </form>
-      <button onClick={handleSubmitBooking}>Submit Booking</button>
+      <button onClick={handleSubmitBooking} className="btn">
+        Submit Booking
+      </button>
     </div>
   );
 };

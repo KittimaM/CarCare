@@ -72,7 +72,48 @@ const CustomerGetServiceChoice = (req, res, next) => {
   );
 };
 
+const CustomerGetAllBooking = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, secret);
+    const { phone, name } = decoded;
+    Conn.execute(
+      "SELECT * FROM booking WHERE customer_phone = ?",
+      [phone],
+      function (error, results) {
+        if (error) {
+          res.json({ status: "ERROR", msg: error });
+        }
+        if (results.length == 0) {
+          res.json({ status: "NO DATA", msg: "NO DATA" });
+        } else {
+          res.json({ status: "SUCCESS", msg: results });
+        }
+      }
+    );
+  } catch (err) {
+    res.json({ status: "ERROR", msg: "token expired" });
+  }
+};
+
+const CustomerDeleteBooking = (req, res, next) => {
+  const { id } = req.body;
+  Conn.execute(
+    "DELETE FROM booking WHERE id = ?",
+    [id],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
 module.exports = {
   CustomerBooking,
   CustomerGetServiceChoice,
+  CustomerGetAllBooking,
+  CustomerDeleteBooking,
 };

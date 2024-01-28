@@ -1,14 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Button } from "../Module";
 
 const CustomerFirstPage = () => {
-  const Button = ({ to, name }) => {
-    return (
-      <Link to={to}>
-        <button>{name}</button>
-      </Link>
-    );
-  };
   return (
     <div>
       <Button to="/customer/login" name="Login" />
