@@ -2,4 +2,5 @@
 docker-compose up --build -d
 docker-compose up --build
 
-ตารางเวลางานพนักงาน
+แก้ sql fkey pkey
+เวลากด edit แล้วเปลี่ยนไปกดปุ่มอื่น

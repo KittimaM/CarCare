@@ -1,48 +1,45 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import {
+  DeleteService,
+  GetAllCarSize,
+  GetAllService,
+  PostAddService,
+  UpdateService,
+} from "../Api";
 
 const AdminService = () => {
   const [carSize, setCarSize] = useState();
   const [service, setService] = useState();
-  const fetchService = async () => {
+  const [editItem, setEditItem] = useState(null);
 
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/service"
-      );
-      const { status, msg } = response.data;
+  const fetchService = () => {
+    GetAllService().then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
         setService(msg);
       } else {
-        console.log(msg);
+        console.log("status : ", status, ", msg: ", msg);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    });
   };
 
-  const fetchCarSize = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/carsize"
-      );
-      const { status, msg } = response.data;
+  const fetchCarSize = () => {
+    GetAllCarSize().then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
         setCarSize(msg);
       } else {
-        console.log(msg);
+        console.log("status : ", status, ", msg: ", msg);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    });
   };
+
   useEffect(() => {
     fetchService();
     fetchCarSize();
   }, []);
 
   const handleAdminAddService = (event) => {
-
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
@@ -53,17 +50,58 @@ const AdminService = () => {
       used_time: data.get("used_time"),
       price: data.get("price"),
     };
-    axios
-      .post("http://localhost:5000/api/admin/service", jsonData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        const { status, msg } = response.data;
-        console.log("status : ", status, " msg: ", msg);
+
+    PostAddService(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
         fetchService();
-      });
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
+  };
+
+  const handleSelectEditId = (selectedItem) => {
+    setEditItem(selectedItem);
+  };
+
+  const handleEditService = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      id: editItem.id,
+      service: data.get("service"),
+      description: data.get("description"),
+      car_size_id: data.get("car_size").split(",")[0],
+      car_size: data.get("car_size").split(",")[1],
+      used_time: data.get("used_time"),
+      price: data.get("price"),
+      is_available: data.get("is_available"),
+    };
+    UpdateService(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setEditItem(null);
+        fetchService();
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
+  };
+
+  const handleDeleteService = (event) => {
+    event.preventDefault();
+    const jsonData = {
+      id: event.target.value,
+    };
+    DeleteService(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchService();
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
   };
 
   return (
@@ -92,20 +130,99 @@ const AdminService = () => {
         <input type="text" name="used_time" />
         <label name="price">price</label>
         <input type="text" name="price" />
-        <button type="submit">Submit</button>
+        <button type="submit" className="btn">
+          Submit
+        </button>
       </form>
-      {service ? (
-        <div>
-          {service.map((item) => (
-            <p key={item.id}>
-              {item.id} , {item.service}, {item.description} ,{" "}
-              {item.car_size_id}, {item.car_size} ,
-              {item.is_available == 1 ? "available" : "not available"}
-            </p>
-          ))}
-        </div>
-      ) : (
-        "NO DATA"
+
+      {service && (
+        <table>
+          <thead>
+            <tr>
+              <td>id</td>
+              <td>service</td>
+              <td>description</td>
+              <td>car_size</td>
+              <td>is_available</td>
+              <td>Edit</td>
+              <td>Delete</td>
+            </tr>
+          </thead>
+          <tbody>
+            {service.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.service}</td>
+                <td>{item.description}</td>
+                <td>{item.car_size}</td>
+                <td>
+                  {item.is_available == 1 ? "available" : "not available"}
+                </td>
+                <td>
+                  <button
+                    className="btn"
+                    onClick={() => handleSelectEditId(item)}
+                    value={item.id}
+                  >
+                    Edit
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn"
+                    onClick={handleDeleteService}
+                    value={item.id}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {editItem && (
+        <form onSubmit={handleEditService}>
+          <label name="service">service</label>
+          <input type="text" name="service" defaultValue={editItem.service} />
+          <label name="description">description</label>
+          <input
+            type="text"
+            name="description"
+            defaultValue={editItem.description}
+          />
+          {carSize && (
+            <div>
+              <label name="car_size">car_size</label>
+              <select
+                name="car_size"
+                defaultValue={[editItem.car_size_id, editItem.car_size]}
+              >
+                {carSize.map((item) => (
+                  <option key={item.id} value={[item.id, item.size]}>
+                    {item.size}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+          <label name="used_time">used_time</label>
+          <input
+            type="text"
+            name="used_time"
+            defaultValue={editItem.used_time}
+          />
+          <label name="price">price</label>
+          <input type="text" name="price" defaultValue={editItem.price} />
+          <select name="is_available" defaultValue={editItem.is_available}>
+            <option value={1}>available</option>
+            <option value={0}>not available</option>
+          </select>
+          <button type="submit" className="btn">
+            Submit
+          </button>
+        </form>
       )}
     </div>
   );

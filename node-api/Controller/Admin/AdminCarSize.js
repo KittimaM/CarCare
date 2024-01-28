@@ -22,7 +22,37 @@ const AdminAddCarSize = (req, res, next) => {
       if (error) {
         res.json({ status: "ERROR", msg: error });
       } else {
-        res.json({ status: "SUCCESS" });
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
+const AdminDeleteCarSize = (req, res, next) => {
+  const { id } = req.body;
+  Conn.execute(
+    "DELETE FROM car_size WHERE id = ?",
+    [id],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
+const AdminUpdateCarSize = (req, res, next) => {
+  const { id, size, description, is_available } = req.body;
+  Conn.execute(
+    `UPDATE car_size SET size = ? , description = ?, is_available = ? WHERE id = ?`,
+    [size, description, is_available, id],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
       }
     }
   );
@@ -31,4 +61,6 @@ const AdminAddCarSize = (req, res, next) => {
 module.exports = {
   AdminCarSize,
   AdminAddCarSize,
+  AdminDeleteCarSize,
+  AdminUpdateCarSize,
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Button } from "./Module";
 
 const Index = () => {
@@ -7,7 +6,6 @@ const Index = () => {
     <div>
       <Button to="/customer" name="Customer" />
       <Button to="/admin/login" name="Admin" />
-      <button className="btn btn-warning">BOOK HERE!</button>
     </div>
   );
 };

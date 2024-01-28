@@ -1,28 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  DeleteCarSize,
+  GetAllCarSize,
+  PostAddCarSize,
+  UpdateCarSize,
+} from "../Api";
 
 const AdminCarSize = () => {
   const [carSize, setCarSize] = useState(null);
   const [addCarSize, setAddCarSize] = useState(false);
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/admin/carsize"
-      );
-      const { status, msg } = response.data;
+  const [editItem, setEditItem] = useState(null);
+
+  const fetchCarSize = async () => {
+    GetAllCarSize().then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
         setCarSize(msg);
       } else {
-        alert(status);
-        console.log(msg);
+        console.log("status : ", status, ", msg: ", msg);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    });
   };
 
   useEffect(() => {
-    fetchData();
+    fetchCarSize();
   }, []);
 
   const toggleAddCarSize = () => {
@@ -36,48 +38,135 @@ const AdminCarSize = () => {
       size: data.get("size"),
       description: data.get("description"),
     };
-    axios
-      .post("http://localhost:5000/api/admin/carsize", jsonData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        const { status, msg } = response.data;
-        alert(status);
-        if (status == "SUCCESS") {
-          fetchData();
-        } else {
-          console.log(msg);
-        }
-      });
+
+    PostAddCarSize(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchCarSize();
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
     setAddCarSize(false);
+  };
+
+  const handleSelectEditId = (selectedItem) => {
+    setEditItem(selectedItem);
+  };
+
+  const handleDeleteUser = (event) => {
+    event.preventDefault();
+    const jsonData = {
+      id: event.target.value,
+    };
+    DeleteCarSize(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchCarSize();
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
+  };
+
+  const handleEditCarSize = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      id: editItem.id,
+      size: data.get("size"),
+      description: data.get("description"),
+      is_available: data.get("is_available"),
+    };
+    UpdateCarSize(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setEditItem(null);
+        fetchCarSize();
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
   };
 
   return (
     <div>
-      <button onClick={toggleAddCarSize}>
-        {addCarSize ? "cancel" : "add car size"}
-      </button>
       {addCarSize && (
         <form onSubmit={handleSubmitAddCarSize}>
           <label name="size">size</label>
           <input type="text" name="size" required />
           <label name="description">description</label>
           <input type="text" name="description" required />
-          <button type="submit">Submit</button>
+          <button className="btn" type="submit">
+            Submit
+          </button>
         </form>
       )}
-      {carSize ? (
-        <div>
-          {carSize.map((item) => (
-            <p key={item.id}>
-              {item.id} , {item.size} , {item.description}, {item.is_available == 1 ? "available" : "not available"}
-            </p>
-          ))}
-        </div>
-      ) : (
-        <p>NO carSize</p>
+      <button className="btn" onClick={toggleAddCarSize}>
+        {addCarSize ? "cancel" : "add car size"}
+      </button>
+      {carSize && (
+        <table>
+          <thead>
+            <tr>
+              <td>id</td>
+              <td>size</td>
+              <td>description</td>
+              <td>is_available</td>
+              <td>Edit</td>
+              <td>Delete</td>
+            </tr>
+          </thead>
+          <tbody>
+            {carSize.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.size}</td>
+                <td>{item.description}</td>
+                <td>
+                  {item.is_available == 1 ? "available" : "not available"}
+                </td>
+                <td>
+                  <button
+                    className="btn"
+                    onClick={() => handleSelectEditId(item)}
+                    value={item.id}
+                  >
+                    Edit
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn"
+                    onClick={handleDeleteUser}
+                    value={item.id}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {editItem && (
+        <form onSubmit={handleEditCarSize}>
+          <label name="size">size</label>
+          <input type="text" name="size" defaultValue={editItem.size} />
+          <label name="description">description</label>
+          <input
+            type="text"
+            name="description"
+            defaultValue={editItem.description}
+          />
+          <select name="is_available" defaultValue={editItem.is_available}>
+            <option value={1}>available</option>
+            <option value={0}>not available</option>
+          </select>
+          <button className="btn" type="submit">
+            Submit
+          </button>
+        </form>
       )}
     </div>
   );
