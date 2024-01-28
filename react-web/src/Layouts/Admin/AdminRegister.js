@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { GetAllRole, PostAddStaffUser } from "../Api";
 
 const AdminRegister = () => {
@@ -15,10 +14,17 @@ const AdminRegister = () => {
       role_id: role_id,
       role: role,
     };
-    PostAddStaffUser(jsonData).then(data => console.log(data))
+    PostAddStaffUser(jsonData).then((data) => console.log(data));
   };
   useEffect(() => {
-    GetAllRole().then((data) => setAllRole(data));
+    GetAllRole().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setAllRole(msg);
+      } else {
+        console.log("status : ", status, " , msg: ", msg);
+      }
+    });
   }, []);
 
   return (

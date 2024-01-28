@@ -1,5 +1,24 @@
 import axios from "axios";
 
+const initialUrl = "http://localhost:5000/api/";
+
+const putApi = async (url, jsonData, isUseToken = false) => {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (isUseToken) {
+      const token = localStorage.getItem("token");
+      headers.Authorization = `Bearer ${token}`;
+    }
+    const response = await axios.put(initialUrl + url, jsonData, { headers });
+    const { status, msg } = response.data;
+    return { status: status, msg: msg };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
 const postApi = async (url, jsonData, isUseToken = false) => {
   try {
     const headers = {
@@ -9,7 +28,7 @@ const postApi = async (url, jsonData, isUseToken = false) => {
       const token = localStorage.getItem("token");
       headers.Authorization = `Bearer ${token}`;
     }
-    const response = await axios.post(url, jsonData, { headers });
+    const response = await axios.post(initialUrl + url, jsonData, { headers });
     const { status, msg } = response.data;
     return { status: status, msg: msg };
   } catch (error) {
@@ -17,7 +36,27 @@ const postApi = async (url, jsonData, isUseToken = false) => {
   }
 };
 
-const getApi = async (url, options = null, isUseToken = true) => {
+const deleteApi = async (url, jsonData, isUseToken = false) => {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (isUseToken) {
+      const token = localStorage.getItem("token");
+      headers.Authorization = `Bearer ${token}`;
+    }
+    const response = await axios.delete(initialUrl + url, {
+      headers: headers,
+      data: jsonData,
+    });
+    const { status, msg } = response.data;
+    return { status: status, msg: msg };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const getApi = async (url, options = null, isUseToken = false) => {
   try {
     let headers = {};
     if (isUseToken) {
@@ -30,7 +69,7 @@ const getApi = async (url, options = null, isUseToken = true) => {
     if (options) {
       headers.params = options;
     }
-    const response = await axios.get(url, { headers });
+    const response = await axios.get(initialUrl + url, { headers });
     const { status, msg } = response.data;
     return { status: status, msg: msg };
   } catch (error) {
@@ -40,76 +79,109 @@ const getApi = async (url, options = null, isUseToken = true) => {
 
 export const GetPermission = () => {
   const isUseToken = true;
-  return getApi("http://localhost:5000/api/admin/permission", isUseToken);
+  return getApi("admin/permission", null, isUseToken);
 };
 
 export const GetAllRole = async () => {
-  try {
-    const response = await axios.get(
-      "http://localhost:5000/api/admin/role/all"
-    );
-    const { status, msg } = response.data;
-    if (status == "SUCCESS") {
-      return msg;
-    } else {
-      console.log(msg);
-    }
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
+  return getApi("admin/role");
 };
 
 export const GetAllExpense = () => {
-  return getApi("http://localhost:5000/api/admin/expense");
+  return getApi("admin/expense");
 };
 
 export const PostAddExpense = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/expense", jsonData);
+  return postApi("admin/expense", jsonData);
 };
 
 export const GetAllIncome = () => {
-  return getApi("http://localhost:5000/api/admin/income");
+  return getApi("admin/income");
 };
 
 export const PostAddIncome = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/income", jsonData);
+  return postApi("admin/income", jsonData);
 };
 
 export const GetAllBooking = (options = null) => {
-  return getApi("http://localhost:5000/api/admin/booking", options);
+  return getApi("admin/booking", options);
 };
 
 export const PostAddRole = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/role", jsonData);
+  return postApi("admin/role", jsonData);
 };
 
 export const PostAddStaffUser = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/user/add", jsonData);
+  return postApi("admin/user/add", jsonData);
 };
 
 export const PostLogin = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/login", jsonData);
+  return postApi("admin/login", jsonData);
 };
 
 export const PostUpDateBookingStatus = (jsonData) => {
-  return postApi(
-    "http://localhost:5000/api/admin/booking/update-status",
-    jsonData
-  );
+  return postApi("admin/booking/update-status", jsonData);
 };
 
 export const GetAllStaff = () => {
-  return getApi("http://localhost:5000/api/admin/user");
+  return getApi("admin/user");
 };
 
 export const PostAddDayOff = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/worktable/add", jsonData);
+  return postApi("admin/worktable/add", jsonData);
 };
 
 export const GetAllDayOff = () => {
-  return getApi("http://localhost:5000/api/admin/worktable");
+  return getApi("admin/worktable");
 };
 
 export const PostUpdateDayOff = (jsonData) => {
-  return postApi("http://localhost:5000/api/admin/worktable/update", jsonData);
+  return postApi("admin/worktable/update", jsonData);
+};
+
+export const DeleteStaffUser = (jsonData) => {
+  return deleteApi("admin/user", jsonData);
+};
+
+export const UpdateStaffUser = (jsonData) => {
+  return putApi("admin/user", jsonData);
+};
+
+export const GetAllCarSize = () => {
+  return getApi("admin/carsize");
+};
+
+export const PostAddCarSize = (jsonData) => {
+  return postApi("admin/carsize", jsonData);
+};
+
+export const DeleteCarSize = (jsonData) => {
+  return deleteApi("admin/carsize", jsonData);
+};
+
+export const UpdateCarSize = (jsonData) => {
+  return putApi("admin/carsize", jsonData);
+};
+
+export const GetAllService = () => {
+  return getApi("admin/service");
+};
+
+export const PostAddService = (jsonData) => {
+  return postApi("admin/service", jsonData);
+};
+
+export const DeleteService = (jsonData) => {
+  return deleteApi("admin/service", jsonData);
+};
+
+export const UpdateService = (jsonData) => {
+  return putApi("admin/service", jsonData);
+};
+
+export const DeleteRole = (jsonData) => {
+  return deleteApi("admin/role", jsonData);
+};
+
+export const UpdateRole = (jsonData) => {
+  return putApi("admin/role", jsonData);
 };

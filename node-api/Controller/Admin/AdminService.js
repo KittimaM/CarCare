@@ -32,7 +32,57 @@ const AdminAddService = (req, res, next) => {
   );
 };
 
+const AdminDeleteService = (req, res, next) => {
+  const { id } = req.body;
+  Conn.execute(
+    "DELETE FROM service WHERE id = ?",
+    [id],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
+const AdminUpdateService = (req, res, next) => {
+  const {
+    id,
+    service,
+    description,
+    car_size_id,
+    car_size,
+    used_time,
+    price,
+    is_available,
+  } = req.body;
+  Conn.execute(
+    "UPDATE service SET service = ? , description = ? , car_size_id = ?, car_size = ?, used_time = ?, price = ?, is_available = ? WHERE id = ?",
+    [
+      service,
+      description,
+      car_size_id,
+      car_size,
+      used_time,
+      price,
+      is_available,
+      id,
+    ],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
 module.exports = {
   AdminService,
   AdminAddService,
+  AdminDeleteService,
+  AdminUpdateService,
 };
