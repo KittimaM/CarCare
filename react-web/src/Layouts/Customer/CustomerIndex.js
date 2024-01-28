@@ -1,58 +1,77 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import { Button } from "../Module";
+import { DeleteCustomerBooking, GetAllCustomerBooking } from "../Api";
 
 const CustomerIndex = () => {
-  const [bookingRecord, setBookingRecord] = useState(null);
-  const token = localStorage.getItem("token");
-  const Button = ({ to, name }) => {
-    return (
-      <Link to={to}>
-        <button>{name}</button>
-      </Link>
-    );
-  };
+  const [booking, setBooking] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/customer/index",
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const { status, msg } = response.data;
-        if (status == "SUCCESS") {
-          setBookingRecord(msg);
-        } else {
-          console.log(msg);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    fetchCustomerBooking();
   }, []);
+
+  const fetchCustomerBooking = () => {
+    GetAllCustomerBooking().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setBooking(msg);
+      } else {
+        setBooking(null);
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
+  };
+
+  const handleDeleteCustomerBooking = (event) => {
+    event.preventDefault();
+    const jsonData = {
+      id: event.target.value,
+    };
+    DeleteCustomerBooking(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchCustomerBooking();
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
+  };
   return (
     <div>
       <Button to="/customer/booking" name="Booking" />
       <Button to="/customer/car" name="Customer Car" />
-      {bookingRecord ? (
-        <div>
-          {bookingRecord.map((item) => (
-            <p key={item.id}>
-              {item.id}, {item.car_no}, {item.service_type}, {item.service_date}
-              , {item.status}
-            </p>
-          ))}
-        </div>
-      ) : (
-        <p>NO BOOKING RECORD</p>
+      {booking && (
+        <table>
+          <thead>
+            <tr>
+              <td>id</td>
+              <td>car_no</td>
+              <td>start_service_datetime</td>
+              <td>processing_status</td>
+              <td></td>
+            </tr>
+          </thead>
+          <tbody>
+            {booking.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>{item.car_no}</td>
+                <td>{item.start_service_datetime}</td>
+                <td>{item.processing_status}</td>
+                <td>
+                  {item.processing_status == "Waiting" && (
+                    <button
+                      className="btn"
+                      onClick={handleDeleteCustomerBooking}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );

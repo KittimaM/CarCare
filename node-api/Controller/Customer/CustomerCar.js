@@ -47,7 +47,39 @@ const CustomerAddCustomerCar = (req, res, next) => {
   }
 };
 
+const CustomerDeleteCustomerCar = (req, res, next) => {
+  const { car_no } = req.body;
+  Conn.execute(
+    "DELETE FROM customer_car WHERE car_no = ?",
+    [car_no],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
+const CustomerUpdateCustomerCar = (req, res, next) => {
+  const { car_no, car_color, car_size_id, car_size, old_car_no } = req.body;
+  Conn.execute(
+    "UPDATE customer_car SET car_no = ?, car_color = ?, car_size_id = ?, car_size = ? WHERE car_no = ?",
+    [car_no, car_color, car_size_id, car_size, old_car_no],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
 module.exports = {
   CustomerCar,
   CustomerAddCustomerCar,
+  CustomerDeleteCustomerCar,
+  CustomerUpdateCustomerCar,
 };

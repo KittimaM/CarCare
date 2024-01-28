@@ -185,3 +185,34 @@ export const DeleteRole = (jsonData) => {
 export const UpdateRole = (jsonData) => {
   return putApi("admin/role", jsonData);
 };
+
+export const GetCustomerCar = () => {
+  const isUseToken = true;
+  return getApi("customer/car", null, isUseToken);
+};
+
+export const PostAddCustomerCar = (jsonData) => {
+  const isUseToken = true;
+  return postApi("customer/car", jsonData, isUseToken);
+};
+
+export const DeleteCustomerCar = (jsonData) => {
+  return deleteApi("customer/car", jsonData);
+};
+
+export const UpdateCustomerCar = (jsonData) => {
+  return putApi("customer/car", jsonData);
+};
+
+export const GetAllCustomerBooking = () => {
+  const isUseToken = true;
+  return getApi("customer/booking", null, isUseToken);
+};
+
+export const DeleteCustomerBooking = (jsonData) => {
+  return deleteApi("customer/booking", jsonData);
+};
+
+export const PostAddCustomer = (jsonData) => {
+  return postApi("customer/register", jsonData);
+};
