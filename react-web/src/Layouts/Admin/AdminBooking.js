@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  FetchBooking,
-  DefaultTimeOptions,
-  FetchCarSize,
-  TimeFormat,
-} from "../Module";
+import { FetchBooking, DefaultTimeOptions, TimeFormat } from "../Module";
+import { GetAllCarSize, PostAddAdminBooking, GetAllService } from "../Api";
 
 const AdminBooking = () => {
-  const token = localStorage.getItem("token");
   const defaultTime = new Date();
   const [service, setService] = useState();
   const [selectedService, setSelectedService] = useState([]);
@@ -21,7 +15,14 @@ const AdminBooking = () => {
   const [servicePrice, setServicePrice] = useState(0);
 
   useEffect(() => {
-    FetchCarSize().then((data) => setCarSize(data));
+    GetAllCarSize().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setCarSize(msg);
+      } else {
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
     FetchBooking().then((data) => setBookedDateTimeOptions(data));
 
     let defaultTimeOptions = DefaultTimeOptions();
@@ -46,50 +47,54 @@ const AdminBooking = () => {
       customer_phone: data.get("customer_phone"),
     };
 
-    axios
-      .post("http://localhost:5000/api/customer/booking/service", jsonData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        const { status, msg } = response.data;
-        if (status == "SUCCESS") {
-          setService(msg);
-          setBooking(jsonData);
-        } else {
-          setService(null);
-          console.log(msg);
-        }
-      });
+    GetAllService().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        const availableService = msg.filter(
+          (item) =>
+            item.is_available == 1 && jsonData.car_size_id == item.car_size_id
+        );
+        let serviceOptions = [];
+        availableService.map((item) => {
+          serviceOptions.push({ ...item, isSelected: false });
+        });
+        setService(serviceOptions);
+        setBooking(jsonData);
+      } else {
+        setService(null);
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
   };
 
   const handleSelectedService = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const [service_id, service_type, used_time, price] = data
-      .get("service")
-      .split(",");
-    const jsonData = {
-      service_id: service_id,
-      service_type: service_type,
-      used_time: used_time,
-      price: price,
-    };
-    setServiceUseTime(parseInt(serviceUseTime) + parseInt(used_time));
-    setServicePrice(parseInt(servicePrice) + parseInt(price));
-    setSelectedService([...selectedService, jsonData]);
+    service.map((item) => {
+      if (item.id == event.target.value) item.isSelected = event.target.checked;
+    });
+    setService(service);
   };
 
   const handleSubmitSelectedService = (event) => {
     event.preventDefault();
+    let serviceDetail = [];
+    let servcieUseTime = 0;
+    let servicePrice = 0;
+    service.map((item) => {
+      if (item.isSelected == true) {
+        serviceDetail.push(item.id);
+        servcieUseTime += parseInt(item.used_time);
+        servicePrice += parseInt(item.price);
+      }
+    });
     const jsonData = {
       ...booking,
-      service: selectedService,
-      service_usetime: serviceUseTime,
+      service: serviceDetail,
+      service_usetime: servcieUseTime,
       service_price: servicePrice,
     };
     setBooking(jsonData);
+    setServiceUseTime(servcieUseTime);
 
     const tempDate = new Date();
     const [date, time] = tempDate.toISOString().split("T");
@@ -191,17 +196,10 @@ const AdminBooking = () => {
 
   const handleSubmitBooking = (event) => {
     event.preventDefault();
-    console.log("booking : ", booking);
-    axios
-      .post("http://localhost:5000/api/admin/booking", booking, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("response.data : ", response.data);
-      });
+    PostAddAdminBooking(booking).then((data) => {
+      const { status, msg } = data;
+      console.log("status : ", status, ", msg: ", msg);
+    });
   };
 
   return (
@@ -230,48 +228,40 @@ const AdminBooking = () => {
             </select>
           </div>
         )}
-        <button type="submit">Selected Car</button>
+        <button type="submit" className="btn">Selected Car</button>
       </form>
 
       {service && (
-        <div>
-          <form onSubmit={handleSelectedService}>
-            <select name="service">
-              {service.map((item) => (
-                <option
-                  key={item.id}
-                  value={[item.id, item.service, item.used_time, item.price]}
-                >
-                  {item.service}
-                </option>
-              ))}
-            </select>
-            <button type="submit">Select Service</button>
-          </form>
-          {selectedService && (
+        <form onSubmit={handleSubmitSelectedService}>
+          <label>Service</label>
+          {service.map((item) => (
             <div>
-              {selectedService.map((item) => (
-                <p key={item.id}>{item.service_type}</p>
-              ))}
-              <button onClick={handleSubmitSelectedService}>
-                Done Select Service
-              </button>
+              <input
+                type="checkbox"
+                name={item.id}
+                value={item.id}
+                onChange={handleSelectedService}
+              />
+              <label>{item.service}</label>
             </div>
-          )}
-        </div>
+          ))}
+          <button className="btn" type="submit">
+            Submit Service
+          </button>
+        </form>
       )}
       {timeOptions &&
         timeOptions.map((item) => (
-          <button onClick={handleSubmitSelectedTime} key={item} value={item}>
+          <button onClick={handleSubmitSelectedTime} key={item} value={item} className="btn">
             {item}
           </button>
         ))}
       <form onSubmit={handleSubmitPaymentType}>
         <label name="payment_type">Payment Type</label>
         <input type="text" name="payment_type" />
-        <button type="submit">Select Payment Type</button>
+        <button type="submit" className="btn">Select Payment Type</button>
       </form>
-      <button onClick={handleSubmitBooking}>Submit Booking</button>
+      <button onClick={handleSubmitBooking} className="btn">Submit Booking</button>
     </div>
   );
 };

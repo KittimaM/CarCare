@@ -216,3 +216,13 @@ export const DeleteCustomerBooking = (jsonData) => {
 export const PostAddCustomer = (jsonData) => {
   return postApi("customer/register", jsonData);
 };
+
+export const PostAddCustomerBooking = (jsonData) => {
+  const isUseToken = true;
+  return postApi("customer/booking", jsonData, isUseToken);
+};
+
+export const PostAddAdminBooking = (jsonData) => {
+  const isUseToken = true;
+  return postApi("admin/booking", jsonData, isUseToken);
+};
