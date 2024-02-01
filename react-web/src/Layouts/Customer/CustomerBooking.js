@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Button,
   FetchBooking,
   TimeFormat,
   DefaultTimeOptions,
 } from "../Module";
+import { GetAllService, GetCustomerCar, PostAddCustomerBooking } from "../Api";
 
 const CustomerBooking = () => {
-  const token = localStorage.getItem("token");
   const [car, setCar] = useState();
   const [service, setService] = useState();
-  const [selectedService, setSelectedService] = useState([]);
   const [selectedDate, setSelectedDate] = useState();
   const [booking, setBooking] = useState([]);
   const [dateOptions, setDateOptions] = useState([]);
@@ -19,32 +17,16 @@ const CustomerBooking = () => {
   const [timeOptions, setTimeOptions] = useState([]);
   const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
   const [serviceUseTime, setServiceUseTime] = useState(0);
-  const [servicePrice, setServicePrice] = useState(0);
 
-  const fetchCustomerCar = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/customer/car",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      const { status, msg } = response.data;
+  useEffect(() => {
+    GetCustomerCar().then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
         setCar(msg);
       } else {
-        console.log(msg);
+        console.log("status : ", status, ", msg: ", msg);
       }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCustomerCar();
+    });
     FetchBooking().then((data) => {
       setBookedDateTimeOptions(data);
     });
@@ -85,50 +67,54 @@ const CustomerBooking = () => {
       customer_phone: customer_phone,
       customer_name: customer_name,
     };
-    axios
-      .post("http://localhost:5000/api/customer/booking/service", jsonData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        const { status, msg } = response.data;
-        if (status == "SUCCESS") {
-          setService(msg);
-          setBooking(jsonData);
-        } else {
-          setService(null);
-          console.log(msg);
-        }
-      });
+    GetAllService().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        const availableService = msg.filter(
+          (item) =>
+            item.is_available == 1 && jsonData.car_size_id == item.car_size_id
+        );
+        let serviceOptions = [];
+        availableService.map((item) => {
+          serviceOptions.push({ ...item, isSelected: false });
+        });
+        setService(serviceOptions);
+        setBooking(jsonData);
+      } else {
+        setService(null);
+        console.log("status : ", status, ", msg: ", msg);
+      }
+    });
   };
 
   const handleSelectedService = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const [service_id, service_type, used_time, price] = data
-      .get("service")
-      .split(",");
-    const jsonData = {
-      service_id: service_id,
-      service_type: service_type,
-      used_time: used_time,
-      price: price,
-    };
-    setServiceUseTime(parseInt(serviceUseTime) + parseInt(used_time));
-    setServicePrice(parseInt(servicePrice) + parseInt(price));
-    setSelectedService([...selectedService, jsonData]);
+    service.map((item) => {
+      if (item.id == event.target.value) item.isSelected = event.target.checked;
+    });
+    setService(service);
   };
 
   const handleSubmitSelectedService = (event) => {
     event.preventDefault();
+    let serviceDetail = [];
+    let servcieUseTime = 0;
+    let servicePrice = 0;
+    service.map((item) => {
+      if (item.isSelected == true) {
+        serviceDetail.push(item.id);
+        servcieUseTime += parseInt(item.used_time);
+        servicePrice += parseInt(item.price);
+      }
+    });
     const jsonData = {
       ...booking,
-      service: selectedService,
-      service_usetime: serviceUseTime,
+      service: serviceDetail,
+      service_usetime: servcieUseTime,
       service_price: servicePrice,
     };
     setBooking(jsonData);
+    setServiceUseTime(servcieUseTime);
   };
 
   const handleSubmitSelectedDate = (event) => {
@@ -236,17 +222,10 @@ const CustomerBooking = () => {
 
   const handleSubmitBooking = (event) => {
     event.preventDefault();
-    console.log("booking : ", booking);
-    axios
-      .post("http://localhost:5000/api/customer/booking", booking, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((response) => {
-        console.log("response.data : ", response.data);
-      });
+    PostAddCustomerBooking(booking).then((data) => {
+      const { status, msg } = data;
+      console.log("status : ", status, ", msg: ", msg);
+    });
   };
 
   return (
@@ -279,33 +258,23 @@ const CustomerBooking = () => {
         <Button to="/customer/car" name="add car" />
       )}
       {service && (
-        <div>
-          <form onSubmit={handleSelectedService}>
-            <select name="service">
-              {service.map((item) => (
-                <option
-                  key={item.id}
-                  value={[item.id, item.service, item.used_time, item.price]}
-                >
-                  {item.service}
-                </option>
-              ))}
-            </select>
-            <button type="submit" className="btn">
-              Select Service
-            </button>
-          </form>
-          {selectedService && (
+        <form onSubmit={handleSubmitSelectedService}>
+          <label>Service</label>
+          {service.map((item) => (
             <div>
-              {selectedService.map((item) => (
-                <p key={item.id}>{item.service_type}</p>
-              ))}
-              <button onClick={handleSubmitSelectedService} className="btn">
-                Done Select Service
-              </button>
+              <input
+                type="checkbox"
+                name={item.id}
+                value={item.id}
+                onChange={handleSelectedService}
+              />
+              <label>{item.service}</label>
             </div>
-          )}
-        </div>
+          ))}
+          <button className="btn" type="submit">
+            Submit Service
+          </button>
+        </form>
       )}
       {dateOptions &&
         dateOptions.map((item) => (

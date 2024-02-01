@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  GetAllBooking,
-  PostAddIncome,
-  PostUpDateBookingStatus,
-} from "../Api";
+import { GetAllBooking, PostAddIncome, PostUpDateBookingStatus } from "../Api";
 
 const AdminSchedule = () => {
   const [todaySchedule, setTodaySchedule] = useState([]);
 
   useEffect(() => {
-    GetAllBooking(
-      "WHERE DATE(start_service_datetime) = CURRENT_DATE ORDER BY start_service_datetime"
-    ).then((data) => {
+    GetAllBooking().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setTodaySchedule(msg);
@@ -54,9 +48,7 @@ const AdminSchedule = () => {
     };
     PostUpDateBookingStatus(jsonData).then((updatedResponse) => {
       if (updatedResponse.status == "SUCCESS") {
-        GetAllBooking(
-          "WHERE DATE(start_service_datetime) = CURRENT_DATE ORDER BY start_service_datetime"
-        ).then((data) => {
+        GetAllBooking().then((data) => {
           const { status, msg } = data;
           if (status == "SUCCESS") {
             setTodaySchedule(msg);
