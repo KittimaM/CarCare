@@ -5,7 +5,12 @@ import {
   TimeFormat,
   DefaultTimeOptions,
 } from "../Module";
-import { GetAllService, GetCustomerCar, PostAddCustomerBooking } from "../Api";
+import {
+  GetAllService,
+  GetCustomerCar,
+  PostAddCustomerBooking,
+  GetAllPaymentType,
+} from "../Api";
 
 const CustomerBooking = () => {
   const [car, setCar] = useState();
@@ -17,14 +22,23 @@ const CustomerBooking = () => {
   const [timeOptions, setTimeOptions] = useState([]);
   const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
   const [serviceUseTime, setServiceUseTime] = useState(0);
+  const [paymentType, setPaymentType] = useState();
 
   useEffect(() => {
+    GetAllPaymentType().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPaymentType(msg);
+      } else {
+        console.log(data);
+      }
+    });
     GetCustomerCar().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCar(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
     FetchBooking().then((data) => {
@@ -82,7 +96,7 @@ const CustomerBooking = () => {
         setBooking(jsonData);
       } else {
         setService(null);
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -215,17 +229,14 @@ const CustomerBooking = () => {
     const data = new FormData(event.currentTarget);
     const jsonData = {
       ...booking,
-      payment_type: data.get("payment_type"),
+      payment_type_id: data.get("payment_type"),
     };
     setBooking(jsonData);
   };
 
   const handleSubmitBooking = (event) => {
     event.preventDefault();
-    PostAddCustomerBooking(booking).then((data) => {
-      const { status, msg } = data;
-      console.log("status : ", status, ", msg: ", msg);
-    });
+    PostAddCustomerBooking(booking).then((data) => console.log(data));
   };
 
   return (
@@ -299,13 +310,24 @@ const CustomerBooking = () => {
             {item}
           </button>
         ))}
-      <form onSubmit={handleSubmitPaymentType}>
-        <label name="payment_type">Payment Type</label>
-        <input type="text" name="payment_type" />
-        <button type="submit" className="btn">
-          Select Payment Type
-        </button>
-      </form>
+      {paymentType && (
+        <form onSubmit={handleSubmitPaymentType}>
+          <label name="payment_type">Payment Type</label>
+          <select name="payment_type">
+            {paymentType.map(
+              (item) =>
+                item.is_available == 1 && (
+                  <option key={item.id} value={item.id}>
+                    {item.payment_type}
+                  </option>
+                )
+            )}
+          </select>
+          <button type="submit" className="btn">
+            Select Payment Type
+          </button>
+        </form>
+      )}
       <button onClick={handleSubmitBooking} className="btn">
         Submit Booking
       </button>

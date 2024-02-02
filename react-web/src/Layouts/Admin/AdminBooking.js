@@ -1,26 +1,38 @@
 import React, { useState, useEffect } from "react";
 import { FetchBooking, DefaultTimeOptions, TimeFormat } from "../Module";
-import { GetAllCarSize, PostAddAdminBooking, GetAllService } from "../Api";
+import {
+  GetAllCarSize,
+  PostAddAdminBooking,
+  GetAllService,
+  GetAllPaymentType,
+} from "../Api";
 
 const AdminBooking = () => {
   const defaultTime = new Date();
   const [service, setService] = useState();
-  const [selectedService, setSelectedService] = useState([]);
   const [booking, setBooking] = useState([]);
   const [carSize, setCarSize] = useState();
   const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
   const [serviceUseTime, setServiceUseTime] = useState(0);
   const [bookedDateTimeOptions, setBookedDateTimeOptions] = useState(null);
   const [timeOptions, setTimeOptions] = useState([]);
-  const [servicePrice, setServicePrice] = useState(0);
+  const [paymentType, setPaymentType] = useState();
 
   useEffect(() => {
+    GetAllPaymentType().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPaymentType(msg);
+      } else {
+        console.log(data);
+      }
+    });
     GetAllCarSize().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCarSize(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
     FetchBooking().then((data) => setBookedDateTimeOptions(data));
@@ -62,7 +74,7 @@ const AdminBooking = () => {
         setBooking(jsonData);
       } else {
         setService(null);
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -189,17 +201,14 @@ const AdminBooking = () => {
     const data = new FormData(event.currentTarget);
     const jsonData = {
       ...booking,
-      payment_type: data.get("payment_type"),
+      payment_type_id: data.get("payment_type"),
     };
     setBooking(jsonData);
   };
 
   const handleSubmitBooking = (event) => {
     event.preventDefault();
-    PostAddAdminBooking(booking).then((data) => {
-      const { status, msg } = data;
-      console.log("status : ", status, ", msg: ", msg);
-    });
+    PostAddAdminBooking(booking).then((data) => console.log(data));
   };
 
   return (
@@ -228,7 +237,9 @@ const AdminBooking = () => {
             </select>
           </div>
         )}
-        <button type="submit" className="btn">Selected Car</button>
+        <button type="submit" className="btn">
+          Selected Car
+        </button>
       </form>
 
       {service && (
@@ -252,16 +263,36 @@ const AdminBooking = () => {
       )}
       {timeOptions &&
         timeOptions.map((item) => (
-          <button onClick={handleSubmitSelectedTime} key={item} value={item} className="btn">
+          <button
+            onClick={handleSubmitSelectedTime}
+            key={item}
+            value={item}
+            className="btn"
+          >
             {item}
           </button>
         ))}
-      <form onSubmit={handleSubmitPaymentType}>
-        <label name="payment_type">Payment Type</label>
-        <input type="text" name="payment_type" />
-        <button type="submit" className="btn">Select Payment Type</button>
-      </form>
-      <button onClick={handleSubmitBooking} className="btn">Submit Booking</button>
+      {paymentType && (
+        <form onSubmit={handleSubmitPaymentType}>
+          <label name="payment_type">Payment Type</label>
+          <select name="payment_type">
+            {paymentType.map(
+              (item) =>
+                item.is_available == 1 && (
+                  <option key={item.id} value={item.id}>
+                    {item.payment_type}
+                  </option>
+                )
+            )}
+          </select>
+          <button type="submit" className="btn">
+            Select Payment Type
+          </button>
+        </form>
+      )}
+      <button onClick={handleSubmitBooking} className="btn">
+        Submit Booking
+      </button>
     </div>
   );
 };
