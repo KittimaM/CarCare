@@ -14,7 +14,7 @@ const CustomerBooking = (req, res, next) => {
       customer_name,
       customer_phone,
       service,
-      payment_type,
+      payment_type_id,
       car_color,
       start_service_datetime,
       end_service_datetime,
@@ -23,7 +23,7 @@ const CustomerBooking = (req, res, next) => {
     } = req.body;
 
     Conn.execute(
-      `INSERT INTO booking(car_no, car_size_id, car_size, customer_name, customer_phone, service, payment_type, created_by_id, created_by, car_color, start_service_datetime, end_service_datetime, service_usetime, service_price) 
+      `INSERT INTO booking(car_no, car_size_id, car_size, customer_name, customer_phone, service, payment_type_id, created_by_id, created_by, car_color, start_service_datetime, end_service_datetime, service_usetime, service_price) 
       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
         car_no,
@@ -32,7 +32,7 @@ const CustomerBooking = (req, res, next) => {
         customer_name,
         customer_phone,
         service,
-        payment_type,
+        payment_type_id,
         phone,
         name,
         car_color,

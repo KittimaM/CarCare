@@ -44,6 +44,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminPaymentTypeRoute = require("./Routes/Admin/AdminPaymentType");
+app.use("/api/admin/paymenttype", AdminPaymentTypeRoute);
+
 const AdminWorkTableRoute = require("./Routes/Admin/AdminWorkTable");
 app.use("/api/admin/worktable", AdminWorkTableRoute);
 

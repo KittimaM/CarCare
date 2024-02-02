@@ -226,3 +226,19 @@ export const PostAddAdminBooking = (jsonData) => {
   const isUseToken = true;
   return postApi("admin/booking", jsonData, isUseToken);
 };
+
+export const PostAddPaymentType = (jsonData) => {
+  return postApi("admin/paymenttype", jsonData);
+};
+
+export const GetAllPaymentType = () => {
+  return getApi("admin/paymenttype");
+};
+
+export const UpdatePaymentType = (jsonData) => {
+  return putApi("admin/paymenttype", jsonData);
+};
+
+export const DeletePaymentType = (jsonData) => {
+  return deleteApi("admin/paymenttype", jsonData);
+};

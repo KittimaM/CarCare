@@ -166,7 +166,6 @@ const AdminRole = () => {
               <input
                 type="checkbox"
                 name={item}
-                // checked={editItem[item]}
                 onChange={handleEditRoleAccess}
                 defaultChecked={editItem[item]}
               />

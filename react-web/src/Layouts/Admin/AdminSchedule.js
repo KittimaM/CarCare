@@ -100,6 +100,7 @@ const AdminSchedule = () => {
               <td>
                 {item.processing_status == "Waiting" && (
                   <button
+                    className="btn"
                     onClick={handleUpdateStatus}
                     value={[
                       item.id,
@@ -113,6 +114,7 @@ const AdminSchedule = () => {
                 )}
                 {item.processing_status == "Service in process" && (
                   <button
+                    className="btn"
                     onClick={handleUpdateStatus}
                     value={[
                       item.id,
@@ -126,6 +128,7 @@ const AdminSchedule = () => {
                 )}
                 {item.processing_status == "Finish Service" && (
                   <button
+                    className="btn"
                     onClick={handleUpdateStatus}
                     value={[
                       item.id,
@@ -143,6 +146,7 @@ const AdminSchedule = () => {
               {item.processing_status == "Waiting" && (
                 <td>
                   <button
+                    className="btn"
                     onClick={handleUpdateStatus}
                     value={[item.id, "Cancel"]}
                   >
