@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { GetAllBooking, PostAddIncome, PostUpDateBookingStatus } from "../Api";
+import {
+  GetAllBooking,
+  PostAddAccount,
+  PostUpDateBookingStatus,
+} from "../Api";
 
 const AdminSchedule = () => {
   const [todaySchedule, setTodaySchedule] = useState([]);
@@ -10,7 +14,7 @@ const AdminSchedule = () => {
       if (status == "SUCCESS") {
         setTodaySchedule(msg);
       } else {
-        console.log("status : ", status, " , msg : ", msg);
+        console.log(data);
       }
     });
   }, []);
@@ -53,25 +57,28 @@ const AdminSchedule = () => {
           if (status == "SUCCESS") {
             setTodaySchedule(msg);
           } else {
-            console.log("status : ", status, " , msg : ", msg);
+            console.log(data);
           }
         });
       } else {
-        console.log(
-          "status : ",
-          updatedResponse.status,
-          " , msg : ",
-          updatedResponse.msg
-        );
+        console.log(updatedResponse);
       }
     });
 
     if (status == "Paid") {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = (today.getMonth() + 1).toString().padStart(2, "0");
+      const day = today.getDate().toString().padStart(2, "0");
       const jsonData = {
-        list: car_no,
+        label: car_no,
+        is_income: 1,
         income: service_price,
+        is_expense: 0,
+        expense: 0,
+        date: `${year}-${month}-${day}`,
       };
-      PostAddIncome(jsonData).then((data) => console.log(data));
+      PostAddAccount(jsonData).then((data) => console.log(data));
     }
   };
 

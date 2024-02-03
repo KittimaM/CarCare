@@ -86,22 +86,6 @@ export const GetAllRole = async () => {
   return getApi("admin/role");
 };
 
-export const GetAllExpense = () => {
-  return getApi("admin/expense");
-};
-
-export const PostAddExpense = (jsonData) => {
-  return postApi("admin/expense", jsonData);
-};
-
-export const GetAllIncome = () => {
-  return getApi("admin/income");
-};
-
-export const PostAddIncome = (jsonData) => {
-  return postApi("admin/income", jsonData);
-};
-
 export const GetAllBooking = (options = null) => {
   return getApi("admin/booking", options);
 };
@@ -241,4 +225,20 @@ export const UpdatePaymentType = (jsonData) => {
 
 export const DeletePaymentType = (jsonData) => {
   return deleteApi("admin/paymenttype", jsonData);
+};
+
+export const GetAllAccount = () => {
+  return getApi("admin/account");
+};
+
+export const PostAddAccount = (jsonData) => {
+  return postApi("admin/account", jsonData);
+};
+
+export const DeleteAccount = (jsonData) => {
+  return deleteApi("admin/account", jsonData);
+};
+
+export const UpdateAccount = (jsonData) => {
+  return putApi("admin/account", jsonData);
 };
