@@ -1,7 +1,10 @@
+var bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
 const Conn = require("../../db");
+const secret = process.env.SECRET_WORD;
 
-const AdminCarSize = (req, res, next) => {
-  Conn.execute("SELECT * FROM car_size", function (error, results) {
+const AdminGetAllAccount = (req, res, next) => {
+  Conn.execute("SELECT * FROM account", function (error, results) {
     if (error) {
       res.json({ status: "ERROR", msg: error });
     }
@@ -13,11 +16,11 @@ const AdminCarSize = (req, res, next) => {
   });
 };
 
-const AdminAddCarSize = (req, res, next) => {
-  const { size, description } = req.body;
+const AdminAddAccount = (req, res, next) => {
+  const { label, income, expense, is_income, is_expense, date } = req.body;
   Conn.execute(
-    `INSERT INTO car_size(size, description) VALUES(?, ?)`,
-    [size, description],
+    "INSERT INTO account (label, income, expense, is_income, is_expense, date) VALUES (?,?,?,?,?,?)",
+    [label, income, expense, is_income, is_expense, date],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -29,10 +32,10 @@ const AdminAddCarSize = (req, res, next) => {
   );
 };
 
-const AdminDeleteCarSize = (req, res, next) => {
+const AdminDeleteAccount = (req, res, next) => {
   const { id } = req.body;
   Conn.execute(
-    "DELETE FROM car_size WHERE id = ?",
+    "DELETE FROM account WHERE id = ?",
     [id],
     function (error, result) {
       if (error) {
@@ -44,11 +47,11 @@ const AdminDeleteCarSize = (req, res, next) => {
   );
 };
 
-const AdminUpdateCarSize = (req, res, next) => {
-  const { id, size, description, is_available } = req.body;
+const AdminUpdateAccount = (req, res, next) => {
+  const { id, label, income, expense, is_income, is_expense, date} = req.body;
   Conn.execute(
-    `UPDATE car_size SET size = ? , description = ?, is_available = ? WHERE id = ?`,
-    [size, description, is_available, id],
+    "UPDATE account SET label = ?, income = ?, expense = ?, is_income = ?, is_expense = ?, date = ? WHERE id = ?",
+    [label, income, expense, is_income, is_expense, date, id],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -58,10 +61,9 @@ const AdminUpdateCarSize = (req, res, next) => {
     }
   );
 };
-
 module.exports = {
-  AdminCarSize,
-  AdminAddCarSize,
-  AdminDeleteCarSize,
-  AdminUpdateCarSize,
+  AdminGetAllAccount,
+  AdminAddAccount,
+  AdminDeleteAccount,
+  AdminUpdateAccount,
 };

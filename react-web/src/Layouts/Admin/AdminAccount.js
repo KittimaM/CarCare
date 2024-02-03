@@ -1,77 +1,56 @@
 import React, { useEffect, useState } from "react";
 import {
-  GetAllIncome,
-  GetAllExpense,
-  PostAddExpense,
-  PostAddIncome,
+  DeleteAccount,
+  GetAllAccount,
+  PostAddAccount,
+  UpdateAccount,
 } from "../Api";
-import { TimeFormat } from "../Module";
 
 const AdminAccount = () => {
   const [list, setList] = useState([]);
   const [totalSummary, setTotalSummary] = useState(0);
+  const [editItem, setEditItem] = useState(null);
 
-  const getAllList = () => {
-    let jsonData = [];
-    let total = 0;
-    GetAllIncome().then((response) => {
-      const { status, msg } = response;
+  const fetchAccount = () => {
+    GetAllAccount().then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
+        let total = 0;
         msg.map((item) => {
-          let dataToInsert = {
-            list: item.list,
-            income: item.income,
-            expense: 0,
-            isIncome: true,
-            isExpense: false,
-            date: item.created_at.split("T")[0],
-            time: item.created_at.split("T")[1],
-          };
-          total = total + parseInt(item.income);
-          jsonData.push(dataToInsert);
+          if (item.is_income == 1) {
+            total += parseInt(item.income);
+          } else {
+            total -= parseInt(item.expense);
+          }
         });
-      } else {
-        console.log("status: ", status, ", msg: ", msg);
-      }
-    });
-    GetAllExpense().then((response) => {
-      const { status, msg } = response;
-      if (status == "SUCCESS") {
-        msg.map((item) => {
-          let dataToInsert = {
-            list: item.list,
-            income: 0,
-            expense: item.expense,
-            isIncome: false,
-            isExpense: true,
-            date: item.created_at.split("T")[0],
-            time: item.created_at.split("T")[1],
-          };
-          total = total - parseInt(item.expense);
-          jsonData.push(dataToInsert);
-        });
+        setList(msg);
         setTotalSummary(total);
-        setList(jsonData);
       } else {
-        console.log("status: ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
   useEffect(() => {
-    getAllList();
+    fetchAccount();
   }, []);
 
   const handleAddIncome = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      list: data.get("list"),
-      income: data.get("income"),
+      label: data.get("label"),
+      income: data.get("price"),
+      expense: 0,
+      is_income: 1,
+      is_expense: 0,
+      date: data.get("date"),
     };
-    PostAddIncome(jsonData).then((response) => {
-      const { status, msg } = response;
+    PostAddAccount(jsonData).then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
-        getAllList();
+        fetchAccount();
+      } else {
+        console.log(data);
       }
     });
   };
@@ -80,13 +59,75 @@ const AdminAccount = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      list: data.get("list"),
-      expense: data.get("expense"),
+      label: data.get("label"),
+      income: 0,
+      expense: data.get("price"),
+      is_income: 0,
+      is_expense: 1,
+      date: data.get("date"),
     };
-    PostAddExpense(jsonData).then((response) => {
-      const { status, msg } = response;
+    PostAddAccount(jsonData).then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
-        getAllList();
+        fetchAccount();
+      } else {
+        console.log(data);
+      }
+    });
+  };
+
+  const handleSelectEditId = (selectedItem) => {
+    setEditItem(selectedItem);
+  };
+
+  const handleEditAccount = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      id: editItem.id,
+      label: data.get("label"),
+    };
+    const account_type = data.get("account_type");
+    if (account_type == "is_income") {
+      jsonData["is_income"] = 1;
+      jsonData["income"] = data.get("price");
+      jsonData["is_expense"] = 0;
+      jsonData["expense"] = 0;
+      jsonData["date"] =
+        data.get("date").length == 0
+          ? editItem.date.split("T")[0]
+          : data.get("date");
+    } else {
+      jsonData["is_income"] = 0;
+      jsonData["income"] = 0;
+      jsonData["is_expense"] = 1;
+      jsonData["expense"] = data.get("price");
+      jsonData["date"] =
+        data.get("date").length == 0
+          ? editItem.date.split("T")[0]
+          : data.get("date");
+    }
+    UpdateAccount(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchAccount();
+      } else {
+        console.log(data);
+      }
+    });
+  };
+
+  const handleDeleteUser = (event) => {
+    event.preventDefault();
+    const jsonData = {
+      id: event.target.value,
+    };
+    DeleteAccount(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchAccount();
+      } else {
+        console.log(data);
       }
     });
   };
@@ -95,42 +136,94 @@ const AdminAccount = () => {
     <div>
       <form onSubmit={handleAddIncome}>
         <label>Income</label>
-        <input type="text" name="list" />
+        <input type="text" name="label" />
         <label>Price</label>
-        <input type="number" name="income" />
-        <button type="submit">Add Income</button>
+        <input type="number" name="price" />
+        <label>date</label>
+        <input type="date" name="date" />
+        <button className="btn" type="submit">
+          Add Income
+        </button>
       </form>
       <form onSubmit={handleAddExpense}>
         <label>Expense</label>
-        <input type="text" name="list" />
+        <input type="text" name="label" />
         <label>Price</label>
-        <input type="number" name="expense" />
-        <button type="submit">Add Expense</button>
+        <input type="number" name="price" />
+        <label>date</label>
+        <input type="date" name="date" />
+        <button className="btn" type="submit">
+          Add Expense
+        </button>
       </form>
       <table>
         <thead>
           <tr>
-            <td>list</td>
+            <td>label</td>
             <td>income</td>
             <td>expense</td>
             <td>date</td>
-            <td>time</td>
+            <td>Edit</td>
+            <td>Delete</td>
           </tr>
         </thead>
         <tbody>
           {list &&
             list.map((item) => (
               <tr>
-                <td>{item.list}</td>
-                <td>{item.isIncome && item.income}</td>
-                <td>{item.isExpense && item.expense}</td>
-                <td>{item.date}</td>
-                <td>{item.time}</td>
+                <td>{item.label}</td>
+                <td>{item.is_income == 1 && item.income}</td>
+                <td>{item.is_expense == 1 && item.expense}</td>
+                <td>{item.date.split("T")[0]}</td>
+                <td>
+                  <button
+                    className="btn"
+                    onClick={() => handleSelectEditId(item)}
+                    value={item.id}
+                  >
+                    Edit
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn"
+                    onClick={handleDeleteUser}
+                    value={item.id}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
         </tbody>
       </table>
       <p>total : {totalSummary && totalSummary}</p>
+      {editItem && (
+        <form onSubmit={handleEditAccount}>
+          <label>label</label>
+          <input type="text" name="label" defaultValue={editItem.label} />
+          <label>Price</label>
+          <input
+            type="number"
+            name="price"
+            defaultValue={
+              editItem.is_income == 1 ? editItem.income : editItem.expense
+            }
+          />
+          <label>date</label>
+          <input type="date" name="date" placeholder={editItem.date} />
+          <select
+            name="account_type"
+            defaultValue={editItem.is_income == 1 ? "is_income" : "is_expense"}
+          >
+            <option value="is_income">is_income</option>
+            <option value="is_expense">is_expense</option>
+          </select>
+          <button className="btn" type="submit">
+            Submit Edit
+          </button>
+        </form>
+      )}
     </div>
   );
 };
