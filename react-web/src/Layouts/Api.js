@@ -242,3 +242,24 @@ export const DeleteAccount = (jsonData) => {
 export const UpdateAccount = (jsonData) => {
   return putApi("admin/account", jsonData);
 };
+
+export const GetAllOnLeave = () => {
+  return getApi("admin/onleave");
+};
+
+export const PostAddOnLeave = (jsonData) => {
+  return postApi("admin/onleave", jsonData);
+};
+
+export const DeleteOnLeave = (jsonData) => {
+  return deleteApi("admin/onleave", jsonData);
+};
+
+export const UpdateOnLeave = (jsonData) => {
+  return putApi("admin/onleave", jsonData);
+};
+
+export const ApproveOnLeave = (jsonData) => {
+  const isUseToken = true;
+  return putApi("admin/onleave/approve", jsonData, isUseToken);
+};

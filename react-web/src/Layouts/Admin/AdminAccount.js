@@ -110,6 +110,7 @@ const AdminAccount = () => {
     UpdateAccount(jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
+        setEditItem(null);
         fetchAccount();
       } else {
         console.log(data);
