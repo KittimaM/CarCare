@@ -93,3 +93,19 @@ export const FetchCarSize = async () => {
     console.error("Error fetching data:", error);
   }
 };
+
+export const getDatesForCurrentWeek = () => {
+  const today = new Date();
+  const currentDay = today.getDay();
+  const sunday = new Date(today);
+  sunday.setDate(today.getDate() - currentDay);
+
+  let weekDates = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(sunday);
+    date.setDate(sunday.getDate() + i);
+    weekDates.push(date.toISOString().split("T")[0]);
+  }
+
+  return weekDates;
+};
