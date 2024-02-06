@@ -23,6 +23,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminDayOffRoute = require("./Routes/Admin/AdminDayOff");
+app.use("/api/admin/dayoff", AdminDayOffRoute);
+
 const AdminOnLeaveRoute = require("./Routes/Admin/AdminOnLeave");
 app.use("/api/admin/onleave", AdminOnLeaveRoute);
 
@@ -31,9 +34,6 @@ app.use("/api/admin/account", AdminAccountRoute);
 
 const AdminPaymentTypeRoute = require("./Routes/Admin/AdminPaymentType");
 app.use("/api/admin/paymenttype", AdminPaymentTypeRoute);
-
-const AdminWorkTableRoute = require("./Routes/Admin/AdminWorkTable");
-app.use("/api/admin/worktable", AdminWorkTableRoute);
 
 const AdminCarSizeRoute = require("./Routes/Admin/AdminCarSize");
 app.use("/api/admin/carsize", AdminCarSizeRoute);

@@ -18,10 +18,10 @@ import AdminRole from "./Layouts/Admin/AdminRole";
 import AdminAccount from "./Layouts/Admin/AdminAccount";
 import AdminSchedule from "./Layouts/Admin/AdminSchedule";
 import AdminPayment from "./Layouts/Admin/AdminPayment";
-import AdminWorkTable from "./Layouts/Admin/AdminWorkTable";
 import AdminPaymentType from "./Layouts/Admin/AdminPaymentType";
 import AdminOnLeave from "./Layouts/Admin/AdminOnLeave";
 import AdminOnLeavePersonal from "./Layouts/Admin/AdminOnLeavePersonal";
+import AdminDayOff from "./Layouts/Admin/AdminDayOff";
 
 function App() {
   console.log(new Date());
@@ -43,9 +43,9 @@ function App() {
           path="/admin/onleave/personal"
           element={<AdminOnLeavePersonal />}
         />
+        <Route path="/admin/dayoff" element={<AdminDayOff/>}/>
         <Route path="/admin/onleave" element={<AdminOnLeave />} />
         <Route path="/admin/paymenttype" element={<AdminPaymentType />} />
-        <Route path="/admin/worktable" element={<AdminWorkTable />} />
         <Route path="/admin/payment" element={<AdminPayment />} />
         <Route path="/admin/schedule" element={<AdminSchedule />} />
         <Route path="/admin/account" element={<AdminAccount />} />

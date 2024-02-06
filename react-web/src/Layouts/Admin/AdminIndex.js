@@ -41,9 +41,6 @@ const AdminIndex = () => {
       {permission && permission.have_payment_access >= 1 && (
         <Button to="/admin/payment" name="Payment" />
       )}
-      {permission && permission.have_worktable_access >= 1 && (
-        <Button to="/admin/worktable" name="Work Table" />
-      )}
       {permission && permission.have_payment_type_access >= 1 && (
         <Button to="/admin/paymenttype" name="Payment Type" />
       )}
@@ -52,6 +49,9 @@ const AdminIndex = () => {
       )}
       {permission && permission.have_on_leave_personal_access >= 1 && (
         <Button to="/admin/onleave/personal" name="On Leave" />
+      )}
+      {permission && permission.have_day_off_list_access >= 1 && (
+        <Button to="/admin/dayoff" name="Day Off List" />
       )}
     </div>
   );

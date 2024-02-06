@@ -110,18 +110,6 @@ export const GetAllStaff = () => {
   return getApi("admin/user");
 };
 
-export const PostAddDayOff = (jsonData) => {
-  return postApi("admin/worktable/add", jsonData);
-};
-
-export const GetAllDayOff = () => {
-  return getApi("admin/worktable");
-};
-
-export const PostUpdateDayOff = (jsonData) => {
-  return postApi("admin/worktable/update", jsonData);
-};
-
 export const DeleteStaffUser = (jsonData) => {
   return deleteApi("admin/user", jsonData);
 };
@@ -272,4 +260,12 @@ export const GetOnLeavePersonal = () => {
 export const PostAddOnLeavePersonal = (jsonData) => {
   const isUseToken = true;
   return postApi("admin/onleave/personal", jsonData, isUseToken);
+};
+
+export const GetAllDayOff = () => {
+  return getApi("admin/dayoff");
+};
+
+export const UpdateDayOff = (jsonData) => {
+  return putApi("admin/dayoff", jsonData);
 };
