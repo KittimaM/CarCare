@@ -263,3 +263,13 @@ export const ApproveOnLeave = (jsonData) => {
   const isUseToken = true;
   return putApi("admin/onleave/approve", jsonData, isUseToken);
 };
+
+export const GetOnLeavePersonal = () => {
+  const isUseToken = true;
+  return getApi("admin/onleave/personal", null, isUseToken);
+};
+
+export const PostAddOnLeavePersonal = (jsonData) => {
+  const isUseToken = true;
+  return postApi("admin/onleave/personal", jsonData, isUseToken);
+};

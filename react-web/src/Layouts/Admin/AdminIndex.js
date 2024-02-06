@@ -17,35 +17,41 @@ const AdminIndex = () => {
 
   return (
     <div>
-      {permission && permission.have_staff_user_access == 1 && (
+      {permission && permission.have_staff_user_access >= 1 && (
         <Button to="/admin/user" name="User" />
       )}
-      {permission && permission.have_car_size_access == 1 && (
+      {permission && permission.have_car_size_access >= 1 && (
         <Button to="/admin/carsize" name="Car Size" />
       )}
-      {permission && permission.have_service_access == 1 && (
+      {permission && permission.have_service_access >= 1 && (
         <Button to="/admin/service" name="Service" />
       )}
-      {permission && permission.have_booking_access == 1 && (
+      {permission && permission.have_booking_access >= 1 && (
         <Button to="/admin/booking" name="Booking" />
       )}
-      {permission && permission.have_role_access == 1 && (
+      {permission && permission.have_role_access >= 1 && (
         <Button to="/admin/role" name="Role" />
       )}
-      {permission && permission.have_account_access == 1 && (
+      {permission && permission.have_account_access >= 1 && (
         <Button to="/admin/account" name="Account Management" />
       )}
-      {permission && permission.have_schedule_access == 1 && (
+      {permission && permission.have_schedule_access >= 1 && (
         <Button to="/admin/schedule" name="Schedule" />
       )}
-      {permission && permission.have_payment_access == 1 && (
+      {permission && permission.have_payment_access >= 1 && (
         <Button to="/admin/payment" name="Payment" />
       )}
-      {permission && permission.have_worktable_access == 1 && (
+      {permission && permission.have_worktable_access >= 1 && (
         <Button to="/admin/worktable" name="Work Table" />
       )}
-      {permission && permission.have_payment_type_access == 1 && (
+      {permission && permission.have_payment_type_access >= 1 && (
         <Button to="/admin/paymenttype" name="Payment Type" />
+      )}
+      {permission && permission.have_on_leave_list_access >= 1 && (
+        <Button to="/admin/onleave" name="On Leave List" />
+      )}
+      {permission && permission.have_on_leave_personal_access >= 1 && (
+        <Button to="/admin/onleave/personal" name="On Leave" />
       )}
     </div>
   );

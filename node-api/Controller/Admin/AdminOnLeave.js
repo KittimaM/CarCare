@@ -83,10 +83,59 @@ const AdminApproveOnLeave = (req, res, next) => {
   }
 };
 
+const AdminGetOnLeavePersonal = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, secret);
+    const staff_id = decoded.id;
+    Conn.execute(
+      "SELECT * FROM on_leave WHERE staff_id = ?",
+      [staff_id],
+      function (error, results) {
+        if (error) {
+          res.json({ status: "ERROR", msg: error });
+        }
+        if (results.length == 0) {
+          res.json({ status: "NO DATA", msg: "NO DATA" });
+        } else {
+          res.json({ status: "SUCCESS", msg: results });
+        }
+      }
+    );
+  } catch (err) {
+    res.json({ status: "ERROR", msg: "token expired" });
+  }
+};
+
+const AdminAddOnLeavePersonal = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, secret);
+    const staff_id = decoded.id;
+    const { date, reason } = req.body;
+    Conn.execute(
+      "INSERT INTO on_leave(staff_id, date, reason) VALUES (?,?,?)",
+      [staff_id, date, reason],
+      function (error, result) {
+        if (error) {
+          res.json({ status: "ERROR", msg: error });
+        } else {
+          const insertId = result.insertId;
+          res.json({ status: "SUCCESS", msg: insertId });
+        }
+      }
+    );
+  } catch (err) {
+    res.json({ status: "ERROR", msg: "token expired" });
+  }
+};
+
 module.exports = {
   AdminGetAllOnLeave,
   AdminAddOnLeave,
   AdminDeleteOnLeave,
   AdminUpdateOnLeave,
   AdminApproveOnLeave,
+  AdminGetOnLeavePersonal,
+  AdminAddOnLeavePersonal,
 };
