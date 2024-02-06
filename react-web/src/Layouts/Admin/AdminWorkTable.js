@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import {
   GetAllDayOff,
   GetAllStaff,
@@ -9,11 +7,9 @@ import {
 } from "../Api";
 
 const AdminWorkTable = () => {
-  const [date, setDate] = useState(new Date());
   const [staff, setStaff] = useState([]);
   const [staffWithDayOff, setStaffWithDayOff] = useState([]);
   const [staffWithOutDayOff, setStaffWithOutDayOff] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(false);
 
   useEffect(() => {
     GetAllStaff().then((data) => {
@@ -33,19 +29,14 @@ const AdminWorkTable = () => {
             setStaffWithDayOff(newStaffWithDayOff);
             setStaffWithOutDayOff(newStaffWithOutDayOff);
           } else {
-            console.log("status : ", status, " , msg : ", msg);
+            console.log(response);
           }
         });
       } else {
-        console.log("status : ", status, " , msg : ", msg);
+        console.log(data);
       }
     });
   }, []);
-
-  const onChange = (newDate) => {
-    setDate(newDate);
-    setSelectedDate(true);
-  };
 
   const handleSubmitAddDayOff = (event) => {
     event.preventDefault();
@@ -71,19 +62,6 @@ const AdminWorkTable = () => {
     <div>
       {staff && (
         <div>
-          <Calendar onChange={onChange} value={date} />
-          {selectedDate && (
-            <form>
-              <select name="staff">
-                {staff.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-              <button type="submit">Submit</button>
-            </form>
-          )}
           {staffWithOutDayOff ? (
             <form onSubmit={handleSubmitAddDayOff}>
               <label>Set Day-off</label>
