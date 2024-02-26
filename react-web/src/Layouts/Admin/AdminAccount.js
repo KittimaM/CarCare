@@ -4,12 +4,14 @@ import {
   GetAllAccount,
   PostAddAccount,
   UpdateAccount,
+  GetPermission,
 } from "../Api";
 
 const AdminAccount = () => {
   const [list, setList] = useState([]);
   const [totalSummary, setTotalSummary] = useState(0);
   const [editItem, setEditItem] = useState(null);
+  const [permission, setPermission] = useState(null);
 
   const fetchAccount = () => {
     GetAllAccount().then((data) => {
@@ -32,6 +34,14 @@ const AdminAccount = () => {
   };
   useEffect(() => {
     fetchAccount();
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_account_access"]);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
 
   const handleAddIncome = (event) => {
@@ -135,28 +145,33 @@ const AdminAccount = () => {
 
   return (
     <div>
-      <form onSubmit={handleAddIncome}>
-        <label>Income</label>
-        <input type="text" name="label" />
-        <label>Price</label>
-        <input type="number" name="price" />
-        <label>date</label>
-        <input type="date" name="date" />
-        <button className="btn" type="submit">
-          Add Income
-        </button>
-      </form>
-      <form onSubmit={handleAddExpense}>
-        <label>Expense</label>
-        <input type="text" name="label" />
-        <label>Price</label>
-        <input type="number" name="price" />
-        <label>date</label>
-        <input type="date" name="date" />
-        <button className="btn" type="submit">
-          Add Expense
-        </button>
-      </form>
+      {permission && permission.includes("2") && (
+        <div>
+          <form onSubmit={handleAddIncome}>
+            <label>Income</label>
+            <input type="text" name="label" />
+            <label>Price</label>
+            <input type="number" name="price" />
+            <label>date</label>
+            <input type="date" name="date" />
+            <button className="btn" type="submit">
+              Add Income
+            </button>
+          </form>
+          <form onSubmit={handleAddExpense}>
+            <label>Expense</label>
+            <input type="text" name="label" />
+            <label>Price</label>
+            <input type="number" name="price" />
+            <label>date</label>
+            <input type="date" name="date" />
+            <button className="btn" type="submit">
+              Add Expense
+            </button>
+          </form>
+        </div>
+      )}
+
       <table>
         <thead>
           <tr>
@@ -164,8 +179,8 @@ const AdminAccount = () => {
             <td>income</td>
             <td>expense</td>
             <td>date</td>
-            <td>Edit</td>
-            <td>Delete</td>
+            {permission && permission.includes("3") && <td>Edit</td>}
+            {permission && permission.includes("4") && <td>Delete</td>}
           </tr>
         </thead>
         <tbody>
@@ -176,30 +191,34 @@ const AdminAccount = () => {
                 <td>{item.is_income == 1 && item.income}</td>
                 <td>{item.is_expense == 1 && item.expense}</td>
                 <td>{item.date.split("T")[0]}</td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.id}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteUser}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteUser}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
         </tbody>
       </table>
       <p>total : {totalSummary && totalSummary}</p>
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditAccount}>
           <label>label</label>
           <input type="text" name="label" defaultValue={editItem.label} />

@@ -4,12 +4,14 @@ import {
   GetAllCarSize,
   PostAddCarSize,
   UpdateCarSize,
+  GetPermission,
 } from "../Api";
 
 const AdminCarSize = () => {
   const [carSize, setCarSize] = useState(null);
   const [addCarSize, setAddCarSize] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [permission, setPermission] = useState(null);
 
   const fetchCarSize = async () => {
     GetAllCarSize().then((data) => {
@@ -17,13 +19,21 @@ const AdminCarSize = () => {
       if (status == "SUCCESS") {
         setCarSize(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
 
   useEffect(() => {
     fetchCarSize();
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_car_size_access"]);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
 
   const toggleAddCarSize = () => {
@@ -43,7 +53,7 @@ const AdminCarSize = () => {
       if (status == "SUCCESS") {
         fetchCarSize();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
     setAddCarSize(false);
@@ -63,7 +73,7 @@ const AdminCarSize = () => {
       if (status == "SUCCESS") {
         fetchCarSize();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -83,27 +93,31 @@ const AdminCarSize = () => {
         setEditItem(null);
         fetchCarSize();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
 
   return (
     <div>
-      {addCarSize && (
-        <form onSubmit={handleSubmitAddCarSize}>
-          <label name="size">size</label>
-          <input type="text" name="size" required />
-          <label name="description">description</label>
-          <input type="text" name="description" required />
-          <button className="btn" type="submit">
-            Submit
+      {permission && permission.includes("2") && addCarSize && (
+        <div>
+          {" "}
+          <form onSubmit={handleSubmitAddCarSize}>
+            <label name="size">size</label>
+            <input type="text" name="size" required />
+            <label name="description">description</label>
+            <input type="text" name="description" required />
+            <button className="btn" type="submit">
+              Submit
+            </button>
+          </form>
+          <button className="btn" onClick={toggleAddCarSize}>
+            {addCarSize ? "cancel" : "add car size"}
           </button>
-        </form>
+        </div>
       )}
-      <button className="btn" onClick={toggleAddCarSize}>
-        {addCarSize ? "cancel" : "add car size"}
-      </button>
+
       {carSize && (
         <table>
           <thead>
@@ -112,8 +126,8 @@ const AdminCarSize = () => {
               <td>size</td>
               <td>description</td>
               <td>is_available</td>
-              <td>Edit</td>
-              <td>Delete</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
             </tr>
           </thead>
           <tbody>
@@ -125,30 +139,34 @@ const AdminCarSize = () => {
                 <td>
                   {item.is_available == 1 ? "available" : "not available"}
                 </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.id}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteUser}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteUser}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditCarSize}>
           <label name="size">size</label>
           <input type="text" name="size" defaultValue={editItem.size} />

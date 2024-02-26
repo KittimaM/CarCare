@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { DeleteRole, GetAllRole, PostAddRole, UpdateRole } from "../Api";
+import {
+  DeleteRole,
+  GetAllRole,
+  PostAddRole,
+  UpdateRole,
+  GetPermission,
+} from "../Api";
 
 const AdminRole = () => {
   const [role, setRole] = useState();
   const [roleAccess, setRoleAccess] = useState();
-  const [accessLabel, setAccessLabel] = useState();
   const [editItem, setEditItem] = useState(null);
+  const [permission, setPermission] = useState(null);
 
   useEffect(() => {
     fetchRole();
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_role_access"]);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
   const fetchRole = () => {
     GetAllRole().then((data) => {
@@ -16,40 +30,71 @@ const AdminRole = () => {
       if (status == "SUCCESS") {
         setRole(msg);
         let defaultAccess = [];
-        let label = [];
         Object.keys(msg[0]).map((item) => {
           if (item !== "id" && item !== "role") {
-            defaultAccess.push({ label: item, isEnable: 0 });
-            label.push(item);
+            defaultAccess.push({ label: item, access: [0] });
           }
         });
-        setAccessLabel(label);
         setRoleAccess(defaultAccess);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
   const handleEnableAccess = (event) => {
-    event.preventDefault();
-    roleAccess.map((item) => {
-      if (item.label == event.target.name) {
-        item["isEnable"] = 1;
-      }
-    });
+    const { checked, name, value } = event.target;
+    const [toggleName, accessLevel] = name.split("/");
+    setRoleAccess((prev) =>
+      prev.map((item) => {
+        if (item.label === toggleName) {
+          if (checked) {
+            if (accessLevel == "view") {
+              return {
+                label: item.label,
+                access: [parseInt(value)],
+              };
+            } else {
+              return {
+                label: item.label,
+                access: [...item.access, parseInt(value)],
+              };
+            }
+          } else {
+            if (accessLevel == "view") {
+              return { label: item.label, access: [0] };
+            } else {
+              return {
+                label: item.label,
+                access: [item.access.filter((item) => item != value)],
+              };
+            }
+          }
+        } else {
+          return item;
+        }
+      })
+    );
   };
 
   const handleSubmitAddRole = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    let accessSetting = {};
-    roleAccess.map((item) => (accessSetting[item.label] = item.isEnable));
+    let accessData = [];
+    roleAccess.map((item) => {
+      accessData[item.label] = item.access;
+    });
     const jsonData = {
       role: data.get("role"),
-      ...accessSetting,
+      ...accessData,
     };
-
-    PostAddRole(jsonData).then((data) => console.log(data));
+    PostAddRole(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchRole();
+      } else {
+        console.log(data);
+      }
+    });
   };
 
   const handleSelectEditId = (selectedItem) => {
@@ -57,9 +102,37 @@ const AdminRole = () => {
   };
 
   const handleEditRoleAccess = (event) => {
-    event.preventDefault();
-    const { checked, name } = event.target;
-    editItem[name] = checked ? 1 : 0;
+    const { name, checked, value } = event.target;
+    const [toggleName, accessLevel] = name.split("/");
+    const updated = Object.keys(editItem).reduce((data, item) => {
+      if (item === toggleName) {
+        if (checked) {
+          if (accessLevel === "view") {
+            data[item] = value;
+          } else {
+            const updateArray = editItem[item].split(",");
+            const updateInt = updateArray.map((item) => parseInt(item));
+            const updateJoin = [...updateInt, parseInt(value)];
+            const finalUpdate = updateJoin.join();
+            data[item] = finalUpdate;
+          }
+        } else {
+          if (accessLevel === "view") {
+            data[item] = "0";
+          } else {
+            const updateArray = editItem[item].split(",");
+            const updateFilter = updateArray.filter((item) => item != value);
+            const updateInt = updateFilter.map((item) => parseInt(item));
+            const finalUpdate = updateInt.join();
+            data[item] = finalUpdate;
+          }
+        }
+      } else {
+        data[item] = editItem[item];
+      }
+      return data;
+    }, {});
+    setEditItem(updated);
   };
 
   const handleEditRole = (event) => {
@@ -76,7 +149,7 @@ const AdminRole = () => {
         setEditItem(null);
         fetchRole();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -91,29 +164,182 @@ const AdminRole = () => {
       if (status == "SUCCESS") {
         fetchRole();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
 
+  const subRoleEditAccess = (name, value) => {
+    if (name == "have_right_to_approve_on_leave") {
+      return (
+        <div>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/add"}
+            value="2"
+            defaultChecked={value.includes("2")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>add</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/edit"}
+            value="3"
+            defaultChecked={value.includes("3")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>edit</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/delete"}
+            value="4"
+            defaultChecked={value.includes("4")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>delete</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/approve"}
+            value="5"
+            defaultChecked={value.includes("5")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>approve</label>
+        </div>
+      );
+    } else if (name == "have_booking_access" || name == "have_payment_access") {
+      return;
+    } else {
+      return (
+        <div>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/add"}
+            value="2"
+            defaultChecked={value.includes("2")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>add</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/edit"}
+            value="3"
+            defaultChecked={value.includes("3")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>edit</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/delete"}
+            value="4"
+            defaultChecked={value.includes("4")}
+            onChange={handleEditRoleAccess}
+          />
+          <label>delete</label>
+        </div>
+      );
+    }
+  };
+
+  const subRoleAccessContent = (name) => {
+    if (name == "have_right_to_approve_on_leave") {
+      return (
+        <div>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/add"}
+            value="2"
+            onChange={handleEnableAccess}
+          />
+          <label>add</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/edit"}
+            value="3"
+            onChange={handleEnableAccess}
+          />
+          <label>edit</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/delete"}
+            value="4"
+            onChange={handleEnableAccess}
+          />
+          <label>delete</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/approve"}
+            value="5"
+            onChange={handleEnableAccess}
+          />
+          <label>approve</label>
+        </div>
+      );
+    } else if (name == "have_booking_access" || name == "have_payment_access") {
+      return;
+    } else {
+      return (
+        <div>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/add"}
+            value="2"
+            onChange={handleEnableAccess}
+          />
+          <label>add</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/edit"}
+            value="3"
+            onChange={handleEnableAccess}
+          />
+          <label>edit</label>
+          <input
+            className="toggle"
+            type="checkbox"
+            name={name + "/delete"}
+            value="4"
+            onChange={handleEnableAccess}
+          />
+          <label>delete</label>
+        </div>
+      );
+    }
+  };
+
   return (
     <div>
-      {roleAccess && (
+      {permission && permission.includes("2") && roleAccess && (
         <form onSubmit={handleSubmitAddRole}>
           <label name="role"> role</label>
           <input type="text" name="role" />
           {roleAccess.map((item) => (
             <div>
               <input
+                className="toggle"
                 type="checkbox"
-                name={item.label}
-                value={item.isEnable}
+                value="1"
+                name={item.label + "/view"}
                 onChange={handleEnableAccess}
               />
               <label>{item.label}</label>
+              {item.access.includes(1) && subRoleAccessContent(item.label)}
             </div>
           ))}
-          <button type="submit" className="btn">
+          <button className="btn" type="submit">
             Submit
           </button>
         </form>
@@ -124,8 +350,8 @@ const AdminRole = () => {
             <tr>
               <td>id</td>
               <td>role</td>
-              <td>Edit</td>
-              <td>Delete</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
             </tr>
           </thead>
           <tbody>
@@ -133,47 +359,67 @@ const AdminRole = () => {
               <tr>
                 <td>{item.id}</td>
                 <td>{item.role}</td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.id}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteRole}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteRole}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditRole}>
-          <label name="role"> role</label>
-          <input type="text" name="role" defaultValue={editItem.role} />
-          {accessLabel.map((item) => (
+          {Object.keys(editItem).map((item) => (
             <div>
-              <input
-                type="checkbox"
-                name={item}
-                onChange={handleEditRoleAccess}
-                defaultChecked={editItem[item]}
-              />
-              <label>{item}</label>
+              {item == "role" && (
+                <div>
+                  <label>role</label>
+                  <input
+                    type="text"
+                    name="role"
+                    defaultValue={editItem[item]}
+                  />
+                </div>
+              )}
+              {item != "role" && item !== "id" && (
+                <div>
+                  <input
+                    className="toggle"
+                    type="checkbox"
+                    value="1"
+                    name={item + "/view"}
+                    onChange={handleEditRoleAccess}
+                    defaultChecked={editItem[item].includes("1")}
+                  />
+                  <label>{item}</label>
+                  {!editItem[item].includes("0") &&
+                    subRoleEditAccess(item, editItem[item])}
+                </div>
+              )}
             </div>
           ))}
-          <button type="submit" className="btn">
-            Submit
+          <button className="btn" type="submit">
+            Submit Edit
           </button>
         </form>
       )}

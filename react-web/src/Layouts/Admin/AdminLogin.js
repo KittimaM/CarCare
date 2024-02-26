@@ -19,7 +19,7 @@ const AdminLogin = () => {
         localStorage.setItem("token", msg);
         navigate("/admin");
       } else {
-        alert(msg);
+        console.log(data);
       }
     });
   };
@@ -29,7 +29,9 @@ const AdminLogin = () => {
       <input type="text" name="username" required />
       <label name="password">password</label>
       <input type="password" name="password" required />
-      <button type="submit">Submit</button>
+      <button className="btn" type="submit">
+        Submit
+      </button>
     </form>
   );
 };

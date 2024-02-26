@@ -4,6 +4,7 @@ import {
   GetAllStaff,
   GetAllRole,
   UpdateStaffUser,
+  GetPermission,
 } from "../Api";
 import { Button } from "../Module";
 
@@ -11,9 +12,19 @@ const AdminUser = () => {
   const [user, setUser] = useState(null);
   const [allRole, setAllRole] = useState();
   const [editItem, setEditItem] = useState(null);
+  const [permission, setPermission] = useState(null);
+
   useEffect(() => {
     fetchUser();
     fetchRole();
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_staff_user_access"]);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
 
   const fetchUser = () => {
@@ -22,7 +33,7 @@ const AdminUser = () => {
       if (status == "SUCCESS") {
         setUser(msg);
       } else {
-        console.log("status : ", status, " , msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -33,7 +44,7 @@ const AdminUser = () => {
       if (status == "SUCCESS") {
         setAllRole(msg);
       } else {
-        console.log("status : ", status, " , msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -48,7 +59,7 @@ const AdminUser = () => {
       if (status == "SUCCESS") {
         fetchUser();
       } else {
-        console.log("status : ", status, " , msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -75,14 +86,17 @@ const AdminUser = () => {
         fetchUser();
         setEditItem(null);
       } else {
-        console.log("status : ", status, " , msg: ", msg);
+        console.log(data);
       }
     });
   };
 
   return (
     <div>
-      <Button to="/admin/register" name="register" />
+      {permission && permission.includes("2") && (
+        <Button to="/admin/register" name="register" />
+      )}
+
       {user && (
         <table>
           <thead>
@@ -90,8 +104,8 @@ const AdminUser = () => {
               <td>id</td>
               <td>username</td>
               <td>name</td>
-              <td>Edit</td>
-              <td>Delete</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
             </tr>
           </thead>
           <tbody>
@@ -100,30 +114,34 @@ const AdminUser = () => {
                 <td>{item.id}</td>
                 <td>{item.username}</td>
                 <td>{item.name}</td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.id}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteUser}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteUser}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditUser}>
           <label name="username">username</label>
           <input type="text" name="username" defaultValue={editItem.username} />

@@ -22,7 +22,7 @@ const AdminRegister = () => {
       if (status == "SUCCESS") {
         setAllRole(msg);
       } else {
-        console.log("status : ", status, " , msg: ", msg);
+        console.log(data);
       }
     });
   }, []);

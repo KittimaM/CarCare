@@ -5,12 +5,14 @@ import {
   GetAllService,
   PostAddService,
   UpdateService,
+  GetPermission,
 } from "../Api";
 
 const AdminService = () => {
   const [carSize, setCarSize] = useState();
   const [service, setService] = useState();
   const [editItem, setEditItem] = useState(null);
+  const [permission, setPermission] = useState(null);
 
   const fetchService = () => {
     GetAllService().then((data) => {
@@ -18,7 +20,7 @@ const AdminService = () => {
       if (status == "SUCCESS") {
         setService(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -29,7 +31,7 @@ const AdminService = () => {
       if (status == "SUCCESS") {
         setCarSize(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -37,6 +39,14 @@ const AdminService = () => {
   useEffect(() => {
     fetchService();
     fetchCarSize();
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_service_access"]);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
 
   const handleAdminAddService = (event) => {
@@ -56,7 +66,7 @@ const AdminService = () => {
       if (status == "SUCCESS") {
         fetchService();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -84,7 +94,7 @@ const AdminService = () => {
         setEditItem(null);
         fetchService();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -99,41 +109,43 @@ const AdminService = () => {
       if (status == "SUCCESS") {
         fetchService();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
 
   return (
     <div>
-      <form onSubmit={handleAdminAddService}>
-        <label name="service">service</label>
-        <input type="text" name="service" />
-        <label name="description">description</label>
-        <input type="text" name="description" />
-        {carSize && (
-          <div>
-            <label name="car_size">car_size</label>
-            <select name="car_size">
-              {carSize.map(
-                (item) =>
-                  item.is_available == 1 && (
-                    <option key={item.id} value={[item.id, item.size]}>
-                      {item.size}
-                    </option>
-                  )
-              )}
-            </select>
-          </div>
-        )}
-        <label name="used_time">used_time</label>
-        <input type="text" name="used_time" />
-        <label name="price">price</label>
-        <input type="text" name="price" />
-        <button type="submit" className="btn">
-          Submit
-        </button>
-      </form>
+      {permission && permission.includes("2") && (
+        <form onSubmit={handleAdminAddService}>
+          <label name="service">service</label>
+          <input type="text" name="service" />
+          <label name="description">description</label>
+          <input type="text" name="description" />
+          {carSize && (
+            <div>
+              <label name="car_size">car_size</label>
+              <select name="car_size">
+                {carSize.map(
+                  (item) =>
+                    item.is_available == 1 && (
+                      <option key={item.id} value={[item.id, item.size]}>
+                        {item.size}
+                      </option>
+                    )
+                )}
+              </select>
+            </div>
+          )}
+          <label name="used_time">used_time</label>
+          <input type="text" name="used_time" />
+          <label name="price">price</label>
+          <input type="text" name="price" />
+          <button type="submit" className="btn">
+            Submit
+          </button>
+        </form>
+      )}
 
       {service && (
         <table>
@@ -144,8 +156,8 @@ const AdminService = () => {
               <td>description</td>
               <td>car_size</td>
               <td>is_available</td>
-              <td>Edit</td>
-              <td>Delete</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
             </tr>
           </thead>
           <tbody>
@@ -158,31 +170,35 @@ const AdminService = () => {
                 <td>
                   {item.is_available == 1 ? "available" : "not available"}
                 </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.id}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteService}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteService}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
 
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditService}>
           <label name="service">service</label>
           <input type="text" name="service" defaultValue={editItem.service} />

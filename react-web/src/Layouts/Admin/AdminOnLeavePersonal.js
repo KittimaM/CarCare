@@ -26,7 +26,7 @@ const AdminOnLeavePersonal = () => {
     GetPermission().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setPermission(msg);
+        setPermission(msg["have_on_leave_personal_access"]);
       } else {
         console.log(data);
       }
@@ -94,7 +94,7 @@ const AdminOnLeavePersonal = () => {
   };
   return (
     <div>
-      {permission && permission.have_on_leave_personal_access >= 2 && (
+      {permission && permission.includes("2") && (
         <form onSubmit={handleAddOnLeave}>
           <lable>Date</lable>
           <input type="date" name="date" />
@@ -112,12 +112,8 @@ const AdminOnLeavePersonal = () => {
               <td>date</td>
               <td>reason</td>
               <td>status</td>
-              {permission && permission.have_on_leave_personal_access >= 3 && (
-                <td>Edit</td>
-              )}
-              {permission && permission.have_on_leave_personal_access == 4 && (
-                <td>Delete</td>
-              )}
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
             </tr>
           </thead>
           <tbody>
@@ -126,38 +122,36 @@ const AdminOnLeavePersonal = () => {
                 <td>{item.date.split("T")[0]}</td>
                 <td>{item.reason}</td>
                 <td>{item.is_approved == 1 ? "Approved" : "Pending"}</td>
-                {permission &&
-                  permission.have_on_leave_personal_access >= 3 && (
-                    <td>
-                      <button
-                        className="btn"
-                        onClick={() => handleSelectEditId(item)}
-                        value={item.id}
-                        disabled={item.is_approved == 1}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  )}
-                {permission &&
-                  permission.have_on_leave_personal_access == 4 && (
-                    <td>
-                      <button
-                        className="btn"
-                        onClick={handleDeleteOnLeave}
-                        value={item.id}
-                        disabled={item.is_approved == 1}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  )}
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                      disabled={item.is_approved == 1}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteOnLeave}
+                      value={item.id}
+                      disabled={item.is_approved == 1}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditOnLeave}>
           <lable>Date</lable>
           <input type="date" name="date" defaultValue={editItem.date} />

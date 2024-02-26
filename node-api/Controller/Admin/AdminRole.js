@@ -17,24 +17,11 @@ const AdminGetAllRole = (req, res, next) => {
 };
 
 const AdminAddRole = (req, res, next) => {
-  const {
-    role,
-    have_staff_user_access,
-    have_car_size_access,
-    have_booking_access,
-    have_role_access,
-    have_service_access,
-  } = req.body;
+  const columns = Object.keys(req.body);
+  const values = Object.values(req.body);
   Conn.execute(
-    "INSERT INTO role(role, have_staff_user_access, have_car_size_access, have_booking_access, have_role_access, have_service_access) VALUES (?,?,?,?,?,?)",
-    [
-      role,
-      have_staff_user_access,
-      have_car_size_access,
-      have_booking_access,
-      have_role_access,
-      have_service_access,
-    ],
+    `INSERT INTO role(${columns.map((item) => `${item}`).join(",")})
+    VALUES (${values.map((item) => `'${item}'`).join(",")})`,
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -58,7 +45,6 @@ const AdminDeleteRole = (req, res, next) => {
 };
 
 const AdminUpdateRole = (req, res, next) => {
-  // Extracting the request body
   const { id } = req.body;
   const columns = Object.keys(req.body);
   const values = Object.values(req.body);

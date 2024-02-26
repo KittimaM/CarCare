@@ -13,7 +13,7 @@ const AdminOnLeave = () => {
   const [staff, setStaff] = useState([]);
   const [onLeaveList, setOnLeaveList] = useState([]);
   const [editItem, setEditItem] = useState(null);
-  const [permission, setPermission] = useState();
+  const [permission, setPermission] = useState(null);
 
   const fetchOnLeaveList = () => {
     GetAllOnLeave().then((data) => {
@@ -30,7 +30,7 @@ const AdminOnLeave = () => {
     GetPermission().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setPermission(msg);
+        setPermission(msg["have_right_to_approve_on_leave"]);
       } else {
         alert(msg);
       }
@@ -124,7 +124,7 @@ const AdminOnLeave = () => {
 
   return (
     <div>
-      {staff && permission && permission.have_on_leave_list_access >= 2 && (
+      {staff && permission && permission.includes("2") && (
         <form onSubmit={handleAddOnLeave}>
           <label>Staff</label>
           <select name="staff_id">
@@ -151,15 +151,9 @@ const AdminOnLeave = () => {
               <td>date</td>
               <td>reason</td>
               <td>status</td>
-              {permission && permission.have_on_leave_list_access >= 3 && (
-                <td>Edit</td>
-              )}
-              {permission && permission.have_on_leave_list_access == 4 && (
-                <td>Delete</td>
-              )}
-              {permission && permission.have_right_to_approve_on_leave == 1 && (
-                <td>Approve</td>
-              )}
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
+              {permission && permission.includes("5") && <td>Approve</td>}
             </tr>
           </thead>
           <tbody>
@@ -169,7 +163,7 @@ const AdminOnLeave = () => {
                 <td>{item.date.split("T")[0]}</td>
                 <td>{item.reason}</td>
                 <td>{item.is_approved == 1 ? "Approved" : "Pending"}</td>
-                {permission && permission.have_on_leave_list_access >= 3 && (
+                {permission && permission.includes("3") && (
                   <td>
                     <button
                       className="btn"
@@ -181,7 +175,7 @@ const AdminOnLeave = () => {
                     </button>
                   </td>
                 )}
-                {permission && permission.have_on_leave_list_access == 4 && (
+                {permission && permission.includes("4") && (
                   <td>
                     <button
                       className="btn"
@@ -193,27 +187,24 @@ const AdminOnLeave = () => {
                     </button>
                   </td>
                 )}
-                {permission &&
-                  permission.have_right_to_approve_on_leave == 1 && (
-                    <td>
-                      <button
-                        className="btn"
-                        onClick={handleApprovedOnLeave}
-                        value={item.id}
-                        disabled={item.is_approved == 1}
-                      >
-                        {item.is_approved == 1
-                          ? "Approved"
-                          : "Click to approve"}
-                      </button>
-                    </td>
-                  )}
+                {permission && permission.includes("5") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleApprovedOnLeave}
+                      value={item.id}
+                      disabled={item.is_approved == 1}
+                    >
+                      {item.is_approved == 1 ? "Approved" : "Click to approve"}
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditOnLeave}>
           <label>Staff</label>
           <select name="staff_id" defaultValue={editItem.staff_id}>
