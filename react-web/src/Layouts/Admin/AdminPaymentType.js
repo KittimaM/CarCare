@@ -4,14 +4,26 @@ import {
   GetAllPaymentType,
   PostAddPaymentType,
   UpdatePaymentType,
+  GetPermission,
 } from "../Api";
 
 const AdminPaymentType = () => {
   const [paymentType, setPaymentType] = useState([]);
   const [editItem, setEditItem] = useState();
+  const [permission, setPermission] = useState(null);
+
   useEffect(() => {
     fetchPaymentType();
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_payment_type_access"]);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
+
   const fetchPaymentType = () => {
     GetAllPaymentType().then((data) => {
       const { status, msg } = data;
@@ -75,13 +87,16 @@ const AdminPaymentType = () => {
 
   return (
     <div>
-      <form onSubmit={handleAddPaymentType}>
-        <label>Payment Type</label>
-        <input type="text" name="payment_type" />
-        <button className="btn" type="submit">
-          Submit Payment
-        </button>
-      </form>
+      {permission && permission.includes("2") && (
+        <form onSubmit={handleAddPaymentType}>
+          <label>Payment Type</label>
+          <input type="text" name="payment_type" />
+          <button className="btn" type="submit">
+            Submit Payment
+          </button>
+        </form>
+      )}
+
       {paymentType && (
         <table>
           <thead>
@@ -89,8 +104,8 @@ const AdminPaymentType = () => {
               <td>id</td>
               <td>payment_type</td>
               <td>is_available</td>
-              <td>Edit</td>
-              <td>Delete</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
             </tr>
           </thead>
           <tbody>
@@ -101,30 +116,34 @@ const AdminPaymentType = () => {
                 <td>
                   {item.is_available == 1 ? "available" : "not available"}
                 </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.id}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteRole}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
+                {permission && permission.includes("3") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.id}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                )}
+                {permission && permission.includes("4") && (
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteRole}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       )}
-      {editItem && (
+      {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditPaymentType}>
           <label>Payment Type</label>
           <input

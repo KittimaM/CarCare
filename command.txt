@@ -2,7 +2,4 @@
 docker-compose up --build -d
 docker-compose up --build
 
-แก้ booking service
-แก้ token 
-แก้ sql fkey pkey
-เวลากด edit แล้วเปลี่ยนไปกดปุ่มอื่น
+ทำ customer

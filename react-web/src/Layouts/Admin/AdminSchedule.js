@@ -3,16 +3,26 @@ import {
   GetAllBooking,
   PostAddAccount,
   PostUpDateBookingStatus,
+  GetPermission,
 } from "../Api";
 
 const AdminSchedule = () => {
   const [todaySchedule, setTodaySchedule] = useState([]);
+  const [permission, setPermission] = useState(null);
 
   useEffect(() => {
     GetAllBooking().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setTodaySchedule(msg);
+      } else {
+        console.log(data);
+      }
+    });
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setPermission(msg["have_schedule_access"]);
       } else {
         console.log(data);
       }
@@ -148,7 +158,9 @@ const AdminSchedule = () => {
                   </button>
                 )}
                 {item.processing_status == "Paid" && <p>Done</p>}
-                {item.processing_status == "Cancel" && <p>Cancel</p>}
+                {permission &&
+                  permission.includes("4") &&
+                  item.processing_status == "Cancel" && <p>Cancel</p>}
               </td>
               {item.processing_status == "Waiting" && (
                 <td>
