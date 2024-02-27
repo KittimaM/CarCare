@@ -102,7 +102,6 @@ const CustomerBooking = () => {
   };
 
   const handleSelectedService = (event) => {
-    event.preventDefault();
     service.map((item) => {
       if (item.id == event.target.value) item.isSelected = event.target.checked;
     });
