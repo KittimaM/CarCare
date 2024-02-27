@@ -240,98 +240,142 @@ const CustomerBooking = () => {
   };
 
   return (
-    <div>
-      <label name="car_no">car_no</label>
-      {car ? (
-        <form onSubmit={handleSubmitSelectedCar}>
-          <select name="car_no">
-            {car.map((item) => (
-              <option
-                key={item.car_no}
-                value={[
-                  item.car_no,
-                  item.car_size_id,
-                  item.car_size,
-                  item.car_color,
-                  item.customer_phone,
-                  item.customer_name,
-                ]}
-              >
-                {item.car_no}
-              </option>
-            ))}
-          </select>
-          <button type="submit" className="btn">
-            Select Car
-          </button>
-        </form>
-      ) : (
-        <Button to="/customer/car" name="add car" />
-      )}
-      {service && (
-        <form onSubmit={handleSubmitSelectedService}>
-          <label>Service</label>
-          {service.map((item) => (
-            <div>
-              <input
-                type="checkbox"
-                name={item.id}
-                value={item.id}
-                onChange={handleSelectedService}
-              />
-              <label>{item.service}</label>
+
+    <>
+
+    
+     <div className="navbar bg-neutral text-neutral-content">
+              <div className="flex-1">
+                <a className="btn btn-ghost text-xl">Carcare</a>
+              </div>
+              <div className="flex-none gap-2">
+                {/* <div className="form-control">
+                  <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
+                </div> */}
+                <div>
+                    <Button to="/customer/car" name="Customer Car" />
+                </div>
+                <div className="dropdown dropdown-end">
+                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                    <div className="w-10 rounded-full">
+                      <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    </div>
+                    
+                  </div>
+                  <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                    <div className='badge m-2'>Phattraporn Bunjongket</div>
+                    {/* <li>
+                      <a className="justify-between">
+                        Profile
+                      </a>
+                    </li> */}
+                    <li><a>Settings</a></li>
+                    <li><a>Logout</a></li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          ))}
-          <button className="btn" type="submit">
-            Submit Service
-          </button>
-        </form>
-      )}
-      {dateOptions &&
-        dateOptions.map((item) => (
-          <button
-            onClick={handleSubmitSelectedDate}
-            value={item}
-            key={item}
-            className="btn"
-          >
-            {item}
-          </button>
-        ))}
-      {selectedDate &&
-        timeOptions &&
-        timeOptions.map((item) => (
-          <button
-            onClick={handleSubmitSelectedTime}
-            key={item}
-            value={item}
-            className="btn"
-          >
-            {item}
-          </button>
-        ))}
-      {paymentType && (
-        <form onSubmit={handleSubmitPaymentType}>
-          <label name="payment_type">Payment Type</label>
-          <select name="payment_type">
-            {paymentType.map(
-              (item) =>
-                item.is_available == 1 && (
-                  <option key={item.id} value={item.id}>
-                    {item.payment_type}
+
+
+
+
+
+        <div>
+          <label name="car_no">car_no</label>
+          {car ? (
+            <form onSubmit={handleSubmitSelectedCar}>
+              <select name="car_no">
+                {car.map((item) => (
+                  <option
+                    key={item.car_no}
+                    value={[
+                      item.car_no,
+                      item.car_size_id,
+                      item.car_size,
+                      item.car_color,
+                      item.customer_phone,
+                      item.customer_name,
+                    ]}
+                  >
+                    {item.car_no}
                   </option>
-                )
-            )}
-          </select>
-          <button type="submit" className="btn">
-            Select Payment Type
+                ))}
+              </select>
+              <button type="submit" className="btn">
+                Select Car
+              </button>
+            </form>
+          ) : (
+            <Button to="/customer/car" name="add car" />
+          )}
+          {service && (
+            <form onSubmit={handleSubmitSelectedService}>
+              <label>Service</label>
+              {service.map((item) => (
+                <div>
+                  <input
+                    type="checkbox"
+                    name={item.id}
+                    value={item.id}
+                    onChange={handleSelectedService}
+                  />
+                  <label>{item.service}</label>
+                </div>
+              ))}
+              <button className="btn" type="submit">
+                Submit Service
+              </button>
+            </form>
+          )}
+          {dateOptions &&
+            dateOptions.map((item) => (
+              <button
+                onClick={handleSubmitSelectedDate}
+                value={item}
+                key={item}
+                className="btn"
+              >
+                {item}
+              </button>
+            ))}
+          {selectedDate &&
+            timeOptions &&
+            timeOptions.map((item) => (
+              <button
+                onClick={handleSubmitSelectedTime}
+                key={item}
+                value={item}
+                className="btn"
+              >
+                {item}
+              </button>
+            ))}
+          {paymentType && (
+            <form onSubmit={handleSubmitPaymentType}>
+              <label name="payment_type">Payment Type</label>
+              <select name="payment_type">
+                {paymentType.map(
+                  (item) =>
+                    item.is_available == 1 && (
+                      <option key={item.id} value={item.id}>
+                        {item.payment_type}
+                      </option>
+                    )
+                )}
+              </select>
+              <button type="submit" className="btn">
+                Select Payment Type
+              </button>
+            </form>
+          )}
+          <button onClick={handleSubmitBooking} className="btn">
+            Submit Booking
           </button>
-        </form>
-      )}
-      <button onClick={handleSubmitBooking} className="btn">
-        Submit Booking
-      </button>
-    </div>
+        </div>
+
+
+    </>
+    
   );
 };
 

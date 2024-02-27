@@ -39,7 +39,7 @@ const CustomerIndex = () => {
     <>
 
 
-<div className="navbar bg-neutral text-neutral-content">
+          <div className="navbar bg-neutral text-neutral-content">
               <div className="flex-1">
                 <a className="btn btn-ghost text-xl">Carcare</a>
               </div>
@@ -78,7 +78,10 @@ const CustomerIndex = () => {
                       <div className="max-w-md">
                           <h1 className="mb-5 text-5xl font-bold">OPEN EVERYDAY 10.00-20.00</h1>
                           <p className="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                          <Button to="/customer/booking" className="btn bg-black" name="Booking" >BOOK HERE!</Button>
+                          
+                            <Button to="/customer/booking" className="btn btn-warning" name="Booking" >BOOK HERE!</Button>
+                          
+                          
                          
                       </div>
                   </div>

@@ -47,7 +47,7 @@ const CustomerLogin = () => {
                     <div className="label">
                         <span className="label-text">Phone Number</span>
                     </div>
-                    <input type="text" name="phone" required placeholder="Type here" className="input input-bordered w-full max-w-xs" />                
+                    <input type="text" name="phone" required className="input input-bordered w-full max-w-xs" />                
                 </label>
 
             
@@ -56,7 +56,7 @@ const CustomerLogin = () => {
                         <span className="label-text">Password</span>
                     </div>
                     
-                    <input type="password" name="password" required placeholder="Type here" className="input input-bordered w-full max-w-xs" />                
+                    <input type="password" name="password" required  className="input input-bordered w-full max-w-xs" />                
                 </label>
 
 
