@@ -18,7 +18,7 @@ const CustomerCar = () => {
       if (status == "SUCCESS") {
         setCarSize(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -29,7 +29,7 @@ const CustomerCar = () => {
       if (status == "SUCCESS") {
         setCar(msg);
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -53,7 +53,7 @@ const CustomerCar = () => {
       if (status == "SUCCESS") {
         fetchCustomerCar();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -72,7 +72,7 @@ const CustomerCar = () => {
       if (status == "SUCCESS") {
         fetchCustomerCar();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };
@@ -93,7 +93,7 @@ const CustomerCar = () => {
         setEditItem(null);
         fetchCustomerCar();
       } else {
-        console.log("status : ", status, ", msg: ", msg);
+        console.log(data);
       }
     });
   };

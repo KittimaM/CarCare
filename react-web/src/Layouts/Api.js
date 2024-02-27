@@ -13,6 +13,9 @@ const putApi = async (url, jsonData, isUseToken = false) => {
     }
     const response = await axios.put(initialUrl + url, jsonData, { headers });
     const { status, msg } = response.data;
+    if (msg == "token expired") {
+      localStorage.removeItem("token");
+    }
     return { status: status, msg: msg };
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -30,6 +33,9 @@ const postApi = async (url, jsonData, isUseToken = false) => {
     }
     const response = await axios.post(initialUrl + url, jsonData, { headers });
     const { status, msg } = response.data;
+    if (msg == "token expired") {
+      localStorage.removeItem("token");
+    }
     return { status: status, msg: msg };
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -50,6 +56,9 @@ const deleteApi = async (url, jsonData, isUseToken = false) => {
       data: jsonData,
     });
     const { status, msg } = response.data;
+    if (msg == "token expired") {
+      localStorage.removeItem("token");
+    }
     return { status: status, msg: msg };
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -71,6 +80,9 @@ const getApi = async (url, options = null, isUseToken = false) => {
     }
     const response = await axios.get(initialUrl + url, { headers });
     const { status, msg } = response.data;
+    if (msg == "token expired") {
+      localStorage.removeItem("token");
+    }
     return { status: status, msg: msg };
   } catch (error) {
     console.error("Error fetching data:", error);
