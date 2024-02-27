@@ -19,7 +19,7 @@ const AdminIndex = () => {
   return (
     <div>
       {permission && permission["have_staff_user_access"].includes("1") && (
-        <Button to="/admin/user" name="User" />
+        <Button to="/admin/user"  name="User" />
       )}
       {permission && permission["have_car_size_access"].includes("1") && (
         <Button to="/admin/carsize" name="Car Size" />
