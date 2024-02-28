@@ -19,7 +19,7 @@ const AdminIndex = () => {
   return (
     <div>
       {permission && permission["have_staff_user_access"].includes("1") && (
-        <Button to="/admin/user"  name="User" />
+        <Button to="/admin/user" name="User" />
       )}
       {permission && permission["have_car_size_access"].includes("1") && (
         <Button to="/admin/carsize" name="Car Size" />
@@ -54,6 +54,9 @@ const AdminIndex = () => {
         )}
       {permission && permission["have_day_off_list_access"].includes("1") && (
         <Button to="/admin/dayoff" name="Day Off List" />
+      )}
+      {permission && permission["have_on_leave_type_access"].includes("1") && (
+        <Button to="/admin/onleave-type" name="On Leave Type" />
       )}
     </div>
   );

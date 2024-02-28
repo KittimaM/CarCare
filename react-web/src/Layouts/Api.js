@@ -281,3 +281,19 @@ export const GetAllDayOff = () => {
 export const UpdateDayOff = (jsonData) => {
   return putApi("admin/dayoff", jsonData);
 };
+
+export const GetAllOnLeaveType = () => {
+  return getApi("admin/onleave-type");
+};
+
+export const DeleteOnLeaveType = (jsonData) => {
+  return deleteApi("admin/onleave-type", jsonData);
+};
+
+export const UpdateOnLeaveType = (jsonData) => {
+  return putApi("admin/onleave-type", jsonData);
+};
+
+export const AddOnLeaveType = (jsonData) => {
+  return postApi("admin/onleave-type", jsonData);
+};

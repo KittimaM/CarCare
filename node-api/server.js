@@ -23,6 +23,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminOnLeaveTypeRoute = require("./Routes/Admin/AdminOnLeaveType");
+app.use("/api/admin/onleave-type", AdminOnLeaveTypeRoute);
+
 const AdminDayOffRoute = require("./Routes/Admin/AdminDayOff");
 app.use("/api/admin/dayoff", AdminDayOffRoute);
 
