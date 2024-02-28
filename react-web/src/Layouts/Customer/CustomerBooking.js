@@ -12,6 +12,13 @@ import {
   GetAllPaymentType,
 } from "../Api";
 
+
+// --------------------
+import {Box} from '@mui/material'
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider'
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 const CustomerBooking = () => {
   const [car, setCar] = useState();
   const [service, setService] = useState();
@@ -328,6 +335,16 @@ const CustomerBooking = () => {
           )}
           {dateOptions &&
             dateOptions.map((item) => (
+
+              // <Box style={{padding:"20px"}}>
+              //   < LocalizationProvider dateAdapter={AdapterDayjs} 
+              //   onClick={handleSubmitSelectedTime} 
+              //   key={item} 
+              //   value={item} >
+              //     <DatePicker label="Select Date"/>
+              //   </LocalizationProvider>
+              // </Box>
+
               <button
                 onClick={handleSubmitSelectedDate}
                 value={item}
@@ -340,6 +357,7 @@ const CustomerBooking = () => {
           {selectedDate &&
             timeOptions &&
             timeOptions.map((item) => (
+              
               <button
                 onClick={handleSubmitSelectedTime}
                 key={item}
