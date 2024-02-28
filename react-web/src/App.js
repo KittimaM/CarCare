@@ -22,6 +22,7 @@ import AdminPaymentType from "./Layouts/Admin/AdminPaymentType";
 import AdminOnLeave from "./Layouts/Admin/AdminOnLeave";
 import AdminOnLeavePersonal from "./Layouts/Admin/AdminOnLeavePersonal";
 import AdminDayOff from "./Layouts/Admin/AdminDayOff";
+import AdminOnLeaveType from "./Layouts/Admin/AdminOnLeaveType";
 
 function App() {
   console.log(new Date());
@@ -39,11 +40,12 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/onleave-type" element={<AdminOnLeaveType />} />
         <Route
           path="/admin/onleave/personal"
           element={<AdminOnLeavePersonal />}
         />
-        <Route path="/admin/dayoff" element={<AdminDayOff/>}/>
+        <Route path="/admin/dayoff" element={<AdminDayOff />} />
         <Route path="/admin/onleave" element={<AdminOnLeave />} />
         <Route path="/admin/paymenttype" element={<AdminPaymentType />} />
         <Route path="/admin/payment" element={<AdminPayment />} />
