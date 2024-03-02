@@ -31,15 +31,31 @@ const AdminIndex = () => {
 
     <>
 
-<Sidebar aria-label="Sidebar with content separator example">
+<Sidebar aria-label="Sidebar with content separator example " className='h-screen '>
       
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <button>
+        {permission && permission["have_staff_user_access"].includes("1") && (
+          <Button to="/admin/dayoff"  name="User" >
+            <Sidebar.Item href="#" icon={HiChartPie}>
+                Dashboard
+            </Sidebar.Item>
+          </Button>
+          
+        )}
+
+        {permission && permission["have_staff_user_access"].includes("1") && (
+              <Sidebar.Item to="/admin/dayoff"  icon={HiChartPie}>
+                  Dashboard
+              </Sidebar.Item>
+            
+          )}
+
+        
           <Sidebar.Item href="#" icon={HiChartPie}>
             Dashboard
           </Sidebar.Item>
-          </button>
+          
           <Sidebar.Item href="#" icon={HiViewBoards}>
             Kanban
           </Sidebar.Item>
