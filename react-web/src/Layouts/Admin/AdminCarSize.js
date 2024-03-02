@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   DeleteCarSize,
   GetAllCarSize,
@@ -99,7 +100,9 @@ const AdminCarSize = () => {
   };
 
   return (
-    <div>
+    <>
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {permission && permission.includes("2") && addCarSize && (
         <div>
           {" "}
@@ -186,6 +189,8 @@ const AdminCarSize = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

@@ -5,10 +5,7 @@ import { GetPermission } from "../Api";
 
 // ---------------------
 
-import { Avatar, Dropdown, Navbar ,Sidebar} from 'flowbite-react';
-import { BiBuoy } from 'react-icons/bi';
-import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser, HiViewBoards } from 'react-icons/hi';
-
+import SidebarAdmin from "./SidebarAdmin";
 
 
 
@@ -31,64 +28,10 @@ const AdminIndex = () => {
 
     <>
 
-<Sidebar aria-label="Sidebar with content separator example " className='h-screen '>
-      
-      <Sidebar.Items>
-        <Sidebar.ItemGroup>
-        {permission && permission["have_staff_user_access"].includes("1") && (
-          <Button to="/admin/dayoff"  name="User" >
-            <Sidebar.Item href="#" icon={HiChartPie}>
-                Dashboard
-            </Sidebar.Item>
-          </Button>
-          
-        )}
-
-        {permission && permission["have_staff_user_access"].includes("1") && (
-              <Sidebar.Item to="/admin/dayoff"  icon={HiChartPie}>
-                  Dashboard
-              </Sidebar.Item>
-            
-          )}
-
-        
-          <Sidebar.Item href="#" icon={HiChartPie}>
-            Dashboard
-          </Sidebar.Item>
-          
-          <Sidebar.Item href="#" icon={HiViewBoards}>
-            Kanban
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiInbox}>
-            Inbox
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiUser}>
-            Users
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiShoppingBag}>
-            Products
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiArrowSmRight}>
-            Sign In
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiTable}>
-            Sign Up
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-        <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
-            Upgrade to Pro
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={HiViewBoards}>
-            Documentation
-          </Sidebar.Item>
-          <Sidebar.Item href="#" icon={BiBuoy}>
-            Help
-          </Sidebar.Item>
-        </Sidebar.ItemGroup>
-      </Sidebar.Items>
-    </Sidebar>
-
+    <SidebarAdmin/>
+    
+    <div className="ml-80 mt-16">
+      </div>
 
     {/* <div>
       {permission && permission["have_staff_user_access"].includes("1") && (

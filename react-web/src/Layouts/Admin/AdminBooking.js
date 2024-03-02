@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FetchBooking, DefaultTimeOptions, TimeFormat } from "../Module";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   GetAllCarSize,
   PostAddAdminBooking,
@@ -212,7 +213,10 @@ const AdminBooking = () => {
   };
 
   return (
-    <div>
+    <>
+
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       <form onSubmit={handleSubmitCar}>
         <label name="customer_name">Customer_name</label>
         <input type="text" name="customer_name" />
@@ -294,6 +298,8 @@ const AdminBooking = () => {
         Submit Booking
       </button>
     </div>
+    </>
+    
   );
 };
 

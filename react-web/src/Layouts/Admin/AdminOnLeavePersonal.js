@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   GetOnLeavePersonal,
   GetPermission,
@@ -93,7 +94,10 @@ const AdminOnLeavePersonal = () => {
     });
   };
   return (
-    <div>
+    <>
+
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {permission && permission.includes("2") && (
         <form onSubmit={handleAddOnLeave}>
           <lable>Date</lable>
@@ -163,6 +167,8 @@ const AdminOnLeavePersonal = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

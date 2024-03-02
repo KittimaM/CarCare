@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   GetAllBooking,
   PostAddAccount,
@@ -93,7 +94,10 @@ const AdminSchedule = () => {
   };
 
   return (
-    <table>
+    <>
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
+      <table>
       <thead>
         <tr>
           <td>id</td>
@@ -177,6 +181,10 @@ const AdminSchedule = () => {
           ))}
       </tbody>
     </table>
+    </div>
+    
+    </>
+    
   );
 };
 

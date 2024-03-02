@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { GetAllRole, PostAddStaffUser } from "../Api";
+import SidebarAdmin from "./SidebarAdmin";
 
 const AdminRegister = () => {
   const [allRole, setAllRole] = useState();
@@ -28,7 +29,9 @@ const AdminRegister = () => {
   }, []);
 
   return (
-    <div>
+    <>
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {allRole && (
         <form onSubmit={handleRegister}>
           <label name="username">username</label>
@@ -50,6 +53,8 @@ const AdminRegister = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

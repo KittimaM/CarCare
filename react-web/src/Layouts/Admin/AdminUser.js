@@ -8,6 +8,11 @@ import {
 } from "../Api";
 import { Button } from "../Module";
 
+// --------------------
+
+import SidebarAdmin from "./SidebarAdmin";
+
+
 const AdminUser = () => {
   const [user, setUser] = useState(null);
   const [allRole, setAllRole] = useState();
@@ -92,7 +97,17 @@ const AdminUser = () => {
   };
 
   return (
-    <div>
+    <>
+
+
+
+    
+
+    <SidebarAdmin />
+
+
+    <div className="ml-80 mt-16">
+
       {permission && permission.includes("2") && (
         <Button to="/admin/register" name="register" />
       )}
@@ -167,6 +182,9 @@ const AdminUser = () => {
         </form>
       )}
     </div>
+
+
+    </>
   );
 };
 

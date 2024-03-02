@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   DeleteAccount,
   GetAllAccount,
@@ -144,7 +145,10 @@ const AdminAccount = () => {
   };
 
   return (
-    <div>
+    <> 
+    
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {permission && permission.includes("2") && (
         <div>
           <form onSubmit={handleAddIncome}>
@@ -245,6 +249,8 @@ const AdminAccount = () => {
         </form>
       )}
     </div>
+    </>
+   
   );
 };
 

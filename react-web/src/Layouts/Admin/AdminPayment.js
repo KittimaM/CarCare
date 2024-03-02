@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { GetAllBooking } from "../Api";
+import SidebarAdmin from "./SidebarAdmin";
 
 const AdminPayment = () => {
   const [paidList, setPaidList] = useState([]);
@@ -14,7 +15,10 @@ const AdminPayment = () => {
     });
   }, []);
   return (
-    <table>
+    <> 
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
+      <table>
       <thead>
         <tr>
           <td>id</td>
@@ -37,6 +41,10 @@ const AdminPayment = () => {
           ))}
       </tbody>
     </table>
+    </div>
+    
+    </>
+   
   );
 };
 

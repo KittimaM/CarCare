@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   DeleteRole,
   GetAllRole,
@@ -321,7 +322,11 @@ const AdminRole = () => {
   };
 
   return (
-    <div>
+    <>
+
+    <SidebarAdmin />
+
+    <div className="ml-80 mt-16">
       {permission && permission.includes("2") && roleAccess && (
         <form onSubmit={handleSubmitAddRole}>
           <label name="role"> role</label>
@@ -424,6 +429,8 @@ const AdminRole = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

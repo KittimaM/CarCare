@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   ApproveOnLeave,
   DeleteOnLeave,
@@ -123,7 +124,9 @@ const AdminOnLeave = () => {
   };
 
   return (
-    <div>
+    <>
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {staff && permission && permission.includes("2") && (
         <form onSubmit={handleAddOnLeave}>
           <label>Staff</label>
@@ -224,6 +227,8 @@ const AdminOnLeave = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

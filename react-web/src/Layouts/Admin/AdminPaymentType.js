@@ -6,6 +6,7 @@ import {
   UpdatePaymentType,
   GetPermission,
 } from "../Api";
+import SidebarAdmin from "./SidebarAdmin";
 
 const AdminPaymentType = () => {
   const [paymentType, setPaymentType] = useState([]);
@@ -86,7 +87,9 @@ const AdminPaymentType = () => {
   };
 
   return (
-    <div>
+    <>
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {permission && permission.includes("2") && (
         <form onSubmit={handleAddPaymentType}>
           <label>Payment Type</label>
@@ -161,6 +164,8 @@ const AdminPaymentType = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

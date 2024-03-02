@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import SidebarAdmin from "./SidebarAdmin";
 import {
   AddOnLeaveType,
   DeleteOnLeaveType,
@@ -93,7 +94,9 @@ const AdminOnLeaveType = () => {
     });
   };
   return (
-    <div>
+  <>
+  <SidebarAdmin />
+    <div className="ml-80 mt-16">
       {permission && permission.includes("2") && onLeaveType && (
         <form onSubmit={handleAddOnLeaveType}>
           <label>type</label>
@@ -177,6 +180,8 @@ const AdminOnLeaveType = () => {
         </form>
       )}
     </div>
+  </>
+    
   );
 };
 
