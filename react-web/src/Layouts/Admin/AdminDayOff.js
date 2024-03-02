@@ -78,7 +78,7 @@ const AdminDayOff = () => {
     <SidebarAdmin />
     <div className="ml-80 mt-16">
       {dayOffList && (
-        <table>
+        <table >
           <thead>
             <tr>
               {dates.map((date, index) => (

@@ -37,6 +37,7 @@ const CustomerIndex = () => {
   };
   return (
     <>
+    
       <div className="navbar bg-neutral text-neutral-content">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl">Carcare</a>

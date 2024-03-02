@@ -147,7 +147,7 @@ const AdminOnLeave = () => {
         </form>
       )}
       {onLeaveList && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>staff_id</td>

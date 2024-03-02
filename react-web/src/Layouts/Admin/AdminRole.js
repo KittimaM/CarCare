@@ -350,7 +350,7 @@ const AdminRole = () => {
         </form>
       )}
       {role && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>id</td>

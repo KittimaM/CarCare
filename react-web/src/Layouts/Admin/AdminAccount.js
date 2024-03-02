@@ -176,7 +176,7 @@ const AdminAccount = () => {
         </div>
       )}
 
-      <table>
+      <table className="table table-md">
         <thead>
           <tr>
             <td>label</td>

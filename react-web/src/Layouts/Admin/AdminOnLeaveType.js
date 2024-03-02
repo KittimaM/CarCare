@@ -114,7 +114,7 @@ const AdminOnLeaveType = () => {
         </form>
       )}
       {onLeaveType && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>type</td>

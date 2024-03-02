@@ -101,7 +101,7 @@ const AdminPaymentType = () => {
       )}
 
       {paymentType && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>id</td>

@@ -122,7 +122,7 @@ const AdminCarSize = () => {
       )}
 
       {carSize && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>id</td>

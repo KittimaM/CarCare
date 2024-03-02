@@ -283,9 +283,6 @@ const CustomerBooking = () => {
             </div>
 
 
-
-
-
         <div>
           <label name="car_no">car_no</label>
           {car ? (

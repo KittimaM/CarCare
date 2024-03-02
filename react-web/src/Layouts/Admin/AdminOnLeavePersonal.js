@@ -110,7 +110,7 @@ const AdminOnLeavePersonal = () => {
         </form>
       )}
       {onLeaveList && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>date</td>

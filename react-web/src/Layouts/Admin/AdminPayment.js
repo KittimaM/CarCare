@@ -18,29 +18,33 @@ const AdminPayment = () => {
     <> 
     <SidebarAdmin />
     <div className="ml-80 mt-16">
-      <table>
-      <thead>
-        <tr>
-          <td>id</td>
-          <td>car_no</td>
-          <td>date</td>
-          <td>time</td>
-          <td>service_price</td>
-        </tr>
-      </thead>
-      <tbody>
-        {paidList &&
-          paidList.map((item) => (
-            <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.car_no}</td>
-              <td>{item.start_service_datetime.split("T")[0]}</td>
-              <td>{item.start_service_datetime.split("T")[1]}</td>
-              <td>{item.service_price}</td>
-            </tr>
-          ))}
-      </tbody>
-    </table>
+      <div className='contrainer'>
+              <div className="overflow-x-auto">
+                <table className="table table-md">
+                <thead>
+                  <tr>
+                    <td>id</td>
+                    <td>car_no</td>
+                    <td>date</td>
+                    <td>time</td>
+                    <td>service_price</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paidList &&
+                    paidList.map((item) => (
+                      <tr key={item.id}>
+                        <td>{item.id}</td>
+                        <td>{item.car_no}</td>
+                        <td>{item.start_service_datetime.split("T")[0]}</td>
+                        <td>{item.start_service_datetime.split("T")[1]}</td>
+                        <td>{item.service_price}</td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              </div>
+      </div>
     </div>
     
     </>

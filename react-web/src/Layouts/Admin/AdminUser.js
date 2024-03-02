@@ -113,7 +113,7 @@ const AdminUser = () => {
       )}
 
       {user && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>id</td>

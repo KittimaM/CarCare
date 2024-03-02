@@ -116,7 +116,7 @@ const AdminService = () => {
   };
 
   return (
-    
+
     <>
     <SidebarAdmin />
     <div className="ml-80 mt-16">
@@ -152,7 +152,7 @@ const AdminService = () => {
       )}
 
       {service && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>id</td>

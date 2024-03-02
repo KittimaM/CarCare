@@ -1,6 +1,6 @@
 import { Modal } from 'flowbite';
-import type { ModalOptions, ModalInterface } from 'flowbite';
-import type { InstanceOptions } from 'flowbite';
+import { ModalOptions, ModalInterface } from 'flowbite';
+import { InstanceOptions } from 'flowbite';
 
 
 import React, { useEffect, useState } from "react";

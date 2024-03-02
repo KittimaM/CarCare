@@ -18,7 +18,7 @@ const CustomerFirstPage = () => {
             {/* <a className="btn bg- m-1" to="/login" >Login</a>
             <a className="btn bg-red-300 m-2">Sign up</a> */}
         </div>
-   
+        
     </div>
 
     <div className="hero min-h-screen bg-[url('https://images.pexels.com/photos/1056516/pexels-photo-1056516.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')]" >
@@ -27,7 +27,7 @@ const CustomerFirstPage = () => {
                 <div className="max-w-md">
                     <h1 className="mb-5 text-5xl font-bold">OPEN EVERYDAY 10.00-20.00</h1>
                     <p className="mb-5">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    <button className="btn btn-warning" >BOOK HERE!</button>
+                    <Button to="/customer/login" name="BOOK HERE!" />
                 </div>
             </div>
     </div>
