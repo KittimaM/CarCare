@@ -82,7 +82,7 @@ const CustomerRegister = () => {
 
             <div className="py-4">
               <button type="submit" className="btn btn-warning w-full">
-                LOGIN
+                Register
               </button>
             </div>
           </form>

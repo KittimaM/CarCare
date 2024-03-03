@@ -214,92 +214,92 @@ const AdminBooking = () => {
 
   return (
     <>
+      <SidebarAdmin />
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> Booking page</div>
 
-    <SidebarAdmin />
-    <div className="ml-80 mt-16">
-      <form onSubmit={handleSubmitCar}>
-        <label name="customer_name">Customer_name</label>
-        <input type="text" name="customer_name" />
-        <label name="customer_phone">Customer_phone</label>
-        <input type="text" name="customer_phone" />
-        <label name="car_no">car_no</label>
-        <input type="text" name="car_no" />
-        <label name="car_color">car_color</label>
-        <input type="text" name="car_color" />
-        {carSize && (
-          <div>
-            <label name="car_size">car_size</label>
-            <select name="car_size">
-              {carSize.map(
+        <form onSubmit={handleSubmitCar}>
+          <label name="customer_name">Customer_name</label>
+          <input type="text" name="customer_name" />
+          <label name="customer_phone">Customer_phone</label>
+          <input type="text" name="customer_phone" />
+          <label name="car_no">car_no</label>
+          <input type="text" name="car_no" />
+          <label name="car_color">car_color</label>
+          <input type="text" name="car_color" />
+          {carSize && (
+            <div>
+              <label name="car_size">car_size</label>
+              <select name="car_size">
+                {carSize.map(
+                  (item) =>
+                    item.is_available == 1 && (
+                      <option key={item.id} value={[item.id, item.size]}>
+                        {item.size}
+                      </option>
+                    )
+                )}
+              </select>
+            </div>
+          )}
+          <button type="submit" className="btn">
+            Selected Car
+          </button>
+        </form>
+
+        {service && (
+          <form onSubmit={handleSubmitSelectedService}>
+            <label>Service</label>
+            {service.map((item) => (
+              <div>
+                <input
+                  type="checkbox"
+                  name={item.id}
+                  value={item.id}
+                  onChange={handleSelectedService}
+                />
+                <label>{item.service}</label>
+              </div>
+            ))}
+            <button className="btn" type="submit">
+              Submit Service
+            </button>
+          </form>
+        )}
+        {timeOptions &&
+          timeOptions.map((item) => (
+            <button
+              onClick={handleSubmitSelectedTime}
+              key={item}
+              value={item}
+              className="btn"
+            >
+              {item}
+            </button>
+          ))}
+        {paymentType && (
+          <form onSubmit={handleSubmitPaymentType}>
+            <label name="payment_type">Payment Type</label>
+            <select name="payment_type">
+              {paymentType.map(
                 (item) =>
                   item.is_available == 1 && (
-                    <option key={item.id} value={[item.id, item.size]}>
-                      {item.size}
+                    <option key={item.id} value={item.id}>
+                      {item.payment_type}
                     </option>
                   )
               )}
             </select>
-          </div>
+            <button type="submit" className="btn">
+              Select Payment Type
+            </button>
+          </form>
         )}
-        <button type="submit" className="btn">
-          Selected Car
+        <button onClick={handleSubmitBooking} className="btn">
+          Submit Booking
         </button>
-      </form>
-
-      {service && (
-        <form onSubmit={handleSubmitSelectedService}>
-          <label>Service</label>
-          {service.map((item) => (
-            <div>
-              <input
-                type="checkbox"
-                name={item.id}
-                value={item.id}
-                onChange={handleSelectedService}
-              />
-              <label>{item.service}</label>
-            </div>
-          ))}
-          <button className="btn" type="submit">
-            Submit Service
-          </button>
-        </form>
-      )}
-      {timeOptions &&
-        timeOptions.map((item) => (
-          <button
-            onClick={handleSubmitSelectedTime}
-            key={item}
-            value={item}
-            className="btn"
-          >
-            {item}
-          </button>
-        ))}
-      {paymentType && (
-        <form onSubmit={handleSubmitPaymentType}>
-          <label name="payment_type">Payment Type</label>
-          <select name="payment_type">
-            {paymentType.map(
-              (item) =>
-                item.is_available == 1 && (
-                  <option key={item.id} value={item.id}>
-                    {item.payment_type}
-                  </option>
-                )
-            )}
-          </select>
-          <button type="submit" className="btn">
-            Select Payment Type
-          </button>
-        </form>
-      )}
-      <button onClick={handleSubmitBooking} className="btn">
-        Submit Booking
-      </button>
-    </div>
+      </div>
     </>
-    
   );
 };
 

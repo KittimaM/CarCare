@@ -88,84 +88,85 @@ const AdminPaymentType = () => {
 
   return (
     <>
-    <SidebarAdmin />
-    <div className="ml-80 mt-16">
-      {permission && permission.includes("2") && (
-        <form onSubmit={handleAddPaymentType}>
-          <label>Payment Type</label>
-          <input type="text" name="payment_type" />
-          <button className="btn" type="submit">
-            Submit Payment
-          </button>
-        </form>
-      )}
+      <SidebarAdmin />
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> Payment Type page</div>
 
-      {paymentType && (
-        <table className="table table-md">
-          <thead>
-            <tr>
-              <td>id</td>
-              <td>payment_type</td>
-              <td>is_available</td>
-              {permission && permission.includes("3") && <td>Edit</td>}
-              {permission && permission.includes("4") && <td>Delete</td>}
-            </tr>
-          </thead>
-          <tbody>
-            {paymentType.map((item) => (
+        {permission && permission.includes("2") && (
+          <form onSubmit={handleAddPaymentType}>
+            <label>Payment Type</label>
+            <input type="text" name="payment_type" />
+            <button className="btn" type="submit">
+              Submit Payment
+            </button>
+          </form>
+        )}
+
+        {paymentType && (
+          <table className="table table-lg">
+            <thead>
               <tr>
-                <td>{item.id}</td>
-                <td>{item.payment_type}</td>
-                <td>
-                  {item.is_available == 1 ? "available" : "not available"}
-                </td>
-                {permission && permission.includes("3") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={() => handleSelectEditId(item)}
-                      value={item.id}
-                    >
-                      Edit
-                    </button>
-                  </td>
-                )}
-                {permission && permission.includes("4") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={handleDeleteRole}
-                      value={item.id}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                )}
+                <td>id</td>
+                <td>payment_type</td>
+                <td>is_available</td>
+                {permission && permission.includes("3") && <td>Edit</td>}
+                {permission && permission.includes("4") && <td>Delete</td>}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      {permission && permission.includes("3") && editItem && (
-        <form onSubmit={handleEditPaymentType}>
-          <label>Payment Type</label>
-          <input
-            type="text"
-            name="payment_type"
-            defaultValue={editItem.payment_type}
-          />
-          <select name="is_available" defaultValue={editItem.is_available}>
-            <option value={1}>available</option>
-            <option value={0}>not available</option>
-          </select>
-          <button className="btn" type="submit">
-            Submit Payment
-          </button>
-        </form>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {paymentType.map((item) => (
+                <tr>
+                  <td>{item.id}</td>
+                  <td>{item.payment_type}</td>
+                  <td>
+                    {item.is_available == 1 ? "available" : "not available"}
+                  </td>
+                  {permission && permission.includes("3") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={() => handleSelectEditId(item)}
+                        value={item.id}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
+                  {permission && permission.includes("4") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={handleDeleteRole}
+                        value={item.id}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {permission && permission.includes("3") && editItem && (
+          <form onSubmit={handleEditPaymentType}>
+            <label>Payment Type</label>
+            <input
+              type="text"
+              name="payment_type"
+              defaultValue={editItem.payment_type}
+            />
+            <select name="is_available" defaultValue={editItem.is_available}>
+              <option value={1}>available</option>
+              <option value={0}>not available</option>
+            </select>
+            <button className="btn" type="submit">
+              Submit Payment
+            </button>
+          </form>
+        )}
+      </div>
     </>
-    
   );
 };
 

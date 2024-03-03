@@ -98,6 +98,9 @@ const AdminOnLeavePersonal = () => {
 
     <SidebarAdmin />
     <div className="ml-80 mt-16">
+    <div className="text-lg bg-yellow-100 mb-5 "> On Leave page</div>
+
+      
       {permission && permission.includes("2") && (
         <form onSubmit={handleAddOnLeave}>
           <lable>Date</lable>
@@ -110,7 +113,7 @@ const AdminOnLeavePersonal = () => {
         </form>
       )}
       {onLeaveList && (
-        <table className="table table-md">
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>date</td>

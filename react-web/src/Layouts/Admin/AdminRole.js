@@ -327,6 +327,9 @@ const AdminRole = () => {
     <SidebarAdmin />
 
     <div className="ml-80 mt-16">
+
+    <div className="text-lg bg-yellow-100 mb-5 "> Role page</div>
+
       {permission && permission.includes("2") && roleAccess && (
         <form onSubmit={handleSubmitAddRole}>
           <label name="role"> role</label>
@@ -350,7 +353,7 @@ const AdminRole = () => {
         </form>
       )}
       {role && (
-        <table className="table table-md">
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>id</td>

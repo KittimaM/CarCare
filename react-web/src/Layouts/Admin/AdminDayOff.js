@@ -77,6 +77,8 @@ const AdminDayOff = () => {
     <>
     <SidebarAdmin />
     <div className="ml-80 mt-16">
+    <div className="text-lg bg-yellow-100 mb-5 "> Day off page</div>
+
       {dayOffList && (
         <table >
           <thead>

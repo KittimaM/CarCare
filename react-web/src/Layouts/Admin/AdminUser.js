@@ -108,6 +108,8 @@ const AdminUser = () => {
 
     <div className="ml-80 mt-16">
 
+      <div className="text-lg bg-yellow-50 mb-5 "> User page </div>
+
       {permission && permission.includes("2") && (
         <Button to="/admin/register" name="register" />
       )}

@@ -97,7 +97,11 @@ const AdminSchedule = () => {
     <>
     <SidebarAdmin />
     <div className="ml-80 mt-16">
-      <table className="table table-md">
+
+      <div className="text-lg bg-yellow-100 mb-5 "> Schedule page</div>
+
+
+      <table className="table table-lg">
       <thead>
         <tr>
           <td>id</td>

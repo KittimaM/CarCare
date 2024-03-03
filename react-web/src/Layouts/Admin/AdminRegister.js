@@ -30,31 +30,31 @@ const AdminRegister = () => {
 
   return (
     <>
-    <SidebarAdmin />
-    <div className="ml-80 mt-16">
-      {allRole && (
-        <form onSubmit={handleRegister}>
-          <label name="username">username</label>
-          <input type="text" name="username" />
-          <label name="name">name</label>
-          <input type="text" name="name" />
-          <label name="password">password</label>
-          <input type="password" name="password" />
-          {
-            <select name="role">
-              {allRole.map((item) => (
-                <option value={[item.id, item.role]} key={item.id}>
-                  {item.role}
-                </option>
-              ))}
-            </select>
-          }
-          <button type="submit">Submit</button>
-        </form>
-      )}
-    </div>
+      <SidebarAdmin />
+
+      <div className="ml-80 mt-16">
+        {allRole && (
+          <form onSubmit={handleRegister}>
+            <label name="username">username</label>
+            <input type="text" name="username" />
+            <label name="name">name</label>
+            <input type="text" name="name" />
+            <label name="password">password</label>
+            <input type="password" name="password" />
+            {
+              <select name="role">
+                {allRole.map((item) => (
+                  <option value={[item.id, item.role]} key={item.id}>
+                    {item.role}
+                  </option>
+                ))}
+              </select>
+            }
+            <button type="submit">Submit</button>
+          </form>
+        )}
+      </div>
     </>
-    
   );
 };
 

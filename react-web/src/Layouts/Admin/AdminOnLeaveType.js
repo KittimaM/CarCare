@@ -95,8 +95,11 @@ const AdminOnLeaveType = () => {
   };
   return (
   <>
+
   <SidebarAdmin />
     <div className="ml-80 mt-16">
+    <div className="text-lg bg-yellow-100 mb-5 "> OnLeaveType page</div>
+
       {permission && permission.includes("2") && onLeaveType && (
         <form onSubmit={handleAddOnLeaveType}>
           <label>type</label>
@@ -114,7 +117,7 @@ const AdminOnLeaveType = () => {
         </form>
       )}
       {onLeaveType && (
-        <table className="table table-md">
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>type</td>

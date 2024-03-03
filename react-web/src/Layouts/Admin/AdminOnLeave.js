@@ -125,110 +125,113 @@ const AdminOnLeave = () => {
 
   return (
     <>
-    <SidebarAdmin />
-    <div className="ml-80 mt-16">
-      {staff && permission && permission.includes("2") && (
-        <form onSubmit={handleAddOnLeave}>
-          <label>Staff</label>
-          <select name="staff_id">
-            {staff.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-          <lable>Date</lable>
-          <input type="date" name="date" />
-          <label>Reason</label>
-          <input type="text" name="reason" />
-          <button className="btn" type="submit">
-            Submit OnLeave
-          </button>
-        </form>
-      )}
-      {onLeaveList && (
-        <table className="table table-md">
-          <thead>
-            <tr>
-              <td>staff_id</td>
-              <td>date</td>
-              <td>reason</td>
-              <td>status</td>
-              {permission && permission.includes("3") && <td>Edit</td>}
-              {permission && permission.includes("4") && <td>Delete</td>}
-              {permission && permission.includes("5") && <td>Approve</td>}
-            </tr>
-          </thead>
-          <tbody>
-            {onLeaveList.map((item) => (
+      <SidebarAdmin />
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> On Leave List page</div>
+
+        {staff && permission && permission.includes("2") && (
+          <form onSubmit={handleAddOnLeave}>
+            <label>Staff</label>
+            <select name="staff_id">
+              {staff.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            <lable>Date</lable>
+            <input type="date" name="date" />
+            <label>Reason</label>
+            <input type="text" name="reason" />
+            <button className="btn" type="submit">
+              Submit OnLeave
+            </button>
+          </form>
+        )}
+        {onLeaveList && (
+          <table className="table table-lg">
+            <thead>
               <tr>
-                <td>{item.staff_id}</td>
-                <td>{item.date.split("T")[0]}</td>
-                <td>{item.reason}</td>
-                <td>{item.is_approved == 1 ? "Approved" : "Pending"}</td>
-                {permission && permission.includes("3") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={() => handleSelectEditId(item)}
-                      value={item.id}
-                      disabled={item.is_approved == 1}
-                    >
-                      Edit
-                    </button>
-                  </td>
-                )}
-                {permission && permission.includes("4") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={handleDeleteOnLeave}
-                      value={item.id}
-                      disabled={item.is_approved == 1}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                )}
-                {permission && permission.includes("5") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={handleApprovedOnLeave}
-                      value={item.id}
-                      disabled={item.is_approved == 1}
-                    >
-                      {item.is_approved == 1 ? "Approved" : "Click to approve"}
-                    </button>
-                  </td>
-                )}
+                <td>staff_id</td>
+                <td>date</td>
+                <td>reason</td>
+                <td>status</td>
+                {permission && permission.includes("3") && <td>Edit</td>}
+                {permission && permission.includes("4") && <td>Delete</td>}
+                {permission && permission.includes("5") && <td>Approve</td>}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      {permission && permission.includes("3") && editItem && (
-        <form onSubmit={handleEditOnLeave}>
-          <label>Staff</label>
-          <select name="staff_id" defaultValue={editItem.staff_id}>
-            {staff.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-          <lable>Date</lable>
-          <input type="date" name="date" defaultValue={editItem.date} />
-          <label>Reason</label>
-          <input type="text" name="reason" defaultValue={editItem.reason} />
-          <button className="btn" type="submit">
-            Submit Edit
-          </button>
-        </form>
-      )}
-    </div>
+            </thead>
+            <tbody>
+              {onLeaveList.map((item) => (
+                <tr>
+                  <td>{item.staff_id}</td>
+                  <td>{item.date.split("T")[0]}</td>
+                  <td>{item.reason}</td>
+                  <td>{item.is_approved == 1 ? "Approved" : "Pending"}</td>
+                  {permission && permission.includes("3") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={() => handleSelectEditId(item)}
+                        value={item.id}
+                        disabled={item.is_approved == 1}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
+                  {permission && permission.includes("4") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={handleDeleteOnLeave}
+                        value={item.id}
+                        disabled={item.is_approved == 1}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
+                  {permission && permission.includes("5") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={handleApprovedOnLeave}
+                        value={item.id}
+                        disabled={item.is_approved == 1}
+                      >
+                        {item.is_approved == 1
+                          ? "Approved"
+                          : "Click to approve"}
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {permission && permission.includes("3") && editItem && (
+          <form onSubmit={handleEditOnLeave}>
+            <label>Staff</label>
+            <select name="staff_id" defaultValue={editItem.staff_id}>
+              {staff.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+            <lable>Date</lable>
+            <input type="date" name="date" defaultValue={editItem.date} />
+            <label>Reason</label>
+            <input type="text" name="reason" defaultValue={editItem.reason} />
+            <button className="btn" type="submit">
+              Submit Edit
+            </button>
+          </form>
+        )}
+      </div>
     </>
-    
   );
 };
 
