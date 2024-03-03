@@ -160,7 +160,7 @@ const CustomerCar = () => {
         </button>
       </form>
       {car && (
-        <table>
+        <table className="table table-md">
           <thead>
             <tr>
               <td>car_no</td>

@@ -284,7 +284,7 @@ const CustomerBooking = () => {
 
 
         <div>
-          <label name="car_no">car_no</label>
+          <label name="car_no" className="text-xl mt-2">car_no</label>
           {car ? (
             <form onSubmit={handleSubmitSelectedCar}>
               <select name="car_no">
@@ -313,7 +313,7 @@ const CustomerBooking = () => {
           )}
           {service && (
             <form onSubmit={handleSubmitSelectedService}>
-              <label>Service</label>
+              <label className="text-xl mt-2">Service</label>
               {service.map((item) => (
                 <div>
                   <input
