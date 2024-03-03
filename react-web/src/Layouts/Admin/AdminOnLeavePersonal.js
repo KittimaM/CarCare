@@ -5,11 +5,13 @@ import {
   UpdateOnLeave,
   DeleteOnLeave,
   PostAddOnLeavePersonal,
+  GetAllOnLeaveType,
 } from "../Api";
 
 const AdminOnLeavePersonal = () => {
   const [permission, setPermission] = useState();
   const [onLeaveList, setOnLeaveList] = useState([]);
+  const [onLeaveType, setOnLeaveType] = useState([]);
   const [editItem, setEditItem] = useState(null);
 
   const fetchOnLeaveList = () => {
@@ -31,6 +33,14 @@ const AdminOnLeavePersonal = () => {
         console.log(data);
       }
     });
+    GetAllOnLeaveType().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setOnLeaveType(msg);
+      } else {
+        console.log(data);
+      }
+    });
     fetchOnLeaveList();
   }, []);
 
@@ -38,7 +48,9 @@ const AdminOnLeavePersonal = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      date: data.get("date"),
+      on_leave_type_id: data.get("on_leave_type_id"),
+      start_date: data.get("start_date"),
+      end_date: data.get("end_date"),
       reason: data.get("reason"),
     };
     PostAddOnLeavePersonal(jsonData).then((data) => {
@@ -60,10 +72,16 @@ const AdminOnLeavePersonal = () => {
     const data = new FormData(event.currentTarget);
     const jsonData = {
       id: editItem.id,
-      date:
-        data.get("date").length == 0
-          ? editItem.date.split("T")[0]
-          : data.get("date"),
+      staff_id: editItem.staff_id,
+      on_leave_type_id: data.get("on_leave_type_id"),
+      start_date:
+        data.get("start_date").length == 0
+          ? editItem.start_date.split("T")[0]
+          : data.get("start_date"),
+      end_date:
+        data.get("end_date").length == 0
+          ? editItem.end_date.split("T")[0]
+          : data.get("end_date"),
       reason: data.get("reason"),
     };
 
@@ -94,10 +112,18 @@ const AdminOnLeavePersonal = () => {
   };
   return (
     <div>
-      {permission && permission.includes("2") && (
+      {permission && permission.includes("2") && onLeaveType && (
         <form onSubmit={handleAddOnLeave}>
-          <lable>Date</lable>
-          <input type="date" name="date" />
+          <label>type</label>
+          <select name="on_leave_type_id">
+            {onLeaveType.map((item) => (
+              <option value={item.id}>{item.type}</option>
+            ))}
+          </select>
+          <lable>Start Date</lable>
+          <input type="date" name="start_date" />
+          <lable>End Date</lable>
+          <input type="date" name="end_date" />
           <label>Reason</label>
           <input type="text" name="reason" />
           <button className="btn" type="submit">
@@ -109,7 +135,9 @@ const AdminOnLeavePersonal = () => {
         <table>
           <thead>
             <tr>
-              <td>date</td>
+              <td>start_date</td>
+              <td>end_date</td>
+              <td>on_leave_type</td>
               <td>reason</td>
               <td>status</td>
               {permission && permission.includes("3") && <td>Edit</td>}
@@ -119,7 +147,15 @@ const AdminOnLeavePersonal = () => {
           <tbody>
             {onLeaveList.map((item) => (
               <tr key={item.id}>
-                <td>{item.date.split("T")[0]}</td>
+                <td>{String(item.start_date).split("T")[0]}</td>
+                <td>{String(item.end_date).split("T")[0]}</td>
+                <td>
+                  {onLeaveType &&
+                    onLeaveType.map(
+                      (leaveType) =>
+                        leaveType.id == item.on_leave_type_id && leaveType.type
+                    )}
+                </td>
                 <td>{item.reason}</td>
                 <td>{item.is_approved == 1 ? "Approved" : "Pending"}</td>
                 {permission && permission.includes("3") && (
@@ -153,8 +189,23 @@ const AdminOnLeavePersonal = () => {
       )}
       {permission && permission.includes("3") && editItem && (
         <form onSubmit={handleEditOnLeave}>
-          <lable>Date</lable>
-          <input type="date" name="date" defaultValue={editItem.date} />
+          <label>type</label>
+          <select
+            name="on_leave_type_id"
+            defaultValue={editItem.on_leave_type_id}
+          >
+            {onLeaveType.map((item) => (
+              <option value={item.id}>{item.type}</option>
+            ))}
+          </select>
+          <lable>Start Date</lable>
+          <input
+            type="date"
+            name="start_date"
+            defaultValue={editItem.start_date}
+          />
+          <lable>End Date</lable>
+          <input type="date" name="end_date" defaultValue={editItem.end_date} />
           <label>Reason</label>
           <input type="text" name="reason" defaultValue={editItem.reason} />
           <button className="btn" type="submit">
