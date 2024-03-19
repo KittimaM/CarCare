@@ -14,6 +14,7 @@ import {
 
 const CustomerBooking = () => {
   const [car, setCar] = useState();
+  const [isSelectedCar, setIsSelectedCar] = useState(false);
   const [service, setService] = useState();
   const [selectedDate, setSelectedDate] = useState();
   const [booking, setBooking] = useState([]);
@@ -23,6 +24,9 @@ const CustomerBooking = () => {
   const [defaultTimeOptions, setDefaultTimeOptions] = useState([]);
   const [serviceUseTime, setServiceUseTime] = useState(0);
   const [paymentType, setPaymentType] = useState();
+  const [isReadyToBook, setIsReadyToBook] = useState(false);
+  const [isSelectedService, setIsSelectedService] = useState(false);
+  const [selectedService, setSelectedService] = useState([]);
 
   useEffect(() => {
     GetAllPaymentType().then((data) => {
@@ -64,70 +68,73 @@ const CustomerBooking = () => {
   const handleSubmitSelectedCar = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const [
-      car_no,
-      car_size_id,
-      car_size,
-      car_color,
-      customer_phone,
-      customer_name,
-    ] = data.get("car_no").split(",");
+    const [plate_no, size_id, size, color] = data.get("plate_no").split(",");
     const jsonData = {
       ...booking,
-      car_no: car_no,
-      car_size_id: car_size_id,
-      car_size: car_size,
-      car_color: car_color,
-      customer_phone: customer_phone,
-      customer_name: customer_name,
+      plate_no: plate_no,
+      size_id: size_id,
+      size: size,
+      color: color,
     };
     GetAllService().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         const availableService = msg.filter(
           (item) =>
-            item.is_available == 1 && jsonData.car_size_id == item.car_size_id
+            item.is_available == 1 && jsonData.size_id == item.car_size_id
         );
-        let serviceOptions = [];
-        availableService.map((item) => {
-          serviceOptions.push({ ...item, isSelected: false });
-        });
-        setService(serviceOptions);
+        setService(availableService);
         setBooking(jsonData);
+        setIsSelectedCar(true);
       } else {
         setService(null);
+        setIsSelectedCar(false);
+        setBooking(null);
         console.log(data);
       }
     });
   };
 
   const handleSelectedService = (event) => {
-    service.map((item) => {
-      if (item.id == event.target.value) item.isSelected = event.target.checked;
-    });
-    setService(service);
+    const { value, checked } = event.target;
+    const [id, service] = value.split(",");
+    if (checked) {
+      setSelectedService((item) => [...item, { [id]: service }]);
+    } else {
+      setSelectedService((item) =>
+        item.filter((item) => Object.keys(item)[0] !== id)
+      );
+    }
   };
 
   const handleSubmitSelectedService = (event) => {
     event.preventDefault();
-    let serviceDetail = [];
-    let servcieUseTime = 0;
-    let servicePrice = 0;
-    service.map((item) => {
-      if (item.isSelected == true) {
-        serviceDetail.push(item.id);
-        servcieUseTime += parseInt(item.used_time);
-        servicePrice += parseInt(item.price);
-      }
-    });
-    const jsonData = {
-      ...booking,
-      service: serviceDetail,
-      service_usetime: servcieUseTime,
-      service_price: servicePrice,
-    };
-    setBooking(jsonData);
-    setServiceUseTime(servcieUseTime);
+    if (selectedService.length == 0) {
+      alert("please select service");
+    } else {
+      let serviceDetail = [];
+      let servcieUseTime = 0;
+      let servicePrice = 0;
+      service.map((item) => {
+        selectedService.map((service) => {
+          console.log("Object.keys(service)[0] : ", Object.keys(service)[0]);
+        });
+        // if (item.isSelected == true) {
+        //   serviceDetail.push(item.id);
+        //   servcieUseTime += parseInt(item.used_time);
+        //   servicePrice += parseInt(item.price);
+        // }
+      });
+      // const jsonData = {
+      //   ...booking,
+      //   service: serviceDetail,
+      //   service_usetime: servcieUseTime,
+      //   service_price: servicePrice,
+      // };
+      // setBooking(jsonData);
+      // setServiceUseTime(servcieUseTime);
+      setIsSelectedService(true);
+    }
   };
 
   const handleSubmitSelectedDate = (event) => {
@@ -231,6 +238,7 @@ const CustomerBooking = () => {
       payment_type_id: data.get("payment_type"),
     };
     setBooking(jsonData);
+    setIsReadyToBook(true);
   };
 
   const handleSubmitBooking = (event) => {
@@ -238,143 +246,176 @@ const CustomerBooking = () => {
     PostAddCustomerBooking(booking).then((data) => console.log(data));
   };
 
+  const serviceContent = () => {
+    return (
+      service && (
+        <form onSubmit={handleSubmitSelectedService}>
+          <label>Service</label>
+          {service.map((item) => (
+            <div>
+              <input
+                type="checkbox"
+                name={item.id}
+                value={[item.id, item.service]}
+                onChange={handleSelectedService}
+                disabled={isSelectedService}
+              />
+              <label>{item.service}</label>
+            </div>
+          ))}
+          {!isSelectedService && (
+            <button className="btn" type="submit">
+              Submit Service
+            </button>
+          )}
+        </form>
+      )
+    );
+  };
+
+  const dateContent = () => {
+    const min = dateOptions[0];
+    const max = dateOptions.pop();
+    return (
+      <div>
+        <label for="date">date</label>
+        <input type="date" min={min} max={max} />
+      </div>
+
+      // dateOptions &&
+      // dateOptions.map((item) => (
+      //   <button
+      //     onClick={handleSubmitSelectedDate}
+      //     value={item}
+      //     key={item}
+      //     className="btn"
+      //   >
+      //     {item}
+      //   </button>
+      // ))
+    );
+  };
+
+  const handleCancelBooking = (event) => {
+    event.preventDefault();
+    setIsSelectedCar(false);
+    setIsSelectedService(false);
+  };
+
   return (
-
     <>
-
-    
-     <div className="navbar bg-neutral text-neutral-content">
-              <div className="flex-1">
-                <a className="btn btn-ghost text-xl">Carcare</a>
-              </div>
-              <div className="flex-none gap-2">
-                {/* <div className="form-control">
+      <div className="navbar bg-neutral text-neutral-content">
+        <div className="flex-1">
+          <a className="btn btn-ghost text-xl">Carcare</a>
+        </div>
+        <div className="flex-none gap-2">
+          {/* <div className="form-control">
                   <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" />
                 </div> */}
-                <div>
-                    <Button to="/customer/car" name="Customer Car" />
-                </div>
-                <div className="dropdown dropdown-end">
-                  <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                    <div className="w-10 rounded-full">
-                      <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                    </div>
-                    
-                  </div>
-                  <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                    <div className='badge m-2'>Phattraporn Bunjongket</div>
-                    {/* <li>
+          <div>
+            <Button to="/customer/car" name="Customer Car" />
+          </div>
+          <div className="dropdown dropdown-end">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img
+                  alt="Tailwind CSS Navbar component"
+                  src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+                />
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
+            >
+              <div className="badge m-2">Phattraporn Bunjongket</div>
+              {/* <li>
                       <a className="justify-between">
                         Profile
                       </a>
                     </li> */}
-                    <li><a>Settings</a></li>
-                    <li><a>Logout</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-
-
-
-
-        <div>
-          <label name="car_no">car_no</label>
-          {car ? (
-            <form onSubmit={handleSubmitSelectedCar}>
-              <select name="car_no">
-                {car.map((item) => (
-                  <option
-                    key={item.car_no}
-                    value={[
-                      item.car_no,
-                      item.car_size_id,
-                      item.car_size,
-                      item.car_color,
-                      item.customer_phone,
-                      item.customer_name,
-                    ]}
-                  >
-                    {item.car_no}
-                  </option>
-                ))}
-              </select>
-              <button type="submit" className="btn">
-                Select Car
-              </button>
-            </form>
-          ) : (
-            <Button to="/customer/car" name="add car" />
-          )}
-          {service && (
-            <form onSubmit={handleSubmitSelectedService}>
-              <label>Service</label>
-              {service.map((item) => (
-                <div>
-                  <input
-                    type="checkbox"
-                    name={item.id}
-                    value={item.id}
-                    onChange={handleSelectedService}
-                  />
-                  <label>{item.service}</label>
-                </div>
-              ))}
-              <button className="btn" type="submit">
-                Submit Service
-              </button>
-            </form>
-          )}
-          {dateOptions &&
-            dateOptions.map((item) => (
-              <button
-                onClick={handleSubmitSelectedDate}
-                value={item}
-                key={item}
-                className="btn"
-              >
-                {item}
-              </button>
-            ))}
-          {selectedDate &&
-            timeOptions &&
-            timeOptions.map((item) => (
-              <button
-                onClick={handleSubmitSelectedTime}
-                key={item}
-                value={item}
-                className="btn"
-              >
-                {item}
-              </button>
-            ))}
-          {paymentType && (
-            <form onSubmit={handleSubmitPaymentType}>
-              <label name="payment_type">Payment Type</label>
-              <select name="payment_type">
-                {paymentType.map(
-                  (item) =>
-                    item.is_available == 1 && (
-                      <option key={item.id} value={item.id}>
-                        {item.payment_type}
-                      </option>
-                    )
-                )}
-              </select>
-              <button type="submit" className="btn">
-                Select Payment Type
-              </button>
-            </form>
-          )}
-          <button onClick={handleSubmitBooking} className="btn">
-            Submit Booking
-          </button>
+              <li>
+                <a>Settings</a>
+              </li>
+              <li>
+                <a>Logout</a>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
 
-
+      <label name="plate_no">plate_no</label>
+      {car ? (
+        <form onSubmit={handleSubmitSelectedCar}>
+          {isSelectedCar ? (
+            <p>{booking.plate_no}</p>
+          ) : (
+            <select name="plate_no">
+              {car.map((item) => (
+                <option
+                  key={item.id}
+                  value={[item.plate_no, item.size_id, item.size, item.color]}
+                >
+                  {item.plate_no}
+                </option>
+              ))}
+            </select>
+          )}
+          {!isSelectedCar && (
+            <button type="submit" className="btn">
+              Select Car
+            </button>
+          )}
+        </form>
+      ) : (
+        <Button to="/customer/car" name="add car" />
+      )}
+      {isSelectedCar && serviceContent()}
+      {isSelectedService && dateContent()}
+      {/* {selectedDate &&
+          timeOptions &&
+          timeOptions.map((item) => (
+            <button
+              onClick={handleSubmitSelectedTime}
+              key={item}
+              value={item}
+              className="btn"
+            >
+              {item}
+            </button>
+          ))}
+        {paymentType && (
+          <form onSubmit={handleSubmitPaymentType}>
+            <label name="payment_type">Payment Type</label>
+            <select name="payment_type">
+              {paymentType.map(
+                (item) =>
+                  item.is_available == 1 && (
+                    <option key={item.id} value={item.id}>
+                      {item.payment_type}
+                    </option>
+                  )
+              )}
+            </select>
+            <button type="submit" className="btn">
+              Select Payment Type
+            </button>
+          </form>
+        )} */}
+      {isReadyToBook && (
+        <button onClick={handleSubmitBooking} className="btn">
+          Submit Booking
+        </button>
+      )}
+      <button onClick={handleCancelBooking} className="btn">
+        Cancel Booking
+      </button>
     </>
-    
   );
 };
 
