@@ -27,6 +27,8 @@ const CustomerBooking = () => {
   const [isReadyToBook, setIsReadyToBook] = useState(false);
   const [isSelectedService, setIsSelectedService] = useState(false);
   const [selectedService, setSelectedService] = useState([]);
+  const [isSelectedTime, setIsSelectedTime] = useState(false);
+  const [isSelectedPaymentType, setIsSelectedPaymentType] = useState(false);
 
   useEffect(() => {
     GetAllPaymentType().then((data) => {
@@ -89,7 +91,7 @@ const CustomerBooking = () => {
       } else {
         setService(null);
         setIsSelectedCar(false);
-        setBooking(null);
+        setBooking([]);
         console.log(data);
       }
     });
@@ -97,12 +99,11 @@ const CustomerBooking = () => {
 
   const handleSelectedService = (event) => {
     const { value, checked } = event.target;
-    const [id, service] = value.split(",");
     if (checked) {
-      setSelectedService((item) => [...item, { [id]: service }]);
+      setSelectedService((item) => [...item, value]);
     } else {
       setSelectedService((item) =>
-        item.filter((item) => Object.keys(item)[0] !== id)
+        item.filter((item) => item !== value)
       );
     }
   };
@@ -112,27 +113,26 @@ const CustomerBooking = () => {
     if (selectedService.length == 0) {
       alert("please select service");
     } else {
-      let serviceDetail = [];
+      let serviceId = [];
       let servcieUseTime = 0;
       let servicePrice = 0;
       service.map((item) => {
-        selectedService.map((service) => {
-          console.log("Object.keys(service)[0] : ", Object.keys(service)[0]);
+        selectedService.map((selected_service_item) => {
+          if (item.id == selected_service_item) {
+            serviceId.push(item.id);
+            servcieUseTime += parseInt(item.used_time);
+            servicePrice += parseFloat(item.price);
+          }
         });
-        // if (item.isSelected == true) {
-        //   serviceDetail.push(item.id);
-        //   servcieUseTime += parseInt(item.used_time);
-        //   servicePrice += parseInt(item.price);
-        // }
       });
-      // const jsonData = {
-      //   ...booking,
-      //   service: serviceDetail,
-      //   service_usetime: servcieUseTime,
-      //   service_price: servicePrice,
-      // };
-      // setBooking(jsonData);
-      // setServiceUseTime(servcieUseTime);
+      const jsonData = {
+        ...booking,
+        service: serviceId,
+        service_usetime: servcieUseTime,
+        service_price: servicePrice,
+      };
+      setBooking(jsonData);
+      setServiceUseTime(servcieUseTime);
       setIsSelectedService(true);
     }
   };
@@ -167,6 +167,7 @@ const CustomerBooking = () => {
     } else {
       setTimeOptions(defaultTimeOptions);
     }
+    setIsSelectedTime(true);
   };
 
   const handleSubmitSelectedTime = (event) => {
@@ -214,6 +215,7 @@ const CustomerBooking = () => {
             end_service_datetime: service_date + "T" + endTime,
           };
           setBooking(jsonData);
+          setIsSelectedPaymentType(true);
         } else {
           alert("please select other time");
         }
@@ -224,6 +226,7 @@ const CustomerBooking = () => {
           end_service_datetime: service_date + "T" + endTime,
         };
         setBooking(jsonData);
+        setIsSelectedPaymentType(true);
       }
     } else {
       alert("please select other time");
@@ -256,7 +259,7 @@ const CustomerBooking = () => {
               <input
                 type="checkbox"
                 name={item.id}
-                value={[item.id, item.service]}
+                value={item.id}
                 onChange={handleSelectedService}
                 disabled={isSelectedService}
               />
@@ -274,32 +277,69 @@ const CustomerBooking = () => {
   };
 
   const dateContent = () => {
-    const min = dateOptions[0];
-    const max = dateOptions.pop();
     return (
-      <div>
-        <label for="date">date</label>
-        <input type="date" min={min} max={max} />
-      </div>
-
-      // dateOptions &&
-      // dateOptions.map((item) => (
-      //   <button
-      //     onClick={handleSubmitSelectedDate}
-      //     value={item}
-      //     key={item}
-      //     className="btn"
-      //   >
-      //     {item}
-      //   </button>
-      // ))
+      dateOptions &&
+      dateOptions.map((item) => (
+        <button
+          onClick={handleSubmitSelectedDate}
+          value={item}
+          key={item}
+          className="btn"
+        >
+          {item}
+        </button>
+      ))
     );
   };
+
+  const timeContent = () => {
+    return (
+      timeOptions &&
+      timeOptions.map((item) => (
+        <button
+          onClick={handleSubmitSelectedTime}
+          key={item}
+          value={item}
+          className="btn"
+        >
+          {item}
+        </button>
+      ))
+    )
+  }
+
+  const paymentContent = () => {
+    return (
+      paymentType && (
+        <form onSubmit={handleSubmitPaymentType}>
+          <label name="payment_type">Payment Type</label>
+          <select name="payment_type">
+            {paymentType.map(
+              (item) =>
+                item.is_available == 1 && (
+                  <option key={item.id} value={item.id}>
+                    {item.payment_type}
+                  </option>
+                )
+            )}
+          </select>
+          <button type="submit" className="btn">
+            Select Payment Type
+          </button>
+        </form>
+      )
+    )
+  }
 
   const handleCancelBooking = (event) => {
     event.preventDefault();
     setIsSelectedCar(false);
+    setSelectedService([]);
     setIsSelectedService(false);
+    setIsSelectedTime(false);
+    setIsSelectedPaymentType(false);
+    setIsReadyToBook(false);
+    setBooking([]);
   };
 
   return (
@@ -377,44 +417,18 @@ const CustomerBooking = () => {
       )}
       {isSelectedCar && serviceContent()}
       {isSelectedService && dateContent()}
-      {/* {selectedDate &&
-          timeOptions &&
-          timeOptions.map((item) => (
-            <button
-              onClick={handleSubmitSelectedTime}
-              key={item}
-              value={item}
-              className="btn"
-            >
-              {item}
-            </button>
-          ))}
-        {paymentType && (
-          <form onSubmit={handleSubmitPaymentType}>
-            <label name="payment_type">Payment Type</label>
-            <select name="payment_type">
-              {paymentType.map(
-                (item) =>
-                  item.is_available == 1 && (
-                    <option key={item.id} value={item.id}>
-                      {item.payment_type}
-                    </option>
-                  )
-              )}
-            </select>
-            <button type="submit" className="btn">
-              Select Payment Type
-            </button>
-          </form>
-        )} */}
+      {isSelectedTime && timeContent()}
+      {isSelectedPaymentType && paymentContent()}
       {isReadyToBook && (
         <button onClick={handleSubmitBooking} className="btn">
           Submit Booking
         </button>
       )}
-      <button onClick={handleCancelBooking} className="btn">
-        Cancel Booking
-      </button>
+      {booking.length != 0 && 
+        <button onClick={handleCancelBooking} className="btn">
+          Cancel Booking
+        </button>
+      }
     </>
   );
 };

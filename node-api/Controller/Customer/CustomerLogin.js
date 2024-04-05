@@ -27,7 +27,7 @@ const CustomerLogin = (req, res, next) => {
                 { id: customerId, phone: phone, name: customerName },
                 secret,
                 {
-                  expiresIn: "1h",
+                  expiresIn: "8h",
                 }
               );
               res.json({ status: "SUCCESS", msg: token });
