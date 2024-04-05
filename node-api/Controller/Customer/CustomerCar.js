@@ -5,10 +5,10 @@ const secret = process.env.SECRET_WORD;
 const CustomerCar = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
-    const { phone } = jwt.verify(token, secret);
+    const { id } = jwt.verify(token, secret);
     Conn.execute(
-      `SELECT * FROM customer_car WHERE customer_phone = ? `,
-      [phone],
+      `SELECT * FROM customer_car WHERE customer_id = ? AND deleted_at IS NULL `,
+      [id],
       function (error, results) {
         if (error) {
           res.json({ status: "ERROR", msg: error });
@@ -27,12 +27,35 @@ const CustomerCar = (req, res, next) => {
 
 const CustomerAddCustomerCar = (req, res, next) => {
   try {
-    const { car_no, car_color, car_size_id, car_size } = req.body;
+    const {
+      plate_no,
+      prefix,
+      postfix,
+      province,
+      brand,
+      model,
+      size_id,
+      size,
+      color,
+    } = req.body;
     const token = req.headers.authorization.split(" ")[1];
-    const { phone, name } = jwt.verify(token, secret);
+    const { id } = jwt.verify(token, secret);
     Conn.execute(
-      "INSERT INTO customer_car(customer_phone, customer_name, car_size_id, car_size, car_no, car_color) VALUES (?,?,?,?,?,?)",
-      [phone, name, car_size_id, car_size, car_no, car_color],
+      `INSERT INTO 
+      customer_car(customer_id, plate_no, prefix, postfix, province, brand, model, size_id, size, color) 
+      VALUES (?,?,?,?,?,?,?,?,?,?)`,
+      [
+        id,
+        plate_no,
+        prefix,
+        postfix,
+        province,
+        brand,
+        model,
+        size_id,
+        size,
+        color,
+      ],
       function (error, result) {
         if (error) {
           res.json({ status: "ERROR", msg: error });
@@ -48,10 +71,10 @@ const CustomerAddCustomerCar = (req, res, next) => {
 };
 
 const CustomerDeleteCustomerCar = (req, res, next) => {
-  const { car_no } = req.body;
+  const { id } = req.body;
   Conn.execute(
-    "DELETE FROM customer_car WHERE car_no = ?",
-    [car_no],
+    `UPDATE customer_car SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?`,
+    [id],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -63,10 +86,34 @@ const CustomerDeleteCustomerCar = (req, res, next) => {
 };
 
 const CustomerUpdateCustomerCar = (req, res, next) => {
-  const { car_no, car_color, car_size_id, car_size, old_car_no } = req.body;
+  const {
+    id,
+    plate_no,
+    prefix,
+    postfix,
+    province,
+    brand,
+    model,
+    size_id,
+    size,
+    color,
+  } = req.body;
   Conn.execute(
-    "UPDATE customer_car SET car_no = ?, car_color = ?, car_size_id = ?, car_size = ? WHERE car_no = ?",
-    [car_no, car_color, car_size_id, car_size, old_car_no],
+    `UPDATE customer_car 
+      SET plate_no = ?, prefix = ?, postfix = ?, province = ?, brand = ?, model = ?, size_id = ?, size = ?, color = ? 
+      WHERE id = ?`,
+    [
+      plate_no,
+      prefix,
+      postfix,
+      province,
+      brand,
+      model,
+      size_id,
+      size,
+      color,
+      id,
+    ],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });

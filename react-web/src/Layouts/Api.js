@@ -297,3 +297,7 @@ export const UpdateOnLeaveType = (jsonData) => {
 export const AddOnLeaveType = (jsonData) => {
   return postApi("admin/onleave-type", jsonData);
 };
+
+export const GetAllProvince = () => {
+  return getApi("admin/province");
+};
