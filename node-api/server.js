@@ -7,6 +7,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // customer
+const CustomerProfileRoute = require("./Routes/Customer/CustomerProfile");
+app.use("/api/customer/profile", CustomerProfileRoute);
+
 const CustomerRegisterRoute = require("./Routes/Customer/CustomerRegister");
 app.use("/api/customer/register", CustomerRegisterRoute);
 

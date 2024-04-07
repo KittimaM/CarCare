@@ -14,8 +14,6 @@ const CustomerCar = () => {
   const [province, setProvince] = useState(null);
   const [editItem, setEditItem] = useState(null);
 
-  const fetchCarSize = async () => {};
-
   const fetchCustomerCar = async () => {
     GetCustomerCar().then((data) => {
       const { status, msg } = data;

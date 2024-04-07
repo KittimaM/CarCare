@@ -23,15 +23,16 @@ import AdminOnLeave from "./Layouts/Admin/AdminOnLeave";
 import AdminOnLeavePersonal from "./Layouts/Admin/AdminOnLeavePersonal";
 import AdminDayOff from "./Layouts/Admin/AdminDayOff";
 import AdminOnLeaveType from "./Layouts/Admin/AdminOnLeaveType";
+import CustomerProfile from "./Layouts/Customer/CustomerProfile";
 
 function App() {
-  console.log(new Date());
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Index />} />
 
         {/* customer */}
+        <Route path="/customer/profile" element={<CustomerProfile/>} />
         <Route path="/customer/index" element={<CustomerIndex />} />
         <Route path="/customer/booking" element={<CustomerBooking />} />
         <Route path="/customer/register" element={<CustomerRegister />} />

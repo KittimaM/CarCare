@@ -301,3 +301,13 @@ export const AddOnLeaveType = (jsonData) => {
 export const GetAllProvince = () => {
   return getApi("admin/province");
 };
+
+export const GetCustomerProfile = () => {
+  const isUseToken = true;
+  return getApi("customer/profile", null, isUseToken);
+}
+
+export const UpdateCustomerProfile = (jsonData) => {
+  const isUseToken = true;
+  return putApi("customer/profile", jsonData, isUseToken);
+}
