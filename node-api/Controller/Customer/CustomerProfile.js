@@ -40,7 +40,7 @@ const CustomerUpdateProfile = (req, res, next) => {
       [phone, name, id],
       function (error, result) {
         if (error) {
-          res.json({ status: "ERROR", msg: error });
+          res.json({ status: error.code, msg: error.sqlMessage });
         } else {
           res.json({ status: "SUCCESS", msg: "SUCCESS" });
         }

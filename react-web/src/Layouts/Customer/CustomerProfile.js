@@ -4,7 +4,10 @@ import { GetCustomerProfile, UpdateCustomerProfile } from '../Api'
 const CustomerProfile = () => {
     const [profile, setProfile] = useState([]);
     const [disabledEditProfile, setDisabledEditProfile] = useState(true);
-    useEffect(() => {
+    const [isError, setIsError] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
+
+    const fetchProfile = () => {
         GetCustomerProfile().then((data) => {
             const {status, msg} = data;
             if (status == "SUCCESS") {
@@ -13,6 +16,10 @@ const CustomerProfile = () => {
                 console.log(data);
             }
         })
+    }
+
+    useEffect(() => {
+        fetchProfile();
     }, []);
 
     const handleEditProfile = (event) => {
@@ -30,15 +37,18 @@ const CustomerProfile = () => {
         UpdateCustomerProfile(jsonData).then((data) => {
             const {status, msg} = data;
             if(status == "SUCCESS") {
+                setIsError(false);
                 setDisabledEditProfile(true);
-            } else {
-                console.log(data);
+            } else if (status == "ER_DUP_ENTRY") {
+                setIsError(true);
+                setErrorMsg("phone number or name are already been used")
             }
         })
     }
 
     const handleCancelEdit = (event) => {
         event.preventDefault();
+        setIsError(false);
         setDisabledEditProfile(true);
     }
   return (
@@ -51,6 +61,7 @@ const CustomerProfile = () => {
                     <input type="tel" name="phone" defaultValue={item.phone} disabled={disabledEditProfile}/>
                     <label>name</label>
                     <input type="text" name="name" defaultValue={item.name} disabled={disabledEditProfile}/>
+                    {isError && <p>{errorMsg}</p>}
                     {disabledEditProfile == false && 
                         <div>
                             <button type="submit" className="btn">Submit</button>
