@@ -111,7 +111,7 @@ const CustomerIndex = () => {
         {/* <Button to="/customer/booking" name="Booking" className="bg-black"/>
               <Button to="/customer/car" name="Customer Car" /> */}
         {booking && (
-          <table>
+          <table className="table table-lg">
             <thead>
               <tr>
                 <td>id</td>
@@ -131,11 +131,11 @@ const CustomerIndex = () => {
                   <td>
                     {item.processing_status == "Waiting" && (
                       <button
-                        className="btn"
+                        className="btn btn-error"
                         onClick={handleDeleteCustomerBooking}
                         value={item.id}
                       >
-                        Delete
+                        Cancle
                       </button>
                     )}
                   </td>

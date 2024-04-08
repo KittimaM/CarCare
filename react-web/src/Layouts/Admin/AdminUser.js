@@ -115,7 +115,7 @@ const AdminUser = () => {
       )}
 
       {user && (
-        <table className="table table-md">
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>id</td>

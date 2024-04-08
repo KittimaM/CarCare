@@ -359,8 +359,9 @@ const CustomerBooking = () => {
                 onClick={handleSubmitSelectedTime}
                 key={item}
                 value={item}
-                className="btn"
+                className="btn btn-warning"
               >
+                
                 {item}
               </button>
             ))}
