@@ -3,6 +3,7 @@ import { Button } from "../Module";
 import {
   DeleteCustomerCar,
   GetAllCarSize,
+  GetAllProvince,
   GetCustomerCar,
   PostAddCustomerCar,
   UpdateCustomerCar,
@@ -10,20 +11,10 @@ import {
 
 
 const CustomerCar = () => {
-  const [car, setCar] = useState();
-  const [carSize, setCarSize] = useState();
+  const [car, setCar] = useState(null);
+  const [carSize, setCarSize] = useState(null);
+  const [province, setProvince] = useState(null);
   const [editItem, setEditItem] = useState(null);
-
-  const fetchCarSize = async () => {
-    GetAllCarSize().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setCarSize(msg);
-      } else {
-        console.log(data);
-      }
-    });
-  };
 
   const fetchCustomerCar = async () => {
     GetCustomerCar().then((data) => {
@@ -31,23 +22,49 @@ const CustomerCar = () => {
       if (status == "SUCCESS") {
         setCar(msg);
       } else {
+        setCar(null);
         console.log(data);
       }
     });
   };
+
   useEffect(() => {
-    fetchCarSize();
     fetchCustomerCar();
+    GetAllCarSize().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setCarSize(msg);
+      } else {
+        setCarSize(null);
+        console.log(data);
+      }
+    });
+    GetAllProvince().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setProvince(msg);
+      } else {
+        setProvince(null);
+        console.log(data);
+      }
+    });
   }, []);
 
   const handleCustomerAddCar = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const prefix = data.get("plate_no").match(/\d+\D+|\D+/g);
+    const postfix = data.get("plate_no").match(/(\d+)$/g);
     const jsonData = {
-      car_no: data.get("car_no"),
-      car_color: data.get("car_color"),
-      car_size: data.get("car_size").split(",")[1],
-      car_size_id: data.get("car_size").split(",")[0],
+      plate_no: data.get("plate_no"),
+      prefix: prefix[0],
+      postfix: postfix[0],
+      province: data.get("province"),
+      color: data.get("color"),
+      size_id: data.get("size").split(",")[0],
+      size: data.get("size").split(",")[1],
+      brand: data.get("brand"),
+      model: data.get("model"),
     };
 
     PostAddCustomerCar(jsonData).then((data) => {
@@ -55,7 +72,11 @@ const CustomerCar = () => {
       if (status == "SUCCESS") {
         fetchCustomerCar();
       } else {
-        console.log(data);
+        if (msg.code == "ER_DUP_ENTRY") {
+          alert("this plate no already exist");
+        } else {
+          console.log(data);
+        }
       }
     });
   };
@@ -67,7 +88,7 @@ const CustomerCar = () => {
   const handleDeleteCustomerCar = (event) => {
     event.preventDefault();
     const jsonData = {
-      car_no: event.target.value,
+      id: event.target.value,
     };
     DeleteCustomerCar(jsonData).then((data) => {
       const { status, msg } = data;
@@ -82,12 +103,19 @@ const CustomerCar = () => {
   const handleEditCustomerCar = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    const prefix = data.get("plate_no").match(/\d+\D+|\D+/g);
+    const postfix = data.get("plate_no").match(/(\d+)$/g);
     const jsonData = {
-      car_no: data.get("car_no"),
-      car_color: data.get("car_color"),
-      car_size: data.get("car_size").split(",")[1],
-      car_size_id: data.get("car_size").split(",")[0],
-      old_car_no: editItem.car_no,
+      id: editItem.id,
+      plate_no: data.get("plate_no"),
+      prefix: prefix[0],
+      postfix: postfix[0],
+      province: data.get("province"),
+      color: data.get("color"),
+      size_id: data.get("size").split(",")[0],
+      size: data.get("size").split(",")[1],
+      brand: data.get("brand"),
+      model: data.get("model"),
     };
     UpdateCustomerCar(jsonData).then((data) => {
       const { status, msg } = data;
@@ -95,7 +123,11 @@ const CustomerCar = () => {
         setEditItem(null);
         fetchCustomerCar();
       } else {
-        console.log(data);
+        if (msg.code == "ER_DUP_ENTRY") {
+          alert("this plate no already exist");
+        } else {
+          console.log(data);
+        }
       }
     });
   };
@@ -139,12 +171,26 @@ const CustomerCar = () => {
     
     <div>
       <form onSubmit={handleCustomerAddCar}>
-        <label name="car_no">car_no</label>
-        <input type="text" name="car_no" />
-        <label name="car_color">car_color</label>
-        <input type="text" name="car_color" />
+        <label name="plate_no">plate_no</label>
+        <input type="text" name="plate_no" />
+        <label name="province">province</label>
+        {province && (
+          <select name="province">
+            {province.map((item) => (
+              <option key={item.id} value={item.province}>
+                {item.province}
+              </option>
+            ))}
+          </select>
+        )}
+        <label name="brand">brand</label>
+        <input type="text" name="brand" />
+        <label name="model">model</label>
+        <input type="text" name="model" />
+        <label name="color">color</label>
+        <input type="text" name="color" />
         {carSize && (
-          <select name="car_size">
+          <select name="size">
             {carSize.map(
               (item) =>
                 item.is_available == 1 && (
@@ -163,24 +209,30 @@ const CustomerCar = () => {
         <table className="table table-md">
           <thead>
             <tr>
-              <td>car_no</td>
-              <td>car_size</td>
-              <td>car_color</td>
+              <td>plate_no</td>
+              <td>province</td>
+              <td>brand</td>
+              <td>model</td>
+              <td>size</td>
+              <td>color</td>
               <td>Edit</td>
               <td>Delete</td>
             </tr>
           </thead>
           <tbody>
             {car.map((item) => (
-              <tr key={item.car_no}>
-                <td>{item.car_no}</td>
-                <td>{item.car_size}</td>
-                <td>{item.car_color}</td>
+              <tr key={item.plate_no}>
+                <td>{item.plate_no}</td>
+                <td>{item.province}</td>
+                <td>{item.brand}</td>
+                <td>{item.model}</td>
+                <td>{item.size}</td>
+                <td>{item.color}</td>
                 <td>
                   <button
                     className="btn"
                     onClick={() => handleSelectEditId(item)}
-                    value={item.car_no}
+                    value={item.plate_no}
                   >
                     Edit
                   </button>
@@ -189,7 +241,7 @@ const CustomerCar = () => {
                   <button
                     className="btn"
                     onClick={handleDeleteCustomerCar}
-                    value={item.car_no}
+                    value={item.id}
                   >
                     Delete
                   </button>
@@ -201,18 +253,28 @@ const CustomerCar = () => {
       )}
       {editItem && (
         <form onSubmit={handleEditCustomerCar}>
-          <label name="car_no">car_no</label>
-          <input type="text" name="car_no" defaultValue={editItem.car_no} />
-          <label name="car_color">car_color</label>
-          <input
-            type="text"
-            name="car_color"
-            defaultValue={editItem.car_color}
-          />
+          <label name="plate_no">plate_no</label>
+          <input type="text" name="plate_no" defaultValue={editItem.plate_no} />
+          <label name="province">province</label>
+          {province && (
+            <select name="province" defaultValue={editItem.province}>
+              {province.map((item) => (
+                <option key={item.id} value={item.province}>
+                  {item.province}
+                </option>
+              ))}
+            </select>
+          )}
+          <label name="brand">brand</label>
+          <input type="text" name="brand" defaultValue={editItem.brand} />
+          <label name="model">model</label>
+          <input type="text" name="model" defaultValue={editItem.model} />
+          <label name="color">color</label>
+          <input type="text" name="color" defaultValue={editItem.color} />
           {carSize && (
             <select
-              name="car_size"
-              defaultValue={[editItem.car_size_id, editItem.car_size]}
+              name="size"
+              defaultValue={[editItem.size_id, editItem.size]}
             >
               {carSize.map(
                 (item) =>

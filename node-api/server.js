@@ -7,6 +7,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // customer
+const CustomerProfileRoute = require("./Routes/Customer/CustomerProfile");
+app.use("/api/customer/profile", CustomerProfileRoute);
+
 const CustomerRegisterRoute = require("./Routes/Customer/CustomerRegister");
 app.use("/api/customer/register", CustomerRegisterRoute);
 
@@ -23,6 +26,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminProvinceRoute = require("./Routes/Admin/AdminProvince");
+app.use("/api/admin/province", AdminProvinceRoute);
+
 const AdminOnLeaveTypeRoute = require("./Routes/Admin/AdminOnLeaveType");
 app.use("/api/admin/onleave-type", AdminOnLeaveTypeRoute);
 

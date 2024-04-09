@@ -6,40 +6,38 @@ const CustomerBooking = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, secret);
-    const { phone, name } = decoded;
+    const { id, phone, name } = decoded;
     const {
-      car_no,
-      car_size_id,
-      car_size,
-      customer_name,
-      customer_phone,
+      plate_no,
+      size_id,
+      size,
+      color,
       service,
-      payment_type_id,
-      car_color,
-      start_service_datetime,
-      end_service_datetime,
       service_usetime,
       service_price,
+      start_service_datetime,
+      end_service_datetime,
+      payment_type_id,
     } = req.body;
 
     Conn.execute(
-      `INSERT INTO booking(car_no, car_size_id, car_size, customer_name, customer_phone, service, payment_type_id, created_by_id, created_by, car_color, start_service_datetime, end_service_datetime, service_usetime, service_price) 
+      `INSERT INTO booking(car_no, car_size_id, car_size, car_color, customer_phone, customer_name, service, service_usetime, service_price, start_service_datetime, end_service_datetime, payment_type_id, created_by_id, created_by) 
       VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       [
-        car_no,
-        car_size_id,
-        car_size,
-        customer_name,
-        customer_phone,
-        service,
-        payment_type_id,
+        plate_no,
+        size_id,
+        size,
+        color,
         phone,
         name,
-        car_color,
-        start_service_datetime,
-        end_service_datetime,
+        service,
         service_usetime,
         service_price,
+        start_service_datetime,
+        end_service_datetime,
+        payment_type_id,
+        id,
+        name,
       ],
       function (error, result) {
         if (error) {

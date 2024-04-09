@@ -425,7 +425,7 @@ const AdminIndex = () => {
       {permission &&
         permission["have_on_leave_personal_access"].includes("1") && (
           <Button to="/admin/onleave/personal" name="On Leave" />
-        )}
+      )}
       {permission && permission["have_day_off_list_access"].includes("1") && (
         <Button to="/admin/dayoff" name="Day Off List" />
       )}

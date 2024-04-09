@@ -49,6 +49,9 @@ const CustomerIndex = () => {
           <div>
             <Button to="/customer/car" name="Customer Car" />
           </div>
+          <div>
+            <Button to="/customer/profile" name="Profile" />
+          </div>
           <div className="dropdown dropdown-end">
             <div
               tabIndex={0}
