@@ -10,6 +10,7 @@ import {
 
 const AdminOnLeavePersonal = () => {
   // test commit
+  // test commit 2
   const [permission, setPermission] = useState();
   const [onLeaveList, setOnLeaveList] = useState([]);
   const [onLeaveType, setOnLeaveType] = useState([]);
