@@ -7,6 +7,9 @@ import {
   GetPermission,
 } from "../Api";
 
+//------------------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminAccount = () => {
   const [list, setList] = useState([]);
   const [totalSummary, setTotalSummary] = useState(0);
@@ -144,7 +147,11 @@ const AdminAccount = () => {
   };
 
   return (
-    <div>
+    <>
+      <SidebarAdmin />
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> Account page</div>
+
       {permission && permission.includes("2") && (
         <div>
           <form onSubmit={handleAddIncome}>
@@ -172,7 +179,7 @@ const AdminAccount = () => {
         </div>
       )}
 
-      <table>
+      <table className="table table-lg">
         <thead>
           <tr>
             <td>label</td>
@@ -245,6 +252,8 @@ const AdminAccount = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 

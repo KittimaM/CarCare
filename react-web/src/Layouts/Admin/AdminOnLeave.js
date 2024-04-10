@@ -10,6 +10,9 @@ import {
   GetAllOnLeaveType,
 } from "../Api";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminOnLeave = () => {
   const [staff, setStaff] = useState([]);
   const [onLeaveList, setOnLeaveList] = useState([]);
@@ -143,7 +146,12 @@ const AdminOnLeave = () => {
   };
 
   return (
-    <div>
+    <>
+      <SidebarAdmin />
+
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> On Leave List page</div>
+
       {staff && permission && permission.includes("2") && (
         <form onSubmit={handleAddOnLeave}>
           <label>Staff</label>
@@ -172,7 +180,7 @@ const AdminOnLeave = () => {
         </form>
       )}
       {onLeaveList && (
-        <table>
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>staff_id</td>
@@ -277,6 +285,8 @@ const AdminOnLeave = () => {
         </form>
       )}
     </div>
+    </>
+   
   );
 };
 

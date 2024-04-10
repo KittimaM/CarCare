@@ -7,6 +7,9 @@ import {
   GetPermission,
 } from "../Api";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminRole = () => {
   const [role, setRole] = useState();
   const [roleAccess, setRoleAccess] = useState();
@@ -321,109 +324,116 @@ const AdminRole = () => {
   };
 
   return (
-    <div>
-      {permission && permission.includes("2") && roleAccess && (
-        <form onSubmit={handleSubmitAddRole}>
-          <label name="role"> role</label>
-          <input type="text" name="role" />
-          {roleAccess.map((item) => (
-            <div>
-              <input
-                className="toggle"
-                type="checkbox"
-                value="1"
-                name={item.label + "/view"}
-                onChange={handleEnableAccess}
-              />
-              <label>{item.label}</label>
-              {item.access.includes(1) && subRoleAccessContent(item.label)}
-            </div>
-          ))}
-          <button className="btn" type="submit">
-            Submit
-          </button>
-        </form>
-      )}
-      {role && (
-        <table>
-          <thead>
-            <tr>
-              <td>id</td>
-              <td>role</td>
-              {permission && permission.includes("3") && <td>Edit</td>}
-              {permission && permission.includes("4") && <td>Delete</td>}
-            </tr>
-          </thead>
-          <tbody>
-            {role.map((item) => (
-              <tr>
-                <td>{item.id}</td>
-                <td>{item.role}</td>
-                {permission && permission.includes("3") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={() => handleSelectEditId(item)}
-                      value={item.id}
-                    >
-                      Edit
-                    </button>
-                  </td>
-                )}
-                {permission && permission.includes("4") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={handleDeleteRole}
-                      value={item.id}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <>
+      <SidebarAdmin />
 
-      {permission && permission.includes("3") && editItem && (
-        <form onSubmit={handleEditRole}>
-          {Object.keys(editItem).map((item) => (
-            <div>
-              {item == "role" && (
-                <div>
-                  <label>role</label>
-                  <input
-                    type="text"
-                    name="role"
-                    defaultValue={editItem[item]}
-                  />
-                </div>
-              )}
-              {item != "role" && item !== "id" && (
-                <div>
-                  <input
-                    className="toggle"
-                    type="checkbox"
-                    value="1"
-                    name={item + "/view"}
-                    onChange={handleEditRoleAccess}
-                    defaultChecked={editItem[item].includes("1")}
-                  />
-                  <label>{item}</label>
-                  {!editItem[item].includes("0") &&
-                    subRoleEditAccess(item, editItem[item])}
-                </div>
-              )}
-            </div>
-          ))}
-          <button className="btn" type="submit">
-            Submit Edit
-          </button>
-        </form>
-      )}
-    </div>
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> Role page</div>
+
+        {permission && permission.includes("2") && roleAccess && (
+          <form onSubmit={handleSubmitAddRole}>
+            <label name="role"> role</label>
+            <input type="text" name="role" />
+            {roleAccess.map((item) => (
+              <div>
+                <input
+                  className="toggle"
+                  type="checkbox"
+                  value="1"
+                  name={item.label + "/view"}
+                  onChange={handleEnableAccess}
+                />
+                <label>{item.label}</label>
+                {item.access.includes(1) && subRoleAccessContent(item.label)}
+              </div>
+            ))}
+            <button className="btn" type="submit">
+              Submit
+            </button>
+          </form>
+        )}
+        {role && (
+          <table className="table table-lg">
+            <thead>
+              <tr>
+                <td>id</td>
+                <td>role</td>
+                {permission && permission.includes("3") && <td>Edit</td>}
+                {permission && permission.includes("4") && <td>Delete</td>}
+              </tr>
+            </thead>
+            <tbody>
+              {role.map((item) => (
+                <tr>
+                  <td>{item.id}</td>
+                  <td>{item.role}</td>
+                  {permission && permission.includes("3") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={() => handleSelectEditId(item)}
+                        value={item.id}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
+                  {permission && permission.includes("4") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={handleDeleteRole}
+                        value={item.id}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {permission && permission.includes("3") && editItem && (
+          <form onSubmit={handleEditRole}>
+            {Object.keys(editItem).map((item) => (
+              <div>
+                {item == "role" && (
+                  <div>
+                    <label>role</label>
+                    <input
+                      type="text"
+                      name="role"
+                      defaultValue={editItem[item]}
+                    />
+                  </div>
+                )}
+                {item != "role" && item !== "id" && (
+                  <div>
+                    <input
+                      className="toggle"
+                      type="checkbox"
+                      value="1"
+                      name={item + "/view"}
+                      onChange={handleEditRoleAccess}
+                      defaultChecked={editItem[item].includes("1")}
+                    />
+                    <label>{item}</label>
+                    {!editItem[item].includes("0") &&
+                      subRoleEditAccess(item, editItem[item])}
+                  </div>
+                )}
+              </div>
+            ))}
+            <button className="btn" type="submit">
+              Submit Edit
+            </button>
+          </form>
+        )}
+      </div>
+    </>
+    
   );
 };
 

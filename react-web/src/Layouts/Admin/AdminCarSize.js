@@ -7,6 +7,9 @@ import {
   GetPermission,
 } from "../Api";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminCarSize = () => {
   const [carSize, setCarSize] = useState(null);
   const [addCarSize, setAddCarSize] = useState(false);
@@ -99,7 +102,11 @@ const AdminCarSize = () => {
   };
 
   return (
-    <div>
+    <>
+    <SidebarAdmin />
+    <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> Car size page</div>
+
       {permission && permission.includes("2") && addCarSize && (
         <div>
           {" "}
@@ -119,7 +126,7 @@ const AdminCarSize = () => {
       )}
 
       {carSize && (
-        <table>
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>id</td>
@@ -186,6 +193,10 @@ const AdminCarSize = () => {
         </form>
       )}
     </div>
+    </>
+
+    
+   
   );
 };
 

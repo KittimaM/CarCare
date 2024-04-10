@@ -344,6 +344,7 @@ const CustomerBooking = () => {
 
   return (
     <>
+
       <div className="navbar bg-neutral text-neutral-content">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl">Carcare</a>
@@ -354,6 +355,9 @@ const CustomerBooking = () => {
                 </div> */}
           <div>
             <Button to="/customer/car" name="Customer Car" />
+          </div>
+          <div>
+            <Button to="/customer/profile" name="Profile" />
           </div>
           <div className="dropdown dropdown-end">
             <div
@@ -388,6 +392,7 @@ const CustomerBooking = () => {
           </div>
         </div>
       </div>
+
 
       <label name="plate_no">plate_no</label>
       {car ? (
