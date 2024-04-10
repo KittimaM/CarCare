@@ -8,6 +8,9 @@ import {
   GetAllOnLeaveType,
 } from "../Api";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminOnLeavePersonal = () => {
   // test commit
   // test commit 2
@@ -114,7 +117,11 @@ const AdminOnLeavePersonal = () => {
     });
   };
   return (
-    <div>
+    <> 
+     <SidebarAdmin />
+    <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> On Leave page</div>
+
       {permission && permission.includes("2") && onLeaveType && (
         <form onSubmit={handleAddOnLeave}>
           <label>type</label>
@@ -135,7 +142,7 @@ const AdminOnLeavePersonal = () => {
         </form>
       )}
       {onLeaveList && (
-        <table>
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>start_date</td>
@@ -217,6 +224,8 @@ const AdminOnLeavePersonal = () => {
         </form>
       )}
     </div>
+    </>
+   
   );
 };
 

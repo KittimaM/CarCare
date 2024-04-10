@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { GetAllDayOff, GetAllStaff, UpdateDayOff } from "../Api";
 import { getDatesForCurrentWeek } from "../Module";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminDayOff = () => {
   const [staff, setStaff] = useState([]);
   const [dayOffList, setDayOffList] = useState([]);
@@ -72,9 +75,14 @@ const AdminDayOff = () => {
   };
 
   return (
-    <div>
+    <>
+        <SidebarAdmin />
+
+    <div className="ml-80 mt-16">
+      <div className="text-lg bg-yellow-100 mb-5 "> Day off page</div>
+
       {dayOffList && (
-        <table>
+        <table >
           <thead>
             <tr>
               {dates.map((date, index) => (
@@ -207,6 +215,8 @@ const AdminDayOff = () => {
       )}
 
     </div>
+    </>
+    
   );
 };
 

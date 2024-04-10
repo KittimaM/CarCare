@@ -39,7 +39,7 @@ const CustomerIndex = () => {
     <>
       <div className="navbar bg-neutral text-neutral-content">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">Carcare</a>
+          <a to="/customer/index" className="btn btn-ghost text-xl">Carcare</a>
         </div>
         <div className="flex-none gap-2">
           {/* <div className="form-control">

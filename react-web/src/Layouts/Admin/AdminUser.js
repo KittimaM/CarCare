@@ -8,6 +8,9 @@ import {
 } from "../Api";
 import { Button } from "../Module";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminUser = () => {
   const [user, setUser] = useState(null);
   const [allRole, setAllRole] = useState();
@@ -92,81 +95,90 @@ const AdminUser = () => {
   };
 
   return (
-    <div>
-      {permission && permission.includes("2") && (
-        <Button to="/admin/register" name="register" />
-      )}
+    <>
+        <SidebarAdmin />
 
-      {user && (
-        <table>
-          <thead>
-            <tr>
-              <td>id</td>
-              <td>username</td>
-              <td>name</td>
-              {permission && permission.includes("3") && <td>Edit</td>}
-              {permission && permission.includes("4") && <td>Delete</td>}
-            </tr>
-          </thead>
-          <tbody>
-            {user.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.username}</td>
-                <td>{item.name}</td>
-                {permission && permission.includes("3") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={() => handleSelectEditId(item)}
-                      value={item.id}
-                    >
-                      Edit
-                    </button>
-                  </td>
-                )}
-                {permission && permission.includes("4") && (
-                  <td>
-                    <button
-                      className="btn"
-                      onClick={handleDeleteUser}
-                      value={item.id}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                )}
+
+      <div className="ml-80 mt-16">
+
+        <div className="text-lg bg-yellow-50 mb-5 ">Admin User page </div>
+
+        {permission && permission.includes("2") && (
+          <Button to="/admin/register" name="register" />
+        )}
+
+        {user && (
+          <table className="table table-lg">
+            <thead>
+              <tr>
+                <td>id</td>
+                <td>username</td>
+                <td>name</td>
+                {permission && permission.includes("3") && <td>Edit</td>}
+                {permission && permission.includes("4") && <td>Delete</td>}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      {permission && permission.includes("3") && editItem && (
-        <form onSubmit={handleEditUser}>
-          <label name="username">username</label>
-          <input type="text" name="username" defaultValue={editItem.username} />
-          <label name="name">name</label>
-          <input type="text" name="name" defaultValue={editItem.name} />
-          <label name="password">password</label>
-          <input type="password" name="password" required />
-          {
-            <select
-              name="role"
-              defaultValue={[editItem.role_id, editItem.role]}
-            >
-              {allRole.map((item) => (
-                <option value={[item.id, item.role]} key={item.id}>
-                  {item.role}
-                </option>
+            </thead>
+            <tbody>
+              {user.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.id}</td>
+                  <td>{item.username}</td>
+                  <td>{item.name}</td>
+                  {permission && permission.includes("3") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={() => handleSelectEditId(item)}
+                        value={item.id}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  )}
+                  {permission && permission.includes("4") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={handleDeleteUser}
+                        value={item.id}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  )}
+                </tr>
               ))}
-            </select>
-          }
-          <button className="btn" type="submit">
-            Submit
-          </button>
-        </form>
-      )}
-    </div>
+            </tbody>
+          </table>
+        )}
+        {permission && permission.includes("3") && editItem && (
+          <form onSubmit={handleEditUser}>
+            <label name="username">username</label>
+            <input type="text" name="username" defaultValue={editItem.username} />
+            <label name="name">name</label>
+            <input type="text" name="name" defaultValue={editItem.name} />
+            <label name="password">password</label>
+            <input type="password" name="password" required />
+            {
+              <select
+                name="role"
+                defaultValue={[editItem.role_id, editItem.role]}
+              >
+                {allRole.map((item) => (
+                  <option value={[item.id, item.role]} key={item.id}>
+                    {item.role}
+                  </option>
+                ))}
+              </select>
+            }
+            <button className="btn" type="submit">
+              Submit
+            </button>
+          </form>
+        )}
+      </div>
+    </>
+    
   );
 };
 

@@ -7,6 +7,9 @@ import {
   UpdateOnLeaveType,
 } from "../Api";
 
+//-----------
+import SidebarAdmin from "./SidebarAdmin";
+
 const AdminOnLeaveType = () => {
   const [onLeaveType, setOnLeaveType] = useState(null);
   const [permission, setPermission] = useState(null);
@@ -93,7 +96,11 @@ const AdminOnLeaveType = () => {
     });
   };
   return (
-    <div>
+    <>
+      <SidebarAdmin />
+    <div className="ml-80 mt-16">
+      <div className="text-lg bg-yellow-100 mb-5 "> On Leave page</div>
+
       {permission && permission.includes("2") && onLeaveType && (
         <form onSubmit={handleAddOnLeaveType}>
           <label>type</label>
@@ -111,7 +118,7 @@ const AdminOnLeaveType = () => {
         </form>
       )}
       {onLeaveType && (
-        <table>
+        <table className="table table-lg">
           <thead>
             <tr>
               <td>type</td>
@@ -177,6 +184,8 @@ const AdminOnLeaveType = () => {
         </form>
       )}
     </div>
+    </>
+    
   );
 };
 
