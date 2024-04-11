@@ -305,9 +305,13 @@ export const GetAllProvince = () => {
 export const GetCustomerProfile = () => {
   const isUseToken = true;
   return getApi("customer/profile", null, isUseToken);
-}
+};
 
 export const UpdateCustomerProfile = (jsonData) => {
   const isUseToken = true;
   return putApi("customer/profile", jsonData, isUseToken);
-}
+};
+
+export const GetChannel = () => {
+  return getApi("admin/channel");
+};

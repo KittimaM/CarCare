@@ -26,6 +26,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminChannelRoute = require("./Routes/Admin/AdminChannel");
+app.use("/api/admin/channel", AdminChannelRoute);
+
 const AdminProvinceRoute = require("./Routes/Admin/AdminProvince");
 app.use("/api/admin/province", AdminProvinceRoute);
 

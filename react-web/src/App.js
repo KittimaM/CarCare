@@ -24,6 +24,7 @@ import AdminOnLeavePersonal from "./Layouts/Admin/AdminOnLeavePersonal";
 import AdminDayOff from "./Layouts/Admin/AdminDayOff";
 import AdminOnLeaveType from "./Layouts/Admin/AdminOnLeaveType";
 import CustomerProfile from "./Layouts/Customer/CustomerProfile";
+import AdminChannel from "./Layouts/Admin/AdminChannel";
 
 function App() {
   return (
@@ -41,11 +42,9 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/channel" element={<AdminChannel/>} />
         <Route path="/admin/onleave-type" element={<AdminOnLeaveType />} />
-        <Route
-          path="/admin/onleave/personal"
-          element={<AdminOnLeavePersonal />}
-        />
+        <Route path="/admin/onleave/personal" element={<AdminOnLeavePersonal />}/>
         <Route path="/admin/dayoff" element={<AdminDayOff />} />
         <Route path="/admin/onleave" element={<AdminOnLeave />} />
         <Route path="/admin/paymenttype" element={<AdminPaymentType />} />
