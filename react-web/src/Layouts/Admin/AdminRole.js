@@ -68,7 +68,7 @@ const AdminRole = () => {
             } else {
               return {
                 label: item.label,
-                access: [item.access.filter((item) => item != value)],
+                access: [...item.access.filter((item) => item != value)],
               };
             }
           }
@@ -344,6 +344,13 @@ const AdminRole = () => {
                   onChange={handleEnableAccess}
                 />
                 <label>{item.label}</label>
+                {item.label == "have_staff_user_access" &&
+                  console.log(
+                    "item.label : ",
+                    item.label,
+                    ", item.access : ",
+                    item.access
+                  )}
                 {item.access.includes(1) && subRoleAccessContent(item.label)}
               </div>
             ))}
@@ -433,7 +440,6 @@ const AdminRole = () => {
         )}
       </div>
     </>
-    
   );
 };
 
