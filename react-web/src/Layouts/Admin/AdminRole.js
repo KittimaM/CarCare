@@ -344,13 +344,6 @@ const AdminRole = () => {
                   onChange={handleEnableAccess}
                 />
                 <label>{item.label}</label>
-                {item.label == "have_staff_user_access" &&
-                  console.log(
-                    "item.label : ",
-                    item.label,
-                    ", item.access : ",
-                    item.access
-                  )}
                 {item.access.includes(1) && subRoleAccessContent(item.label)}
               </div>
             ))}
