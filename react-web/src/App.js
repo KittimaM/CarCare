@@ -25,6 +25,7 @@ import AdminDayOff from "./Layouts/Admin/AdminDayOff";
 import AdminOnLeaveType from "./Layouts/Admin/AdminOnLeaveType";
 import CustomerProfile from "./Layouts/Customer/CustomerProfile";
 import AdminChannel from "./Layouts/Admin/AdminChannel";
+import AdminMasterTable from "./Layouts/Admin/AdminMasterTable";
 
 function App() {
   return (
@@ -33,7 +34,7 @@ function App() {
         <Route path="/" element={<Index />} />
 
         {/* customer */}
-        <Route path="/customer/profile" element={<CustomerProfile/>} />
+        <Route path="/customer/profile" element={<CustomerProfile />} />
         <Route path="/customer/index" element={<CustomerIndex />} />
         <Route path="/customer/booking" element={<CustomerBooking />} />
         <Route path="/customer/register" element={<CustomerRegister />} />
@@ -42,7 +43,8 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
-        <Route path="/admin/channel" element={<AdminChannel/>} />
+        <Route path="/admin/master-table" element={<AdminMasterTable />} />
+        <Route path="/admin/channel" element={<AdminChannel />} />
         <Route path="/admin/onleave-type" element={<AdminOnLeaveType />} />
         <Route path="/admin/onleave/personal" element={<AdminOnLeavePersonal />}/>
         <Route path="/admin/dayoff" element={<AdminDayOff />} />
