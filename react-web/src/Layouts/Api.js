@@ -315,3 +315,19 @@ export const UpdateCustomerProfile = (jsonData) => {
 export const GetChannel = () => {
   return getApi("admin/channel");
 };
+
+export const GetAllStatus = () => {
+  return getApi("admin/status");
+};
+
+export const PostAddStatus = (jsonData) => {
+  return postApi("admin/status", jsonData);
+};
+
+export const UpdateStatus = (jsonData) => {
+  return putApi("admin/status", jsonData);
+};
+
+export const DeleteStatus = (jsonData) => {
+  return deleteApi("admin/status", jsonData);
+};

@@ -26,6 +26,7 @@ import AdminOnLeaveType from "./Layouts/Admin/AdminOnLeaveType";
 import CustomerProfile from "./Layouts/Customer/CustomerProfile";
 import AdminChannel from "./Layouts/Admin/AdminChannel";
 import AdminMasterTable from "./Layouts/Admin/AdminMasterTable";
+import AdminStatus from "./Layouts/Admin/AdminStatus";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/status" element={<AdminStatus />} />
         <Route path="/admin/master-table" element={<AdminMasterTable />} />
         <Route path="/admin/channel" element={<AdminChannel />} />
         <Route path="/admin/onleave-type" element={<AdminOnLeaveType />} />
