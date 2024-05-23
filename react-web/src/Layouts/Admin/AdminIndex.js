@@ -12,7 +12,6 @@ const AdminIndex = () => {
     GetPermission().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        console.log(msg);
         setPermission(msg);
       } else {
         console.log(data);
