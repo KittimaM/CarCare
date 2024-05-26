@@ -1,7 +1,7 @@
 const Conn = require("../../db");
 
-const AdminGetAllStatus = (req, res, next) => {
-  Conn.execute("SELECT * FROM status", function (error, results) {
+const AdminGetAllStatusGroup = (req, res, next) => {
+  Conn.execute("SELECT * FROM status_group", function (error, results) {
     if (error) {
       res.json({ status: "ERROR", msg: error });
     }
@@ -13,11 +13,11 @@ const AdminGetAllStatus = (req, res, next) => {
   });
 };
 
-const AdminAddStatus = (req, res, next) => {
-  const { code, description, status_group_id } = req.body;
+const AdminAddStatusGroup = (req, res, next) => {
+  const { code, description } = req.body;
   Conn.execute(
-    "INSERT INTO status (code, description, status_group_id) VALUES (?,?,?)",
-    [code, description, status_group_id],
+    "INSERT INTO status_group (code, description) VALUES (?,?)",
+    [code, description],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -29,10 +29,10 @@ const AdminAddStatus = (req, res, next) => {
   );
 };
 
-const AdminDeleteStatus = (req, res, next) => {
+const AdminDeleteStatusGroup = (req, res, next) => {
   const { id } = req.body;
   Conn.execute(
-    "DELETE FROM status WHERE id = ?",
+    "DELETE FROM status_group WHERE id = ?",
     [id],
     function (error, result) {
       if (error) {
@@ -44,10 +44,10 @@ const AdminDeleteStatus = (req, res, next) => {
   );
 };
 
-const AdminUpdateStatus = (req, res, next) => {
-  const { id, code, description, status_group_id } = req.body;
+const AdminUpdateStatusGroup = (req, res, next) => {
+  const { id, code, description } = req.body;
   Conn.execute(
-    "UPDATE status SET code = ?, description = ?, status_group_id = ? WHERE id = ?",
+    "UPDATE status_group SET code = ?, description = ? WHERE id = ?",
     [code, description, id],
     function (error, result) {
       if (error) {
@@ -59,8 +59,8 @@ const AdminUpdateStatus = (req, res, next) => {
   );
 };
 module.exports = {
-  AdminGetAllStatus,
-  AdminAddStatus,
-  AdminDeleteStatus,
-  AdminUpdateStatus,
+  AdminGetAllStatusGroup,
+  AdminAddStatusGroup,
+  AdminDeleteStatusGroup,
+  AdminUpdateStatusGroup,
 };

@@ -331,3 +331,19 @@ export const UpdateStatus = (jsonData) => {
 export const DeleteStatus = (jsonData) => {
   return deleteApi("admin/status", jsonData);
 };
+
+export const GetAllStatusGroup = () => {
+  return getApi("admin/status-group");
+};
+
+export const PostAddStatusGroup = (jsonData) => {
+  return postApi("admin/status-group", jsonData);
+};
+
+export const UpdateStatusGroup = (jsonData) => {
+  return putApi("admin/status-group", jsonData);
+};
+
+export const DeleteStatusGroup = (jsonData) => {
+  return deleteApi("admin/status-group", jsonData);
+};

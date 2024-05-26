@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   DeleteStatus,
   GetAllStatus,
+  GetAllStatusGroup,
   GetPermission,
   PostAddStatus,
   UpdateStatus,
@@ -9,15 +10,24 @@ import {
 import SidebarAdmin from "./SidebarAdmin";
 
 const AdminStatus = () => {
-  const [status, setStatus] = useState();
+  const [statusGroups, setStatusGroups] = useState();
+  const [statuses, setStatuses] = useState();
   const [permission, setPermission] = useState();
   const [editItem, setEditItem] = useState(null);
 
   const fetchAllStatus = () => {
+    GetAllStatusGroup().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setStatusGroups(msg);
+      } else {
+        console.log(data);
+      }
+    });
     GetAllStatus().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setStatus(msg);
+        setStatuses(msg);
       } else {
         console.log(data);
       }
@@ -41,6 +51,7 @@ const AdminStatus = () => {
     const jsonData = {
       code: data.get("code"),
       description: data.get("description"),
+      status_group_id: data.get("status_group_id"),
     };
     PostAddStatus(jsonData).then((data) => {
       const { status, msg } = data;
@@ -63,6 +74,7 @@ const AdminStatus = () => {
       id: editItem.id,
       code: data.get("code"),
       description: data.get("description"),
+      status_group_id: data.get("status_group_id"),
     };
     UpdateStatus(jsonData).then((data) => {
       const { status, msg } = data;
@@ -102,53 +114,70 @@ const AdminStatus = () => {
               <input type="text" name="code" />
               <label>description</label>
               <input type="text" name="description" />
+              <select name="status_group_id">
+                {statusGroups.map((statusGroup) => (
+                  <option key={statusGroup.id} value={statusGroup.id}>
+                    {statusGroup.code}
+                  </option>
+                ))}
+              </select>
               <button className="btn" type="submit">
                 Add
               </button>
             </form>
           </div>
         )}
-        <table className="table table-lg">
-          <thead>
-            <tr>
-              <td>code</td>
-              <td>description</td>
-              {permission && permission.includes("3") && <td>Edit</td>}
-              {permission && permission.includes("4") && <td>Delete</td>}
-            </tr>
-          </thead>
-          <tbody>
-            {status &&
-              status.map((item) => (
-                <tr>
-                  <td>{item.code}</td>
-                  <td>{item.description}</td>
-                  {permission && permission.includes("3") && (
-                    <td>
-                      <button
-                        className="btn"
-                        onClick={() => handleSelectEditId(item)}
-                        value={item.id}
-                      >
-                        Edit
-                      </button>
-                    </td>
-                  )}
-                  {permission && permission.includes("4") && (
-                    <td>
-                      <button
-                        className="btn"
-                        onClick={handleDeleteStatus}
-                        value={item.id}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  )}
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        {statusGroups &&
+          statusGroups.map((statusGroup) => (
+            <div>
+              {statusGroup.code} - {statusGroup.description}
+              <table className="table table-lg">
+                <thead>
+                  <tr>
+                    <td>code</td>
+                    <td>description</td>
+                    {permission && permission.includes("3") && <td>Edit</td>}
+                    {permission && permission.includes("4") && <td>Delete</td>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {statuses &&
+                    statuses.map(
+                      (status) =>
+                        status.status_group_id == statusGroup.id && (
+                          <tr>
+                            <td>{status.code}</td>
+                            <td>{status.description}</td>
+                            {permission && permission.includes("3") && (
+                              <td>
+                                <button
+                                  className="btn"
+                                  onClick={() => handleSelectEditId(status)}
+                                  value={status.id}
+                                >
+                                  Edit
+                                </button>
+                              </td>
+                            )}
+                            {permission && permission.includes("4") && (
+                              <td>
+                                <button
+                                  className="btn"
+                                  onClick={handleDeleteStatus}
+                                  value={status.id}
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            )}
+                          </tr>
+                        )
+                    )}
+                </tbody>
+              </table>
+            </div>
+          ))}
+
         {permission && permission.includes("3") && editItem && (
           <form onSubmit={handleEditStatus}>
             <label>code</label>
