@@ -107,7 +107,7 @@ export const PostAddRole = (jsonData) => {
 };
 
 export const PostAddStaffUser = (jsonData) => {
-  return postApi("admin/user/add", jsonData);
+  return postApi("admin/user", jsonData);
 };
 
 export const PostLogin = (jsonData) => {

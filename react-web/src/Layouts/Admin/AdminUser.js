@@ -5,10 +5,8 @@ import {
   GetAllRole,
   UpdateStaffUser,
   GetPermission,
+  PostAddStaffUser,
 } from "../Api";
-import { Button } from "../Module";
-
-//-----------
 import SidebarAdmin from "./SidebarAdmin";
 
 const AdminUser = () => {
@@ -16,14 +14,22 @@ const AdminUser = () => {
   const [allRole, setAllRole] = useState();
   const [editItem, setEditItem] = useState(null);
   const [permission, setPermission] = useState(null);
+  const [openAddUserForm, setOpenAddUserForm] = useState(false);
 
   useEffect(() => {
     fetchUser();
-    fetchRole();
     GetPermission().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setPermission(msg["have_staff_user_access"]);
+      } else {
+        console.log(data);
+      }
+    });
+    GetAllRole().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setAllRole(msg);
       } else {
         console.log(data);
       }
@@ -41,17 +47,25 @@ const AdminUser = () => {
     });
   };
 
-  const fetchRole = () => {
-    GetAllRole().then((data) => {
+  const handleAddUser = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      name: data.get("name"),
+      username: data.get("username"),
+      password: data.get("password"),
+      role_id: data.get("role_id"),
+    };
+    PostAddStaffUser(jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setAllRole(msg);
+        setOpenAddUserForm(false);
+        fetchUser();
       } else {
         console.log(data);
       }
     });
   };
-
   const handleDeleteUser = (event) => {
     event.preventDefault();
     const jsonData = {
@@ -74,14 +88,12 @@ const AdminUser = () => {
   const handleEditUser = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const [role_id, role] = data.get("role").split(",");
     const jsonData = {
       id: editItem.id,
       name: data.get("name"),
       username: data.get("username"),
       password: data.get("password"),
-      role_id: role_id,
-      role: role,
+      role_id: data.get("role_id"),
     };
     UpdateStaffUser(jsonData).then((data) => {
       const { status, msg } = data;
@@ -96,22 +108,22 @@ const AdminUser = () => {
 
   return (
     <>
-        <SidebarAdmin />
-
+      <SidebarAdmin />
 
       <div className="ml-80 mt-16">
-
         <div className="text-lg bg-yellow-50 mb-5 ">Admin User page </div>
 
         {permission && permission.includes("2") && (
-          <Button to="/admin/register" name="register" />
+          <button className="btn" onClick={() => setOpenAddUserForm(true)}>
+            Add User
+          </button>
         )}
 
         {user && (
           <table className="table table-lg">
             <thead>
               <tr>
-                <td>id</td>
+                <td>No.</td>
                 <td>username</td>
                 <td>name</td>
                 {permission && permission.includes("3") && <td>Edit</td>}
@@ -119,9 +131,9 @@ const AdminUser = () => {
               </tr>
             </thead>
             <tbody>
-              {user.map((item) => (
+              {user.map((item, index) => (
                 <tr key={item.id}>
-                  <td>{item.id}</td>
+                  <td>{index + 1}</td>
                   <td>{item.username}</td>
                   <td>{item.name}</td>
                   {permission && permission.includes("3") && (
@@ -151,34 +163,153 @@ const AdminUser = () => {
             </tbody>
           </table>
         )}
-        {permission && permission.includes("3") && editItem && (
-          <form onSubmit={handleEditUser}>
-            <label name="username">username</label>
-            <input type="text" name="username" defaultValue={editItem.username} />
-            <label name="name">name</label>
-            <input type="text" name="name" defaultValue={editItem.name} />
-            <label name="password">password</label>
-            <input type="password" name="password" required />
-            {
-              <select
-                name="role"
-                defaultValue={[editItem.role_id, editItem.role]}
-              >
-                {allRole.map((item) => (
-                  <option value={[item.id, item.role]} key={item.id}>
-                    {item.role}
-                  </option>
-                ))}
-              </select>
-            }
-            <button className="btn" type="submit">
-              Submit
-            </button>
-          </form>
+        {openAddUserForm && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+              <h2 className="text-2xl mb-4">New User</h2>
+              <form onSubmit={handleAddUser}>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    username
+                  </label>
+                  <input
+                    type="text"
+                    name="username"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    role
+                  </label>
+                  {
+                    <select
+                      name="role_id"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                      {allRole.map((item) => (
+                        <option value={item.id} key={item.id}>
+                          {item.role}
+                        </option>
+                      ))}
+                    </select>
+                  }
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={() => setOpenAddUserForm(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+        {editItem && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+              <h2 className="text-2xl mb-4">Edit User</h2>
+              <form onSubmit={handleEditUser}>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    username
+                  </label>
+                  <input
+                    defaultValue={editItem.username}
+                    type="text"
+                    name="username"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    name
+                  </label>
+                  <input
+                    defaultValue={editItem.name}
+                    type="text"
+                    name="name"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    password
+                  </label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    role
+                  </label>
+                  {
+                    <select
+                      defaultValue={editItem.role_id}
+                      name="role_id"
+                      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    >
+                      {allRole.map((item) => (
+                        <option value={item.id} key={item.id}>
+                          {item.role}
+                        </option>
+                      ))}
+                    </select>
+                  }
+                </div>
+                <div className="flex items-center justify-between">
+                  <button
+                    type="submit"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Submit
+                  </button>
+                  <button
+                    type="button"
+                    className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={() => setEditItem(false)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         )}
       </div>
     </>
-    
   );
 };
 

@@ -8,7 +8,7 @@ const {
 var router = express.Router();
 
 router.get("/", AdminUser);
-router.post("/add", AdminAddStaffUser);
+router.post("/", AdminAddStaffUser);
 router.delete("/", AdminDeleteStaffUser);
 router.put("/", AdminUpdateStaffUser);
 
