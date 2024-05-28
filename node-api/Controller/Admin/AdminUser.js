@@ -16,14 +16,14 @@ const AdminUser = (req, res, next) => {
 };
 
 const AdminAddStaffUser = (req, res, next) => {
-  const { username, name, password, role_id, role } = req.body;
+  const { username, name, password, role_id } = req.body;
   bcrypt.hash(password, saltRounds, function (error, hash) {
     if (error) {
       res.json({ status: "ERROR", msg: error });
     } else {
       Conn.execute(
-        `INSERT INTO staff_user (username, name , password, role_id, role) VALUES (?,?,?,?,?)`,
-        [username, name, hash, role_id, role],
+        `INSERT INTO staff_user (username, name , password, role_id) VALUES (?,?,?,?)`,
+        [username, name, hash, role_id],
         function (error, result) {
           if (error) {
             res.json({ status: "ERROR", msg: error });
@@ -63,14 +63,14 @@ const AdminDeleteStaffUser = (req, res, next) => {
 };
 
 const AdminUpdateStaffUser = (req, res, next) => {
-  const { id, username, name, password, role_id, role } = req.body;
+  const { id, username, name, password, role_id } = req.body;
   bcrypt.hash(password, saltRounds, function (error, hash) {
     if (error) {
       res.json({ status: "ERROR", msg: error });
     } else {
       Conn.execute(
-        `UPDATE staff_user SET username = ? , name = ?, password = ?, role_id = ?, role = ? WHERE id = ?`,
-        [username, name, hash, role_id, role, id],
+        `UPDATE staff_user SET username = ? , name = ?, password = ?, role_id = ? WHERE id = ?`,
+        [username, name, hash, role_id, id],
         function (error, result) {
           if (error) {
             res.json({ status: "ERROR", msg: error });
