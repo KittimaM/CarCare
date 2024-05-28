@@ -16,6 +16,55 @@ const AdminGetChannel = (req, res, next) => {
   });
 };
 
+const AdminAddChannel = (req, res, next) => {
+  const { name, description, is_available } = req.body;
+  Conn.execute(
+    "INSERT INTO channel (name, description, is_available) VALUES (?,?,?)",
+    [name, description, is_available],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        const insertId = result.insertId;
+        res.json({ status: "SUCCESS", msg: insertId });
+      }
+    }
+  );
+};
+
+const AdminDeleteChannel = (req, res, next) => {
+  const { id } = req.body;
+  Conn.execute(
+    "DELETE FROM channel WHERE id = ?",
+    [id],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
+const AdminUpdateChannel = (req, res, next) => {
+  const { id, name, description, is_available } = req.body;
+  Conn.execute(
+    "UPDATE channel SET name = ?, description = ?, is_available = ? WHERE id = ?",
+    [name, description, is_available, id],
+    function (error, result) {
+      if (error) {
+        res.json({ status: "ERROR", msg: error });
+      } else {
+        res.json({ status: "SUCCESS", msg: "SUCCESS" });
+      }
+    }
+  );
+};
+
 module.exports = {
   AdminGetChannel,
+  AdminAddChannel,
+  AdminDeleteChannel,
+  AdminUpdateChannel
 };
