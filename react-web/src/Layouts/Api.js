@@ -316,6 +316,18 @@ export const GetChannel = () => {
   return getApi("admin/channel");
 };
 
+export const PostAddChannel = (jsonData) => {
+  return postApi("admin/channel", jsonData);
+};
+
+export const DeleteChannel = (jsonData) => {
+  return deleteApi("admin/channel", jsonData);
+};
+
+export const UpdateChannel = (jsonData) => {
+  return putApi("admin/channel", jsonData);
+};
+
 export const GetAllStatus = () => {
   return getApi("admin/status");
 };
