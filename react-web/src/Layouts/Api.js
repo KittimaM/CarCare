@@ -359,3 +359,19 @@ export const UpdateStatusGroup = (jsonData) => {
 export const DeleteStatusGroup = (jsonData) => {
   return deleteApi("admin/status-group", jsonData);
 };
+
+export const GetAdminCustomer = () => {
+  return getApi("admin/customer");
+};
+
+export const UpdateAdminCustomer = (jsonData) => {
+  return putApi("admin/customer", jsonData);
+};
+
+export const PostAdminAddCustomer = (jsonData) => {
+  return postApi("admin/customer", jsonData);
+};
+
+export const DeleteAdminCustomer = (jsonData) => {
+  return deleteApi("admin/customer", jsonData);
+};

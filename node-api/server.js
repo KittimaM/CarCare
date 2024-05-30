@@ -26,6 +26,9 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
+const AdminCustomerRoute = require("./Routes/Admin/AdminCustomer");
+app.use("/api/admin/customer", AdminCustomerRoute);
+
 const AdminStatusGroupRoute = require("./Routes/Admin/AdminStatusGroup");
 app.use("/api/admin/status-group", AdminStatusGroupRoute);
 
