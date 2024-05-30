@@ -1,3 +1,5 @@
+import React, { useEffect } from "react";
+import { GetPermission } from "./Layouts/Api";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CustomerFirstPage from "./Layouts/Customer/CustomerFirstPage";
@@ -27,8 +29,25 @@ import CustomerProfile from "./Layouts/Customer/CustomerProfile";
 import AdminChannel from "./Layouts/Admin/AdminChannel";
 import AdminMasterTable from "./Layouts/Admin/AdminMasterTable";
 import AdminStatus from "./Layouts/Admin/AdminStatus";
+import AdminCustomer from "./Layouts/Admin/AdminCustomer";
+import AdminStaff from "./Layouts/Admin/AdminStaff";
 
 function App() {
+  useEffect(() => {
+    GetPermission().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        const datatest = {
+          name: "John Doe",
+          age: 30,
+          email: "john.doe@example.com",
+        };
+        localStorage.setItem("permission", JSON.stringify(datatest));
+      } else {
+        console.log(data);
+      }
+    });
+  }, []);
   return (
     <Router>
       <Routes>
@@ -44,11 +63,16 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
+        <Route path="/admin/staff" element={<AdminStaff />} />
+        <Route path="/admin/customer" element={<AdminCustomer />} />
         <Route path="/admin/status" element={<AdminStatus />} />
         <Route path="/admin/master-table" element={<AdminMasterTable />} />
         <Route path="/admin/channel" element={<AdminChannel />} />
         <Route path="/admin/onleave-type" element={<AdminOnLeaveType />} />
-        <Route path="/admin/onleave/personal" element={<AdminOnLeavePersonal />}/>
+        <Route
+          path="/admin/onleave/personal"
+          element={<AdminOnLeavePersonal />}
+        />
         <Route path="/admin/dayoff" element={<AdminDayOff />} />
         <Route path="/admin/onleave" element={<AdminOnLeave />} />
         <Route path="/admin/paymenttype" element={<AdminPaymentType />} />

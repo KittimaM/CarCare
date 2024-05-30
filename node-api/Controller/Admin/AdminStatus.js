@@ -48,7 +48,7 @@ const AdminUpdateStatus = (req, res, next) => {
   const { id, code, description, status_group_id } = req.body;
   Conn.execute(
     "UPDATE status SET code = ?, description = ?, status_group_id = ? WHERE id = ?",
-    [code, description, id],
+    [code, description, status_group_id, id],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -58,6 +58,7 @@ const AdminUpdateStatus = (req, res, next) => {
     }
   );
 };
+
 module.exports = {
   AdminGetAllStatus,
   AdminAddStatus,

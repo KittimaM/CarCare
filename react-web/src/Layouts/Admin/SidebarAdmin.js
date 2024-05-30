@@ -172,7 +172,8 @@ function SidebarAdmin() {
               </li>
             )}
             {permission &&
-              permission["have_staff_user_access"].includes("1") && (
+              (permission["have_staff_access"].includes("1") ||
+                permission["have_customer_access"].includes("1")) && (
                 <li>
                   <a
                     href="/admin/user"
@@ -378,7 +379,8 @@ function SidebarAdmin() {
               </li>
             )}
             {permission &&
-              permission["have_master_table_access"].includes("1") && (
+              (permission["have_on_leave_type_access"].includes("1") ||
+                permission["have_payment_type_access"].includes("1")) && (
                 <li>
                   <a
                     href="/admin/master-table"
