@@ -17,10 +17,10 @@ const AdminGetChannel = (req, res, next) => {
 };
 
 const AdminAddChannel = (req, res, next) => {
-  const { name, description, is_available } = req.body;
+  const { name, description, is_available, service } = req.body;
   Conn.execute(
-    "INSERT INTO channel (name, description, is_available) VALUES (?,?,?)",
-    [name, description, is_available],
+    "INSERT INTO channel (name, description, is_available, service) VALUES (?,?,?,?)",
+    [name, description, is_available, service],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -48,10 +48,10 @@ const AdminDeleteChannel = (req, res, next) => {
 };
 
 const AdminUpdateChannel = (req, res, next) => {
-  const { id, name, description, is_available } = req.body;
+  const { id, name, description, is_available, service } = req.body;
   Conn.execute(
-    "UPDATE channel SET name = ?, description = ?, is_available = ? WHERE id = ?",
-    [name, description, is_available, id],
+    "UPDATE channel SET name = ?, description = ?, is_available = ?, service = ? WHERE id = ?",
+    [name, description, is_available, service, id],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -66,5 +66,5 @@ module.exports = {
   AdminGetChannel,
   AdminAddChannel,
   AdminDeleteChannel,
-  AdminUpdateChannel
+  AdminUpdateChannel,
 };

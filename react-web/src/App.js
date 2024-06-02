@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { GetPermission } from "./Layouts/Api";
+import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import CustomerFirstPage from "./Layouts/Customer/CustomerFirstPage";
@@ -33,21 +32,6 @@ import AdminCustomer from "./Layouts/Admin/AdminCustomer";
 import AdminStaff from "./Layouts/Admin/AdminStaff";
 
 function App() {
-  useEffect(() => {
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        const datatest = {
-          name: "John Doe",
-          age: 30,
-          email: "john.doe@example.com",
-        };
-        localStorage.setItem("permission", JSON.stringify(datatest));
-      } else {
-        console.log(data);
-      }
-    });
-  }, []);
   return (
     <Router>
       <Routes>
