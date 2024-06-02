@@ -14,10 +14,10 @@ const AdminCarSize = (req, res, next) => {
 };
 
 const AdminAddCarSize = (req, res, next) => {
-  const { size, description } = req.body;
+  const { size, description, is_available } = req.body;
   Conn.execute(
-    `INSERT INTO car_size(size, description) VALUES(?, ?)`,
-    [size, description],
+    `INSERT INTO car_size(size, description, is_available) VALUES(?,?,?)`,
+    [size, description, is_available],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
