@@ -4,7 +4,7 @@ const {
   AdminAddCustomer,
   AdminUpdateCustomer,
   AdminDeleteCustomer,
-} = require("../../Controller/Admin/AdminCustomer");
+} = require("../../../Controller/Admin/AdminUser/AdminCustomer");
 var router = express.Router();
 
 router.get("/", AdminGetAllCustomer);

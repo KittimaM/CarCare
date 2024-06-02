@@ -9,7 +9,7 @@ import AdminLogin from "./Layouts/Admin/AdminLogin";
 import AdminIndex from "./Layouts/Admin/AdminIndex";
 import Index from "./Layouts/Index";
 import CustomerBooking from "./Layouts/Customer/CustomerBooking";
-import AdminUser from "./Layouts/Admin/AdminUser";
+import AdminUser from "./Layouts/Admin/AdminUser/AdminUser";
 import CustomerIndex from "./Layouts/Customer/CustomerIndex";
 import AdminCarSize from "./Layouts/Admin/AdminCarSize";
 import CustomerCar from "./Layouts/Customer/CustomerCar";
@@ -28,8 +28,6 @@ import CustomerProfile from "./Layouts/Customer/CustomerProfile";
 import AdminChannel from "./Layouts/Admin/AdminChannel";
 import AdminMasterTable from "./Layouts/Admin/AdminMasterTable";
 import AdminStatus from "./Layouts/Admin/AdminStatus";
-import AdminCustomer from "./Layouts/Admin/AdminCustomer";
-import AdminStaff from "./Layouts/Admin/AdminStaff";
 
 function App() {
   return (
@@ -47,8 +45,6 @@ function App() {
         <Route path="/customer" element={<CustomerFirstPage />} />
 
         {/* admin */}
-        <Route path="/admin/staff" element={<AdminStaff />} />
-        <Route path="/admin/customer" element={<AdminCustomer />} />
         <Route path="/admin/status" element={<AdminStatus />} />
         <Route path="/admin/master-table" element={<AdminMasterTable />} />
         <Route path="/admin/channel" element={<AdminChannel />} />

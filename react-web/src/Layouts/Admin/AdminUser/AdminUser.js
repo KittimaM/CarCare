@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { GetPermission } from "../Api";
-import SidebarAdmin from "./SidebarAdmin";
+import { GetPermission } from "../../Api";
+import SidebarAdmin from "../SidebarAdmin";
 import AdminCustomer from "./AdminCustomer";
 import AdminStaff from "./AdminStaff";
 

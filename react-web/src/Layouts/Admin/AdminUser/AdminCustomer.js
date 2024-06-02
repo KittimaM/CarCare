@@ -4,7 +4,7 @@ import {
   GetAdminCustomer,
   PostAdminAddCustomer,
   UpdateAdminCustomer,
-} from "../Api";
+} from "../../Api";
 
 const AdminCustomer = ({ permission }) => {
   const [customer, setCustomer] = useState();

@@ -5,7 +5,7 @@ import {
   GetAllRole,
   UpdateStaffUser,
   PostAddStaffUser,
-} from "../Api";
+} from "../../Api";
 
 const AdminStaff = ({ permission }) => {
   const [user, setUser] = useState(null);
