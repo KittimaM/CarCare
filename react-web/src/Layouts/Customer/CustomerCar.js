@@ -7,6 +7,7 @@ import {
   PostAddCustomerCar,
   UpdateCustomerCar,
 } from "../Api";
+import URLList from "../url/URLList";
 //----------------------------
 import { Button } from "../Module";
 
@@ -30,7 +31,7 @@ const CustomerCar = () => {
 
   useEffect(() => {
     fetchCustomerCar();
-    GetAllCarSize().then((data) => {
+    GetAllCarSize(URLList.AdminCarSizeURL).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCarSize(msg);
@@ -39,7 +40,7 @@ const CustomerCar = () => {
         console.log(data);
       }
     });
-    GetAllProvince().then((data) => {
+    GetAllProvince(URLList.ProvinceURL).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setProvince(msg);
@@ -132,7 +133,7 @@ const CustomerCar = () => {
     });
   };
   return (
-    <> 
+    <>
       <div className="navbar bg-neutral text-neutral-content">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl">Carcare</a>
@@ -179,99 +180,14 @@ const CustomerCar = () => {
             </ul>
           </div>
         </div>
-        </div>
+      </div>
       <div>
-
-
-
-      <form onSubmit={handleCustomerAddCar}>
-        <label name="plate_no">plate_no</label>
-        <input type="text" name="plate_no" />
-        <label name="province">province</label>
-        {province && (
-          <select name="province">
-            {province.map((item) => (
-              <option key={item.id} value={item.province}>
-                {item.province}
-              </option>
-            ))}
-          </select>
-        )}
-        <label name="brand">brand</label>
-        <input type="text" name="brand" />
-        <label name="model">model</label>
-        <input type="text" name="model" />
-        <label name="color">color</label>
-        <input type="text" name="color" />
-        {carSize && (
-          <select name="size">
-            {carSize.map(
-              (item) =>
-                item.is_available == 1 && (
-                  <option key={item.id} value={[item.id, item.size]}>
-                    {item.size}
-                  </option>
-                )
-            )}
-          </select>
-        )}
-        <button type="submit" className="btn">
-          Submit
-        </button>
-      </form>
-      {car && (
-        <table>
-          <thead>
-            <tr>
-              <td>plate_no</td>
-              <td>province</td>
-              <td>brand</td>
-              <td>model</td>
-              <td>size</td>
-              <td>color</td>
-              <td>Edit</td>
-              <td>Delete</td>
-            </tr>
-          </thead>
-          <tbody>
-            {car.map((item) => (
-              <tr key={item.plate_no}>
-                <td>{item.plate_no}</td>
-                <td>{item.province}</td>
-                <td>{item.brand}</td>
-                <td>{item.model}</td>
-                <td>{item.size}</td>
-                <td>{item.color}</td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={() => handleSelectEditId(item)}
-                    value={item.plate_no}
-                  >
-                    Edit
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn"
-                    onClick={handleDeleteCustomerCar}
-                    value={item.id}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      {editItem && (
-        <form onSubmit={handleEditCustomerCar}>
+        <form onSubmit={handleCustomerAddCar}>
           <label name="plate_no">plate_no</label>
-          <input type="text" name="plate_no" defaultValue={editItem.plate_no} />
+          <input type="text" name="plate_no" />
           <label name="province">province</label>
           {province && (
-            <select name="province" defaultValue={editItem.province}>
+            <select name="province">
               {province.map((item) => (
                 <option key={item.id} value={item.province}>
                   {item.province}
@@ -280,16 +196,13 @@ const CustomerCar = () => {
             </select>
           )}
           <label name="brand">brand</label>
-          <input type="text" name="brand" defaultValue={editItem.brand} />
+          <input type="text" name="brand" />
           <label name="model">model</label>
-          <input type="text" name="model" defaultValue={editItem.model} />
+          <input type="text" name="model" />
           <label name="color">color</label>
-          <input type="text" name="color" defaultValue={editItem.color} />
+          <input type="text" name="color" />
           {carSize && (
-            <select
-              name="size"
-              defaultValue={[editItem.size_id, editItem.size]}
-            >
+            <select name="size">
               {carSize.map(
                 (item) =>
                   item.is_available == 1 && (
@@ -304,10 +217,98 @@ const CustomerCar = () => {
             Submit
           </button>
         </form>
-      )}
-    </div>
+        {car && (
+          <table>
+            <thead>
+              <tr>
+                <td>plate_no</td>
+                <td>province</td>
+                <td>brand</td>
+                <td>model</td>
+                <td>size</td>
+                <td>color</td>
+                <td>Edit</td>
+                <td>Delete</td>
+              </tr>
+            </thead>
+            <tbody>
+              {car.map((item) => (
+                <tr key={item.plate_no}>
+                  <td>{item.plate_no}</td>
+                  <td>{item.province}</td>
+                  <td>{item.brand}</td>
+                  <td>{item.model}</td>
+                  <td>{item.size}</td>
+                  <td>{item.color}</td>
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={() => handleSelectEditId(item)}
+                      value={item.plate_no}
+                    >
+                      Edit
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="btn"
+                      onClick={handleDeleteCustomerCar}
+                      value={item.id}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {editItem && (
+          <form onSubmit={handleEditCustomerCar}>
+            <label name="plate_no">plate_no</label>
+            <input
+              type="text"
+              name="plate_no"
+              defaultValue={editItem.plate_no}
+            />
+            <label name="province">province</label>
+            {province && (
+              <select name="province" defaultValue={editItem.province}>
+                {province.map((item) => (
+                  <option key={item.id} value={item.province}>
+                    {item.province}
+                  </option>
+                ))}
+              </select>
+            )}
+            <label name="brand">brand</label>
+            <input type="text" name="brand" defaultValue={editItem.brand} />
+            <label name="model">model</label>
+            <input type="text" name="model" defaultValue={editItem.model} />
+            <label name="color">color</label>
+            <input type="text" name="color" defaultValue={editItem.color} />
+            {carSize && (
+              <select
+                name="size"
+                defaultValue={[editItem.size_id, editItem.size]}
+              >
+                {carSize.map(
+                  (item) =>
+                    item.is_available == 1 && (
+                      <option key={item.id} value={[item.id, item.size]}>
+                        {item.size}
+                      </option>
+                    )
+                )}
+              </select>
+            )}
+            <button type="submit" className="btn">
+              Submit
+            </button>
+          </form>
+        )}
+      </div>
     </>
-   
   );
 };
 

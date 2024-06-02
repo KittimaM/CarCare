@@ -130,20 +130,20 @@ export const UpdateStaffUser = (jsonData) => {
   return putApi("admin/user", jsonData);
 };
 
-export const GetAllCarSize = () => {
-  return getApi("admin/carsize");
+export const GetAllCarSize = (url) => {
+  return getApi(url);
 };
 
-export const PostAddCarSize = (jsonData) => {
-  return postApi("admin/carsize", jsonData);
+export const PostAddCarSize = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
-export const DeleteCarSize = (jsonData) => {
-  return deleteApi("admin/carsize", jsonData);
+export const DeleteCarSize = (url, jsonData) => {
+  return deleteApi(url, jsonData);
 };
 
-export const UpdateCarSize = (jsonData) => {
-  return putApi("admin/carsize", jsonData);
+export const UpdateCarSize = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
 export const GetAllService = () => {
@@ -298,8 +298,8 @@ export const AddOnLeaveType = (jsonData) => {
   return postApi("admin/onleave-type", jsonData);
 };
 
-export const GetAllProvince = () => {
-  return getApi("admin/province");
+export const GetAllProvince = (url) => {
+  return getApi(url);
 };
 
 export const GetCustomerProfile = () => {
@@ -360,18 +360,34 @@ export const DeleteStatusGroup = (jsonData) => {
   return deleteApi("admin/status-group", jsonData);
 };
 
-export const GetAdminCustomer = () => {
-  return getApi("admin/customer");
+export const GetAllAdminCustomer = (url) => {
+  return getApi(url);
 };
 
-export const UpdateAdminCustomer = (jsonData) => {
-  return putApi("admin/customer", jsonData);
+export const UpdateAdminCustomer = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
-export const PostAdminAddCustomer = (jsonData) => {
-  return postApi("admin/customer", jsonData);
+export const PostAdminAddCustomer = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
-export const DeleteAdminCustomer = (jsonData) => {
-  return deleteApi("admin/customer", jsonData);
+export const DeleteAdminCustomer = (url, jsonData) => {
+  return deleteApi(url, jsonData);
+};
+
+export const GetAllAdminCustomerCar = (url) => {
+  return getApi(url);
+};
+
+export const DeleteAdminCustomerCar = (url, jsonData) => {
+  return deleteApi(url, jsonData);
+};
+
+export const PostAddAdminCustomerCar = (url, jsonData) => {
+  return postApi(url, jsonData);
+};
+
+export const UpdateAdminCustomerCar = (url, jsonData) => {
+  return putApi(url, jsonData);
 };

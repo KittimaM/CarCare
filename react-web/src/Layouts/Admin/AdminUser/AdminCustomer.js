@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import {
   DeleteAdminCustomer,
-  GetAdminCustomer,
+  GetAllAdminCustomer,
   PostAdminAddCustomer,
   UpdateAdminCustomer,
 } from "../../Api";
+import URLList from "../../url/URLList";
 
 const AdminCustomer = ({ permission }) => {
   const [customer, setCustomer] = useState();
   const [editItem, setEditItem] = useState();
   const [openAddCustomerForm, setOpenAddCustomerForm] = useState(false);
   const fetchCustomer = () => {
-    GetAdminCustomer().then((data) => {
+    GetAllAdminCustomer(URLList.AdminCustomerURL).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCustomer(msg);
@@ -38,7 +39,7 @@ const AdminCustomer = ({ permission }) => {
       name: data.get("name"),
       password: data.get("password"),
     };
-    UpdateAdminCustomer(jsonData).then((data) => {
+    UpdateAdminCustomer(URLList.AdminCustomerURL, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         fetchCustomer();
@@ -57,7 +58,7 @@ const AdminCustomer = ({ permission }) => {
       phone: data.get("phone"),
       password: data.get("password"),
     };
-    PostAdminAddCustomer(jsonData).then((data) => {
+    PostAdminAddCustomer(URLList.AdminCustomerURL, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setOpenAddCustomerForm(false);
@@ -73,7 +74,7 @@ const AdminCustomer = ({ permission }) => {
     const jsonData = {
       id: event.target.value,
     };
-    DeleteAdminCustomer(jsonData).then((data) => {
+    DeleteAdminCustomer(URLList.AdminCustomerURL, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         fetchCustomer();
