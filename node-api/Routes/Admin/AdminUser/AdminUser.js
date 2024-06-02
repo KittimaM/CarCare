@@ -4,7 +4,7 @@ const {
   AdminAddStaffUser,
   AdminDeleteStaffUser,
   AdminUpdateStaffUser,
-} = require("../../Controller/Admin/AdminUser");
+} = require("../../../Controller/Admin/AdminUser/AdminUser");
 var router = express.Router();
 
 router.get("/", AdminUser);

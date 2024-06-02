@@ -1,94 +1,83 @@
 import React, { useEffect, useState } from "react";
 import {
-  DeleteStaffUser,
-  GetAllStaff,
-  GetAllRole,
-  UpdateStaffUser,
-  PostAddStaffUser,
-} from "../Api";
+  DeleteAdminCustomer,
+  GetAllAdminCustomer,
+  PostAdminAddCustomer,
+  UpdateAdminCustomer,
+} from "../../Api";
+import URLList from "../../url/URLList";
 
-const AdminStaff = ({ permission }) => {
-  const [user, setUser] = useState(null);
-  const [allRole, setAllRole] = useState();
-  const [editItem, setEditItem] = useState(null);
-  const [openAddUserForm, setOpenAddUserForm] = useState(false);
+const AdminCustomer = ({ permission }) => {
+  const [customer, setCustomer] = useState();
+  const [editItem, setEditItem] = useState();
+  const [openAddCustomerForm, setOpenAddCustomerForm] = useState(false);
+  const fetchCustomer = () => {
+    GetAllAdminCustomer(URLList.AdminCustomerURL).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setCustomer(msg);
+      } else {
+        console.log(data);
+      }
+    });
+  };
 
   useEffect(() => {
-    fetchStaff();
-    GetAllRole().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setAllRole(msg);
-      } else {
-        console.log(data);
-      }
-    });
+    fetchCustomer();
   }, []);
-
-  const fetchStaff = () => {
-    GetAllStaff().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setUser(msg);
-      } else {
-        console.log(data);
-      }
-    });
-  };
-
-  const handleAddUser = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const jsonData = {
-      name: data.get("name"),
-      username: data.get("username"),
-      password: data.get("password"),
-      role_id: data.get("role_id"),
-    };
-    PostAddStaffUser(jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setOpenAddUserForm(false);
-        fetchStaff();
-      } else {
-        console.log(data);
-      }
-    });
-  };
-  const handleDeleteUser = (event) => {
-    event.preventDefault();
-    const jsonData = {
-      id: event.target.value,
-    };
-    DeleteStaffUser(jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        fetchStaff();
-      } else {
-        console.log(data);
-      }
-    });
-  };
 
   const handleSelectEditId = (selectedItem) => {
     setEditItem(selectedItem);
   };
 
-  const handleEditUser = (event) => {
+  const handleUpdateCustomer = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
       id: editItem.id,
+      phone: data.get("phone"),
       name: data.get("name"),
-      username: data.get("username"),
       password: data.get("password"),
-      role_id: data.get("role_id"),
     };
-    UpdateStaffUser(jsonData).then((data) => {
+    UpdateAdminCustomer(URLList.AdminCustomerURL, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        fetchStaff();
+        fetchCustomer();
         setEditItem(null);
+      } else {
+        console.log(data);
+      }
+    });
+  };
+
+  const handleAddCustomer = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      name: data.get("name"),
+      phone: data.get("phone"),
+      password: data.get("password"),
+    };
+    PostAdminAddCustomer(URLList.AdminCustomerURL, jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setOpenAddCustomerForm(false);
+        fetchCustomer();
+      } else {
+        console.log(data);
+      }
+    });
+  };
+
+  const handleDeleteCustomer = (event) => {
+    event.preventDefault();
+    const jsonData = {
+      id: event.target.value,
+    };
+    DeleteAdminCustomer(URLList.AdminCustomerURL, jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchCustomer();
       } else {
         console.log(data);
       }
@@ -98,34 +87,33 @@ const AdminStaff = ({ permission }) => {
   return (
     <div>
       {permission && permission.includes("2") && (
-        <button className="btn" onClick={() => setOpenAddUserForm(true)}>
-          Add Staff
+        <button className="btn" onClick={() => setOpenAddCustomerForm(true)}>
+          Add Customer
         </button>
       )}
-
-      {user && (
-        <table className="table table-lg">
-          <thead>
-            <tr>
-              <td>No.</td>
-              <td>username</td>
-              <td>name</td>
-              {permission && permission.includes("3") && <td>Edit</td>}
-              {permission && permission.includes("4") && <td>Delete</td>}
-            </tr>
-          </thead>
-          <tbody>
-            {user.map((item, index) => (
+      <table className="table table-lg">
+        <thead>
+          <tr>
+            <td>No.</td>
+            <td>phone</td>
+            <td>name</td>
+            {permission && permission.includes("3") && <td>Edit</td>}
+            {permission && permission.includes("4") && <td>Delete</td>}
+          </tr>
+        </thead>
+        <tbody>
+          {customer &&
+            customer.map((item, index) => (
               <tr key={item.id}>
                 <td>{index + 1}</td>
-                <td>{item.username}</td>
+                <td>{item.phone}</td>
                 <td>{item.name}</td>
                 {permission && permission.includes("3") && (
                   <td>
                     <button
                       className="btn"
-                      onClick={() => handleSelectEditId(item)}
                       value={item.id}
+                      onClick={() => handleSelectEditId(item)}
                     >
                       Edit
                     </button>
@@ -135,8 +123,8 @@ const AdminStaff = ({ permission }) => {
                   <td>
                     <button
                       className="btn"
-                      onClick={handleDeleteUser}
                       value={item.id}
+                      onClick={handleDeleteCustomer}
                     >
                       Delete
                     </button>
@@ -144,21 +132,20 @@ const AdminStaff = ({ permission }) => {
                 )}
               </tr>
             ))}
-          </tbody>
-        </table>
-      )}
-      {openAddUserForm && (
+        </tbody>
+      </table>
+      {openAddCustomerForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl mb-4">New User</h2>
-            <form onSubmit={handleAddUser}>
+            <h2 className="text-2xl mb-4">Add Customer</h2>
+            <form onSubmit={handleAddCustomer}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  username
+                  phone
                 </label>
                 <input
                   type="text"
-                  name="username"
+                  name="phone"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
@@ -182,23 +169,6 @@ const AdminStaff = ({ permission }) => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  role
-                </label>
-                {
-                  <select
-                    name="role_id"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  >
-                    {allRole.map((item) => (
-                      <option value={item.id} key={item.id}>
-                        {item.role}
-                      </option>
-                    ))}
-                  </select>
-                }
-              </div>
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
@@ -209,7 +179,7 @@ const AdminStaff = ({ permission }) => {
                 <button
                   type="button"
                   className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  onClick={() => setOpenAddUserForm(false)}
+                  onClick={() => setOpenAddCustomerForm(false)}
                 >
                   Close
                 </button>
@@ -221,16 +191,16 @@ const AdminStaff = ({ permission }) => {
       {editItem && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl mb-4">Edit User</h2>
-            <form onSubmit={handleEditUser}>
+            <h2 className="text-2xl mb-4">Edit Customer</h2>
+            <form onSubmit={handleUpdateCustomer}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  username
+                  phone
                 </label>
                 <input
-                  defaultValue={editItem.username}
+                  defaultValue={editItem.phone}
                   type="text"
-                  name="username"
+                  name="phone"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
@@ -255,24 +225,6 @@ const AdminStaff = ({ permission }) => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  role
-                </label>
-                {
-                  <select
-                    defaultValue={editItem.role_id}
-                    name="role_id"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  >
-                    {allRole.map((item) => (
-                      <option value={item.id} key={item.id}>
-                        {item.role}
-                      </option>
-                    ))}
-                  </select>
-                }
-              </div>
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
@@ -296,4 +248,4 @@ const AdminStaff = ({ permission }) => {
   );
 };
 
-export default AdminStaff;
+export default AdminCustomer;

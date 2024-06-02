@@ -7,6 +7,7 @@ import {
   UpdateService,
   GetPermission,
 } from "../Api";
+import URLList from "../url/URLList";
 
 //-----------
 import SidebarAdmin from "./SidebarAdmin";
@@ -29,7 +30,7 @@ const AdminService = () => {
   };
 
   const fetchCarSize = () => {
-    GetAllCarSize().then((data) => {
+    GetAllCarSize(URLList.AdminCarSizeURL).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCarSize(msg);
@@ -119,9 +120,8 @@ const AdminService = () => {
 
   return (
     <>
-     <SidebarAdmin />
+      <SidebarAdmin />
       <div className="ml-80 mt-16">
-
         <div className="text-lg bg-yellow-100 mb-5 "> Service page</div>
 
         {permission && permission.includes("2") && (
@@ -248,9 +248,8 @@ const AdminService = () => {
             </button>
           </form>
         )}
-    </div>
+      </div>
     </>
-    
   );
 };
 

@@ -26,7 +26,10 @@ const CustomerCarRoute = require("./Routes/Customer/CustomerCar");
 app.use("/api/customer/car", CustomerCarRoute);
 
 //admin
-const AdminCustomerRoute = require("./Routes/Admin/AdminCustomer");
+const AdminCustomerCarRoute = require("./Routes/Admin/AdminUser/AdminCustomerCar");
+app.use("/api/admin/customer-car", AdminCustomerCarRoute);
+
+const AdminCustomerRoute = require("./Routes/Admin/AdminUser/AdminCustomer");
 app.use("/api/admin/customer", AdminCustomerRoute);
 
 const AdminStatusGroupRoute = require("./Routes/Admin/AdminStatusGroup");
@@ -68,7 +71,7 @@ app.use("/api/admin/login", AdminLoginRoute);
 const AdminBookingRoute = require("./Routes/Admin/AdminBooking");
 app.use("/api/admin/booking", AdminBookingRoute);
 
-const AdminUserRoute = require("./Routes/Admin/AdminUser");
+const AdminUserRoute = require("./Routes/Admin/AdminUser/AdminUser");
 app.use("/api/admin/user", AdminUserRoute);
 
 const AdminServiceRoute = require("./Routes/Admin/AdminService");

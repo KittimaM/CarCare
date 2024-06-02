@@ -35,15 +35,14 @@ const CustomerAddCustomerCar = (req, res, next) => {
       brand,
       model,
       size_id,
-      size,
       color,
     } = req.body;
     const token = req.headers.authorization.split(" ")[1];
     const { id } = jwt.verify(token, secret);
     Conn.execute(
       `INSERT INTO 
-      customer_car(customer_id, plate_no, prefix, postfix, province, brand, model, size_id, size, color) 
-      VALUES (?,?,?,?,?,?,?,?,?,?)`,
+      customer_car(customer_id, plate_no, prefix, postfix, province, brand, model, size_id, color) 
+      VALUES (?,?,?,?,?,?,?,?,?)`,
       [
         id,
         plate_no,
@@ -53,7 +52,6 @@ const CustomerAddCustomerCar = (req, res, next) => {
         brand,
         model,
         size_id,
-        size,
         color,
       ],
       function (error, result) {

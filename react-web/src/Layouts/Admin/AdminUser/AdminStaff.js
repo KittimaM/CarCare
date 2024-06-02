@@ -1,82 +1,94 @@
 import React, { useEffect, useState } from "react";
 import {
-  DeleteAdminCustomer,
-  GetAdminCustomer,
-  PostAdminAddCustomer,
-  UpdateAdminCustomer,
-} from "../Api";
+  DeleteStaffUser,
+  GetAllStaff,
+  GetAllRole,
+  UpdateStaffUser,
+  PostAddStaffUser,
+} from "../../Api";
 
-const AdminCustomer = ({ permission }) => {
-  const [customer, setCustomer] = useState();
-  const [editItem, setEditItem] = useState();
-  const [openAddCustomerForm, setOpenAddCustomerForm] = useState(false);
-  const fetchCustomer = () => {
-    GetAdminCustomer().then((data) => {
+const AdminStaff = ({ permission }) => {
+  const [user, setUser] = useState(null);
+  const [allRole, setAllRole] = useState();
+  const [editItem, setEditItem] = useState(null);
+  const [openAddUserForm, setOpenAddUserForm] = useState(false);
+
+  useEffect(() => {
+    fetchStaff();
+    GetAllRole().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setCustomer(msg);
+        setAllRole(msg);
+      } else {
+        console.log(data);
+      }
+    });
+  }, []);
+
+  const fetchStaff = () => {
+    GetAllStaff().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setUser(msg);
       } else {
         console.log(data);
       }
     });
   };
 
-  useEffect(() => {
-    fetchCustomer();
-  }, []);
+  const handleAddUser = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const jsonData = {
+      name: data.get("name"),
+      username: data.get("username"),
+      password: data.get("password"),
+      role_id: data.get("role_id"),
+    };
+    PostAddStaffUser(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setOpenAddUserForm(false);
+        fetchStaff();
+      } else {
+        console.log(data);
+      }
+    });
+  };
+  const handleDeleteUser = (event) => {
+    event.preventDefault();
+    const jsonData = {
+      id: event.target.value,
+    };
+    DeleteStaffUser(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchStaff();
+      } else {
+        console.log(data);
+      }
+    });
+  };
 
   const handleSelectEditId = (selectedItem) => {
     setEditItem(selectedItem);
   };
 
-  const handleUpdateCustomer = (event) => {
+  const handleEditUser = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
       id: editItem.id,
-      phone: data.get("phone"),
       name: data.get("name"),
+      username: data.get("username"),
       password: data.get("password"),
+      role_id: data.get("role_id"),
     };
-    UpdateAdminCustomer(jsonData).then((data) => {
+    UpdateStaffUser(jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        fetchCustomer();
+        fetchStaff();
         setEditItem(null);
-      } else {
-        console.log(data);
-      }
-    });
-  };
-
-  const handleAddCustomer = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const jsonData = {
-      name: data.get("name"),
-      phone: data.get("phone"),
-      password: data.get("password"),
-    };
-    PostAdminAddCustomer(jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setOpenAddCustomerForm(false);
-        fetchCustomer();
-      } else {
-        console.log(data);
-      }
-    });
-  };
-
-  const handleDeleteCustomer = (event) => {
-    event.preventDefault();
-    const jsonData = {
-      id: event.target.value,
-    };
-    DeleteAdminCustomer(jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        fetchCustomer();
       } else {
         console.log(data);
       }
@@ -86,33 +98,34 @@ const AdminCustomer = ({ permission }) => {
   return (
     <div>
       {permission && permission.includes("2") && (
-        <button className="btn" onClick={() => setOpenAddCustomerForm(true)}>
-          Add Customer
+        <button className="btn" onClick={() => setOpenAddUserForm(true)}>
+          Add Staff
         </button>
       )}
-      <table className="table table-lg">
-        <thead>
-          <tr>
-            <td>No.</td>
-            <td>phone</td>
-            <td>name</td>
-            {permission && permission.includes("3") && <td>Edit</td>}
-            {permission && permission.includes("4") && <td>Delete</td>}
-          </tr>
-        </thead>
-        <tbody>
-          {customer &&
-            customer.map((item, index) => (
+
+      {user && (
+        <table className="table table-lg">
+          <thead>
+            <tr>
+              <td>No.</td>
+              <td>username</td>
+              <td>name</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
+            </tr>
+          </thead>
+          <tbody>
+            {user.map((item, index) => (
               <tr key={item.id}>
                 <td>{index + 1}</td>
-                <td>{item.phone}</td>
+                <td>{item.username}</td>
                 <td>{item.name}</td>
                 {permission && permission.includes("3") && (
                   <td>
                     <button
                       className="btn"
-                      value={item.id}
                       onClick={() => handleSelectEditId(item)}
+                      value={item.id}
                     >
                       Edit
                     </button>
@@ -122,8 +135,8 @@ const AdminCustomer = ({ permission }) => {
                   <td>
                     <button
                       className="btn"
+                      onClick={handleDeleteUser}
                       value={item.id}
-                      onClick={handleDeleteCustomer}
                     >
                       Delete
                     </button>
@@ -131,20 +144,21 @@ const AdminCustomer = ({ permission }) => {
                 )}
               </tr>
             ))}
-        </tbody>
-      </table>
-      {openAddCustomerForm && (
+          </tbody>
+        </table>
+      )}
+      {openAddUserForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl mb-4">Add Customer</h2>
-            <form onSubmit={handleAddCustomer}>
+            <h2 className="text-2xl mb-4">New User</h2>
+            <form onSubmit={handleAddUser}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  phone
+                  username
                 </label>
                 <input
                   type="text"
-                  name="phone"
+                  name="username"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
@@ -168,6 +182,23 @@ const AdminCustomer = ({ permission }) => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  role
+                </label>
+                {
+                  <select
+                    name="role_id"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  >
+                    {allRole.map((item) => (
+                      <option value={item.id} key={item.id}>
+                        {item.role}
+                      </option>
+                    ))}
+                  </select>
+                }
+              </div>
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
@@ -178,7 +209,7 @@ const AdminCustomer = ({ permission }) => {
                 <button
                   type="button"
                   className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  onClick={() => setOpenAddCustomerForm(false)}
+                  onClick={() => setOpenAddUserForm(false)}
                 >
                   Close
                 </button>
@@ -190,16 +221,16 @@ const AdminCustomer = ({ permission }) => {
       {editItem && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl mb-4">Edit Customer</h2>
-            <form onSubmit={handleUpdateCustomer}>
+            <h2 className="text-2xl mb-4">Edit User</h2>
+            <form onSubmit={handleEditUser}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
-                  phone
+                  username
                 </label>
                 <input
-                  defaultValue={editItem.phone}
+                  defaultValue={editItem.username}
                   type="text"
-                  name="phone"
+                  name="username"
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
@@ -224,6 +255,24 @@ const AdminCustomer = ({ permission }) => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  role
+                </label>
+                {
+                  <select
+                    defaultValue={editItem.role_id}
+                    name="role_id"
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  >
+                    {allRole.map((item) => (
+                      <option value={item.id} key={item.id}>
+                        {item.role}
+                      </option>
+                    ))}
+                  </select>
+                }
+              </div>
               <div className="flex items-center justify-between">
                 <button
                   type="submit"
@@ -247,4 +296,4 @@ const AdminCustomer = ({ permission }) => {
   );
 };
 
-export default AdminCustomer;
+export default AdminStaff;

@@ -1,5 +1,5 @@
 var bcrypt = require("bcrypt");
-const Conn = require("../../db");
+const Conn = require("../../../db");
 const saltRounds = 10;
 
 const AdminUser = (req, res, next) => {
