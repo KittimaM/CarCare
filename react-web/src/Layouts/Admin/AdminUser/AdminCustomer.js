@@ -5,7 +5,7 @@ import {
   PostAdminAddCustomer,
   UpdateAdminCustomer,
 } from "../../Api";
-import URLList from "../../url/URLList";
+import URLList from "../../Url/URLList";
 
 const AdminCustomer = ({ permission }) => {
   const [customer, setCustomer] = useState();

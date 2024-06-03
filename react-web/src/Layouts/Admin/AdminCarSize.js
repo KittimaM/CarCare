@@ -6,24 +6,33 @@ import {
   UpdateCarSize,
   GetPermission,
 } from "../Api";
-import URLList from "../url/URLList";
-
-//-----------
+import URLList from "../Url/URLList";
 import SidebarAdmin from "./SidebarAdmin";
+import Notification from "../Notification/Notification";
 
 const AdminCarSize = () => {
-  const [carSize, setCarSize] = useState(null);
-  const [addCarSize, setAddCarSize] = useState(false);
+  const [carSizeList, setCarSizeList] = useState(null);
   const [editItem, setEditItem] = useState(null);
   const [permission, setPermission] = useState(null);
   const [openAddCarSizeForm, setOpenAddCarSizeForm] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState();
+  const [notificationStatus, setNotificationStatus] = useState();
+
+  const handleShowNotification = () => {
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+      setNotificationMessage(null);
+    }, 3000);
+  };
 
   const fetchCarSize = async () => {
     GetAllCarSize(URLList.AdminCarSizeURL).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setCarSize(msg);
+        setCarSizeList(msg);
       } else {
         console.log(data);
       }
@@ -74,7 +83,10 @@ const AdminCarSize = () => {
       PostAddCarSize(URLList.AdminCarSizeURL, jsonData).then((data) => {
         const { status, msg } = data;
         if (status == "SUCCESS") {
+          setNotificationMessage(`success add carsize = ${jsonData.size}`);
+          setNotificationStatus(status);
           setOpenAddCarSizeForm(false);
+          handleShowNotification();
           fetchCarSize();
         } else {
           let errorMsg = {};
@@ -101,9 +113,18 @@ const AdminCarSize = () => {
     DeleteCarSize(URLList.AdminCarSizeURL, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
+        setNotificationMessage("success delete");
+        setNotificationStatus(status);
+        handleShowNotification();
         fetchCarSize();
       } else {
-        console.log(data);
+        if (msg.code == "ER_ROW_IS_REFERENCED_2") {
+          setNotificationMessage("in use");
+          setNotificationStatus(status);
+          handleShowNotification();
+        } else {
+          console.log(data);
+        }
       }
     });
   };
@@ -111,21 +132,33 @@ const AdminCarSize = () => {
   const handleEditCarSize = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const jsonData = {
-      id: editItem.id,
-      size: data.get("size"),
-      description: data.get("description"),
-      is_available: data.get("is_available") !== null ? 1 : 0,
-    };
-    UpdateCarSize(URLList.AdminCarSizeURL, jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setEditItem(null);
-        fetchCarSize();
-      } else {
-        console.log(data);
-      }
-    });
+    const validatedErrors = validateData(data);
+    const { status, msg } = validatedErrors;
+    if (status == "ERROR") {
+      setErrors(msg);
+    } else {
+      const jsonData = {
+        id: editItem.id,
+        size: data.get("size"),
+        description: data.get("description"),
+        is_available: data.get("is_available") !== null ? 1 : 0,
+      };
+      UpdateCarSize(URLList.AdminCarSizeURL, jsonData).then((data) => {
+        const { status, msg } = data;
+        if (status == "SUCCESS") {
+          setEditItem(null);
+          fetchCarSize();
+        } else {
+          if (msg.code == "ER_DUP_ENTRY") {
+            let errorMsg = {};
+            errorMsg["size"] = "duplicate";
+            setErrors(errorMsg);
+          } else {
+            console.log(data);
+          }
+        }
+      });
+    }
   };
 
   return (
@@ -133,7 +166,12 @@ const AdminCarSize = () => {
       <SidebarAdmin />
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 "> Car size page</div>
-
+        {showNotification && (
+          <Notification
+            message={notificationMessage}
+            type={notificationStatus}
+          />
+        )}
         {permission && permission.includes("2") && (
           <button
             className="btn"
@@ -157,21 +195,21 @@ const AdminCarSize = () => {
             </tr>
           </thead>
           <tbody>
-            {carSize &&
-              carSize.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>{item.size}</td>
-                  <td>{item.description}</td>
+            {carSizeList &&
+              carSizeList.map((carSize, index) => (
+                <tr key={carSize.id}>
+                  <td>{index + 1}</td>
+                  <td>{carSize.size}</td>
+                  <td>{carSize.description}</td>
                   <td>
-                    {item.is_available == 1 ? "available" : "not available"}
+                    {carSize.is_available == 1 ? "available" : "not available"}
                   </td>
                   {permission && permission.includes("3") && (
                     <td>
                       <button
                         className="btn"
-                        onClick={() => handleSelectEditId(item)}
-                        value={item.id}
+                        onClick={() => handleSelectEditId(carSize)}
+                        value={carSize.id}
                       >
                         Edit
                       </button>
@@ -182,7 +220,7 @@ const AdminCarSize = () => {
                       <button
                         className="btn"
                         onClick={handleDeleteUser}
-                        value={item.id}
+                        value={carSize.id}
                       >
                         Delete
                       </button>
