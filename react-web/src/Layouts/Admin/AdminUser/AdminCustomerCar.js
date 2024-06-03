@@ -8,7 +8,7 @@ import {
   PostAddAdminCustomerCar,
   UpdateAdminCustomerCar,
 } from "../../Api";
-import URLList from "../../url/URLList";
+import URLList from "../../Url/URLList";
 
 const AdminCustomerCar = ({ permission }) => {
   const [customerList, setCustomerList] = useState();

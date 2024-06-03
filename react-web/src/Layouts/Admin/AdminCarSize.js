@@ -6,7 +6,7 @@ import {
   UpdateCarSize,
   GetPermission,
 } from "../Api";
-import URLList from "../url/URLList";
+import URLList from "../Url/URLList";
 
 //-----------
 import SidebarAdmin from "./SidebarAdmin";
