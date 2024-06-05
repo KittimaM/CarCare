@@ -312,20 +312,20 @@ export const UpdateCustomerProfile = (jsonData) => {
   return putApi("customer/profile", jsonData, isUseToken);
 };
 
-export const GetChannel = () => {
-  return getApi("admin/channel");
+export const GetChannel = (url) => {
+  return getApi(url);
 };
 
-export const PostAddChannel = (jsonData) => {
-  return postApi("admin/channel", jsonData);
+export const PostAddChannel = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
-export const DeleteChannel = (jsonData) => {
-  return deleteApi("admin/channel", jsonData);
+export const DeleteChannel = (url, jsonData) => {
+  return deleteApi(url, jsonData);
 };
 
-export const UpdateChannel = (jsonData) => {
-  return putApi("admin/channel", jsonData);
+export const UpdateChannel = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
 export const GetAllStatus = () => {

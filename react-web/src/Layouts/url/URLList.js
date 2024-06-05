@@ -4,6 +4,7 @@ const URLList = {
   AdminCarSizeURL: "admin/carsize",
   ProvinceURL: "admin/province",
   AdminService: "admin/service",
+  AdminChannel: "admin/channel",
 };
 
 export default URLList;

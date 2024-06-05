@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { GetChannel } from "../Api";
+import URLList from "../Url/URLList";
 
 const AdminFirstPage = () => {
   const [channel, setChannel] = useState();
   useEffect(() => {
-    GetChannel().then((data) => {
+    GetChannel(URLList.AdminChannel).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setChannel(msg);
@@ -13,7 +14,7 @@ const AdminFirstPage = () => {
       }
     });
   }, []);
-  
+
   return (
     <div className="ml-72 mt-16">
       <div className="container ">

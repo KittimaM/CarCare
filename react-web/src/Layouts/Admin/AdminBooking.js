@@ -60,7 +60,7 @@ const AdminBooking = () => {
       customer_phone: data.get("customer_phone"),
     };
 
-    GetAllService().then((data) => {
+    GetAllService(URLList.AdminService).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         const availableService = msg.filter(
