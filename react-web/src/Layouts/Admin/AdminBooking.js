@@ -20,7 +20,7 @@ const AdminBooking = () => {
   const [paymentType, setPaymentType] = useState();
 
   useEffect(() => {
-    GetAllPaymentType().then((data) => {
+    GetAllPaymentType(URLList.AdminPaymentType).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setPaymentType(msg);
