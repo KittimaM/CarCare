@@ -7,22 +7,30 @@ import {
   UpdateChannel,
 } from "../Api";
 import URLList from "../Url/URLList";
+import Notification from "../Notification/Notification";
 
 const AdminChannel = ({ permission }) => {
   const [openAddChannelForm, setOpenAddChannelForm] = useState(false);
-  const [channel, setChannel] = useState();
+  const [channelList, setChannelList] = useState();
   const [editItem, setEditItem] = useState(null);
   const [service, setService] = useState();
   const [editService, setEditService] = useState();
+  const [errors, setErrors] = useState([]);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState();
+  const [notificationStatus, setNotificationStatus] = useState();
 
   const fetchChannel = () => {
     GetChannel(URLList.AdminChannel).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
-        setChannel(msg);
+        setChannelList(msg);
+      } else if (status == "NO DATA") {
+        setChannelList(null);
       } else {
         console.log(data);
       }
+      setErrors([]);
     });
   };
   useEffect(() => {
@@ -41,6 +49,29 @@ const AdminChannel = ({ permission }) => {
     });
   }, []);
 
+  const handleShowNotification = () => {
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+      setNotificationMessage(null);
+    }, 3000);
+  };
+
+  const validateData = (data) => {
+    let errorMsg = {};
+    if (data.get("name") == null || data.get("name") == "") {
+      errorMsg["name"] = "please insert data";
+    }
+    if (Object.entries(errorMsg).length !== 0) {
+      return { status: "ERROR", msg: errorMsg };
+    } else {
+      return {
+        status: "SUCCESS",
+        msg: "",
+      };
+    }
+  };
+
   const handleAddChannel = (event) => {
     event.preventDefault();
     let selectedServiceIds = [];
@@ -50,21 +81,38 @@ const AdminChannel = ({ permission }) => {
       }
     });
     const data = new FormData(event.currentTarget);
-    const jsonData = {
-      name: data.get("name"),
-      description: data.get("description"),
-      is_available: data.get("is_available") !== null ? 1 : 0,
-      service: selectedServiceIds.join(","),
-    };
-    PostAddChannel(jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setOpenAddChannelForm(false);
-        fetchChannel();
-      } else {
-        console.log(data);
-      }
-    });
+    const validatedErrors = validateData(data);
+    const { status, msg } = validatedErrors;
+    if (status == "ERROR") {
+      setErrors(msg);
+    } else {
+      const jsonData = {
+        name: data.get("name"),
+        description: data.get("description"),
+        is_available: data.get("is_available") !== null ? 1 : 0,
+        service: selectedServiceIds.join(","),
+      };
+      PostAddChannel(URLList.AdminChannel, jsonData).then((data) => {
+        const { status, msg } = data;
+        if (status == "SUCCESS") {
+          setNotificationMessage(`success add channel = ${jsonData.name}`);
+          setNotificationStatus(status);
+          handleShowNotification();
+          setOpenAddChannelForm(false);
+          fetchChannel();
+        } else if (status == "ERROR") {
+          let errorMsg = {};
+          if (msg.code == "ER_DUP_ENTRY") {
+            errorMsg["name"] = "duplicated";
+            setErrors(errorMsg);
+          } else {
+            console.log(data);
+          }
+        } else {
+          console.log(data);
+        }
+      });
+    }
   };
 
   const handleSelectEditId = (selectedItem) => {
@@ -93,22 +141,39 @@ const AdminChannel = ({ permission }) => {
       }
     });
     const data = new FormData(event.currentTarget);
-    const jsonData = {
-      id: editItem.id,
-      name: data.get("name"),
-      description: data.get("description"),
-      is_available: data.get("is_available") !== null ? 1 : 0,
-      service: selectedServiceIds.join(","),
-    };
-    UpdateChannel(jsonData).then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setEditItem(null);
-        fetchChannel();
-      } else {
-        console.log(data);
-      }
-    });
+    const validatedErrors = validateData(data);
+    const { status, msg } = validatedErrors;
+    if (status == "ERROR") {
+      setErrors(msg);
+    } else {
+      const jsonData = {
+        id: editItem.id,
+        name: data.get("name"),
+        description: data.get("description"),
+        is_available: data.get("is_available") !== null ? 1 : 0,
+        service: selectedServiceIds.join(","),
+      };
+      UpdateChannel(URLList.AdminChannel, jsonData).then((data) => {
+        const { status, msg } = data;
+        if (status == "SUCCESS") {
+          setNotificationMessage(`success edit channel = ${jsonData.name}`);
+          setNotificationStatus(status);
+          handleShowNotification();
+          setEditItem(null);
+          fetchChannel();
+        } else if (status == "ERROR") {
+          let errorMsg = {};
+          if (msg.code == "ER_DUP_ENTRY") {
+            errorMsg["name"] = "duplicated";
+            setErrors(errorMsg);
+          } else {
+            console.log(data);
+          }
+        } else {
+          console.log(data);
+        }
+      });
+    }
   };
 
   const handleDeleteChannel = (event) => {
@@ -119,6 +184,9 @@ const AdminChannel = ({ permission }) => {
     DeleteChannel(URLList.AdminChannel, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
+        setNotificationMessage("success deleted");
+        setNotificationStatus(status);
+        handleShowNotification();
         fetchChannel();
       } else {
         console.log(data);
@@ -143,24 +211,30 @@ const AdminChannel = ({ permission }) => {
     <div>
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 ">Channel</div>
+        {showNotification && (
+          <Notification
+            message={notificationMessage}
+            type={notificationStatus}
+          />
+        )}
         {permission && permission.includes("2") && (
           <button class="btn" onClick={() => setOpenAddChannelForm(true)}>
             Add Channel
           </button>
         )}
-        {channel && (
-          <table className="table table-lg">
-            <thead>
-              <tr>
-                <td>name</td>
-                <td>description</td>
-                <td>is available</td>
-                {permission && permission.includes("3") && <td>Edit</td>}
-                {permission && permission.includes("4") && <td>Delete</td>}
-              </tr>
-            </thead>
-            <tbody>
-              {channel.map((item) => (
+        <table className="table table-lg">
+          <thead>
+            <tr>
+              <td>name</td>
+              <td>description</td>
+              <td>is available</td>
+              {permission && permission.includes("3") && <td>Edit</td>}
+              {permission && permission.includes("4") && <td>Delete</td>}
+            </tr>
+          </thead>
+          <tbody>
+            {channelList &&
+              channelList.map((item) => (
                 <tr key={item.id}>
                   <td>{item.name}</td>
                   <td>{item.description}</td>
@@ -191,9 +265,8 @@ const AdminChannel = ({ permission }) => {
                   )}
                 </tr>
               ))}
-            </tbody>
-          </table>
-        )}
+          </tbody>
+        </table>
         {openAddChannelForm && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
@@ -208,6 +281,9 @@ const AdminChannel = ({ permission }) => {
                     name="name"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-red-500 text-sm">{errors.name}</p>
+                  )}
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -265,7 +341,10 @@ const AdminChannel = ({ permission }) => {
                   <button
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={() => setOpenAddChannelForm(false)}
+                    onClick={() => {
+                      setErrors([]);
+                      setOpenAddChannelForm(false);
+                    }}
                   >
                     Close
                   </button>
@@ -289,6 +368,9 @@ const AdminChannel = ({ permission }) => {
                     name="name"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-red-500 text-sm">{errors.name}</p>
+                  )}
                 </div>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -347,7 +429,10 @@ const AdminChannel = ({ permission }) => {
                   <button
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                    onClick={() => setEditItem(false)}
+                    onClick={() => {
+                      setErrors([]);
+                      setEditItem(null);
+                    }}
                   >
                     Close
                   </button>
