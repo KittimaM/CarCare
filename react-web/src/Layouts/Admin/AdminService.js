@@ -3,6 +3,7 @@ import {
   DeleteService,
   GetAllCarSize,
   GetAllService,
+  GetAllStaff,
   PostAddService,
   UpdateService,
 } from "../Api";
@@ -13,6 +14,7 @@ const AdminService = ({ permission }) => {
   const [openAddForm, setOpenAddForm] = useState(false);
   const [carSizeList, setCarSizeList] = useState();
   const [serviceList, setServiceList] = useState();
+  const [staffList, setStaffList] = useState();
   const [editItem, setEditItem] = useState(null);
   const [errors, setErrors] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
@@ -43,6 +45,16 @@ const AdminService = ({ permission }) => {
         console.log(data);
       }
     });
+    GetAllStaff(URLList.AdminStaff).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setStaffList(msg);
+      } else if (status == "NO DATA") {
+        setStaffList(null);
+      } else {
+        console.log(data);
+      }
+    });
   }, []);
 
   const handleShowNotification = () => {
@@ -63,6 +75,9 @@ const AdminService = ({ permission }) => {
     }
     if (data.get("price") == null || data.get("price") == "") {
       errorMsg["price"] = "please insert data";
+    }
+    if (data.get("used_people") == null || data.get("used_people") == "") {
+      errorMsg["used_people"] = "please insert data";
     }
     if (Object.entries(errorMsg).length !== 0) {
       return { status: "ERROR", msg: errorMsg };
@@ -88,6 +103,7 @@ const AdminService = ({ permission }) => {
         car_size_id: data.get("car_size_id"),
         used_time: data.get("used_time"),
         price: data.get("price"),
+        used_people: data.get("used_people"),
         is_available: data.get("is_available") !== null ? 1 : 0,
       };
       PostAddService(URLList.AdminService, jsonData).then((data) => {
@@ -132,6 +148,7 @@ const AdminService = ({ permission }) => {
         car_size_id: data.get("car_size_id"),
         used_time: data.get("used_time"),
         price: data.get("price"),
+        used_people: data.get("used_people"),
         is_available: data.get("is_available") !== null ? 1 : 0,
       };
       UpdateService(URLList.AdminService, jsonData).then((data) => {
@@ -203,6 +220,7 @@ const AdminService = ({ permission }) => {
                         <td>description</td>
                         <td>used time(mins)</td>
                         <td>price(baht)</td>
+                        <td>used people(people)</td>
                         <td>is available</td>
                         {permission && permission.includes("3") && (
                           <td>Edit</td>
@@ -222,6 +240,7 @@ const AdminService = ({ permission }) => {
                                 <td>{service.description}</td>
                                 <td>{service.used_time}</td>
                                 <td>{service.price}</td>
+                                <td>{service.used_people}</td>
                                 <td>
                                   {service.is_available == 1
                                     ? "available"
@@ -340,6 +359,24 @@ const AdminService = ({ permission }) => {
                   )}
                 </div>
                 <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Used people
+                  </label>
+                  <input
+                    defaultValue="1"
+                    type="number"
+                    name="used_people"
+                    min="1"
+                    max={staffList.length}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                  {errors.used_people && (
+                    <p className="mt-1 text-red-500 text-sm">
+                      {errors.used_people}
+                    </p>
+                  )}
+                </div>
+                <div className="mb-4">
                   <input
                     className="mr-2 mt-[0.3rem] h-3.5 w-8 appearance-none rounded-[0.4375rem] bg-neutral-300 before:pointer-events-none before:absolute before:h-3.5 before:w-3.5 before:rounded-full before:bg-transparent before:content-[''] after:absolute after:z-[2] after:-mt-[0.1875rem] after:h-5 after:w-5 after:rounded-full after:border-none after:bg-neutral-100 after:shadow-[0_0px_3px_0_rgb(0_0_0_/_7%),_0_2px_2px_0_rgb(0_0_0_/_4%)] after:transition-[background-color_0.2s,transform_0.2s] after:content-[''] checked:bg-primary checked:after:absolute checked:after:z-[2] checked:after:-mt-[3px] checked:after:ml-[1.0625rem] checked:after:h-5 checked:after:w-5 checked:after:rounded-full checked:after:border-none checked:after:bg-primary checked:after:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),_0_2px_2px_0_rgba(0,0,0,0.14),_0_1px_5px_0_rgba(0,0,0,0.12)] checked:after:transition-[background-color_0.2s,transform_0.2s] checked:after:content-[''] hover:cursor-pointer focus:outline-none focus:ring-0 focus:before:scale-100 focus:before:opacity-[0.12] focus:before:shadow-[3px_-1px_0px_13px_rgba(0,0,0,0.6)] focus:before:transition-[box-shadow_0.2s,transform_0.2s] focus:after:absolute focus:after:z-[1] focus:after:block focus:after:h-5 focus:after:w-5 focus:after:rounded-full focus:after:content-[''] checked:focus:border-primary checked:focus:bg-primary checked:focus:before:ml-[1.0625rem] checked:focus:before:scale-100 checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca] checked:focus:before:transition-[box-shadow_0.2s,transform_0.2s] dark:bg-neutral-600 dark:after:bg-neutral-400 dark:checked:bg-primary dark:checked:after:bg-primary dark:focus:before:shadow-[3px_-1px_0px_13px_rgba(255,255,255,0.4)] dark:checked:focus:before:shadow-[3px_-1px_0px_13px_#3b71ca]"
                     type="checkbox"
@@ -432,7 +469,7 @@ const AdminService = ({ permission }) => {
                     defaultValue={editItem.used_time}
                     type="number"
                     name="used_time"
-                    min="0"
+                    min="1"
                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   />
                   {errors.used_time && (
@@ -455,6 +492,24 @@ const AdminService = ({ permission }) => {
                   />
                   {errors.price && (
                     <p className="mt-1 text-red-500 text-sm">{errors.price}</p>
+                  )}
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 text-sm font-bold mb-2">
+                    Used people
+                  </label>
+                  <input
+                    defaultValue={editItem.used_people}
+                    type="number"
+                    name="used_people"
+                    min="1"
+                    max={staffList.length}
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  />
+                  {errors.used_people && (
+                    <p className="mt-1 text-red-500 text-sm">
+                      {errors.used_people}
+                    </p>
                   )}
                 </div>
                 <div className="mb-4">

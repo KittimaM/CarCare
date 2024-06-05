@@ -14,11 +14,26 @@ const AdminService = (req, res, next) => {
 };
 
 const AdminAddService = (req, res, next) => {
-  const { service, description, car_size_id, used_time, price, is_available } =
-    req.body;
+  const {
+    service,
+    description,
+    car_size_id,
+    used_time,
+    price,
+    is_available,
+    used_people,
+  } = req.body;
   Conn.execute(
-    "INSERT INTO service (service, description, car_size_id, used_time, price, is_available) VALUES (?,?,?,?,?,?)",
-    [service, description, car_size_id, used_time, price, is_available],
+    "INSERT INTO service (service, description, car_size_id, used_time, price, is_available, used_people) VALUES (?,?,?,?,?,?,?)",
+    [
+      service,
+      description,
+      car_size_id,
+      used_time,
+      price,
+      is_available,
+      used_people,
+    ],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -53,9 +68,10 @@ const AdminUpdateService = (req, res, next) => {
     used_time,
     price,
     is_available,
+    used_people,
   } = req.body;
   Conn.execute(
-    "UPDATE service SET service = ? , description = ? , car_size_id = ?, used_time = ?, price = ?, is_available = ? WHERE id = ?",
+    "UPDATE service SET service = ? , description = ? , car_size_id = ?, used_time = ?, price = ?, is_available = ?, used_people = ? WHERE id = ?",
     [
       service,
       description,
@@ -63,6 +79,7 @@ const AdminUpdateService = (req, res, next) => {
       used_time,
       price,
       is_available,
+      used_people,
       id,
     ],
     function (error, result) {

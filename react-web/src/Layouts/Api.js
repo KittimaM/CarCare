@@ -106,8 +106,8 @@ export const PostAddRole = (jsonData) => {
   return postApi("admin/role", jsonData);
 };
 
-export const PostAddStaffUser = (jsonData) => {
-  return postApi("admin/user", jsonData);
+export const PostAddStaffUser = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
 export const PostLogin = (jsonData) => {
@@ -118,16 +118,16 @@ export const PostUpDateBookingStatus = (jsonData) => {
   return postApi("admin/booking/update-status", jsonData);
 };
 
-export const GetAllStaff = () => {
-  return getApi("admin/user");
+export const GetAllStaff = (url) => {
+  return getApi(url);
 };
 
-export const DeleteStaffUser = (jsonData) => {
-  return deleteApi("admin/user", jsonData);
+export const DeleteStaffUser = (url, jsonData) => {
+  return deleteApi(url, jsonData);
 };
 
-export const UpdateStaffUser = (jsonData) => {
-  return putApi("admin/user", jsonData);
+export const UpdateStaffUser = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
 export const GetAllCarSize = (url) => {

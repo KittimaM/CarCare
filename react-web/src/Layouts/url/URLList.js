@@ -5,8 +5,9 @@ const URLList = {
   ProvinceURL: "admin/province",
   AdminService: "admin/service",
   AdminChannel: "admin/channel",
-  AdminOnLeaveType : "admin/onleave-type",
-  AdminPaymentType : "admin/paymenttype",
+  AdminOnLeaveType: "admin/onleave-type",
+  AdminPaymentType: "admin/paymenttype",
+  AdminStaff: "admin/user",
 };
 
 export default URLList;
