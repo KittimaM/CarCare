@@ -1,7 +1,4 @@
-var bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 const Conn = require("../../db");
-const secret = process.env.SECRET_WORD;
 
 const AdminService = (req, res, next) => {
   Conn.execute("SELECT * FROM service", function (error, results) {
@@ -17,11 +14,11 @@ const AdminService = (req, res, next) => {
 };
 
 const AdminAddService = (req, res, next) => {
-  const { service, description, car_size_id, car_size, used_time, price } =
+  const { service, description, car_size_id, used_time, price, is_available } =
     req.body;
   Conn.execute(
-    "INSERT INTO service (service, description, car_size_id, car_size, used_time, price) VALUES (?, ?, ?, ? ,?, ?)",
-    [service, description, car_size_id, car_size, used_time, price],
+    "INSERT INTO service (service, description, car_size_id, used_time, price, is_available) VALUES (?,?,?,?,?,?)",
+    [service, description, car_size_id, used_time, price, is_available],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -53,18 +50,16 @@ const AdminUpdateService = (req, res, next) => {
     service,
     description,
     car_size_id,
-    car_size,
     used_time,
     price,
     is_available,
   } = req.body;
   Conn.execute(
-    "UPDATE service SET service = ? , description = ? , car_size_id = ?, car_size = ?, used_time = ?, price = ?, is_available = ? WHERE id = ?",
+    "UPDATE service SET service = ? , description = ? , car_size_id = ?, used_time = ?, price = ?, is_available = ? WHERE id = ?",
     [
       service,
       description,
       car_size_id,
-      car_size,
       used_time,
       price,
       is_available,

@@ -24,6 +24,8 @@ const AdminCustomerCar = ({ permission }) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCustomerCarList(msg);
+      } else if (status == "NO DATA") {
+        setCustomerCarList(null);
       } else {
         console.log(data);
       }
@@ -195,7 +197,6 @@ const AdminCustomerCar = ({ permission }) => {
       <table className="table table-lg">
         <thead>
           <tr>
-            <td>No.</td>
             <td>plate_no</td>
             <td>customer's name</td>
             <td>province</td>
@@ -209,9 +210,8 @@ const AdminCustomerCar = ({ permission }) => {
         </thead>
         <tbody>
           {customerCarList &&
-            customerCarList.map((customerCar, index) => (
+            customerCarList.map((customerCar) => (
               <tr key={customerCar.id}>
-                <td>{index + 1}</td>
                 <td>{customerCar.plate_no}</td>
                 <td>
                   {customerList &&

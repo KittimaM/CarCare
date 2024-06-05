@@ -94,7 +94,6 @@ const AdminCustomer = ({ permission }) => {
       <table className="table table-lg">
         <thead>
           <tr>
-            <td>No.</td>
             <td>phone</td>
             <td>name</td>
             {permission && permission.includes("3") && <td>Edit</td>}
@@ -103,9 +102,8 @@ const AdminCustomer = ({ permission }) => {
         </thead>
         <tbody>
           {customer &&
-            customer.map((item, index) => (
+            customer.map((item) => (
               <tr key={item.id}>
-                <td>{index + 1}</td>
                 <td>{item.phone}</td>
                 <td>{item.name}</td>
                 {permission && permission.includes("3") && (

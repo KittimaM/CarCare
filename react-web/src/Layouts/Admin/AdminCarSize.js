@@ -31,9 +31,12 @@ const AdminCarSize = ({ permission }) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setCarSizeList(msg);
+      } else if (status == "NO DATA") {
+        setCarSizeList(null);
       } else {
         console.log(data);
       }
+      setErrors([]);
     });
   };
 
@@ -75,8 +78,9 @@ const AdminCarSize = ({ permission }) => {
         if (status == "SUCCESS") {
           setNotificationMessage(`success add carsize = ${jsonData.size}`);
           setNotificationStatus(status);
-          setOpenAddCarSizeForm(false);
           handleShowNotification();
+          setOpenAddCarSizeForm(false);
+
           fetchCarSize();
         } else {
           let errorMsg = {};
@@ -136,11 +140,14 @@ const AdminCarSize = ({ permission }) => {
       UpdateCarSize(URLList.AdminCarSizeURL, jsonData).then((data) => {
         const { status, msg } = data;
         if (status == "SUCCESS") {
+          setNotificationMessage(`success edit carsize = ${jsonData.size}`);
+          setNotificationStatus(status);
+          handleShowNotification();
           setEditItem(null);
           fetchCarSize();
         } else {
+          let errorMsg = {};
           if (msg.code == "ER_DUP_ENTRY") {
-            let errorMsg = {};
             errorMsg["size"] = "duplicate";
             setErrors(errorMsg);
           } else {
@@ -175,7 +182,6 @@ const AdminCarSize = ({ permission }) => {
         <table className="table table-lg">
           <thead>
             <tr>
-              <td>id</td>
               <td>size</td>
               <td>description</td>
               <td>is_available</td>
@@ -185,9 +191,8 @@ const AdminCarSize = ({ permission }) => {
           </thead>
           <tbody>
             {carSizeList &&
-              carSizeList.map((carSize, index) => (
+              carSizeList.map((carSize) => (
                 <tr key={carSize.id}>
-                  <td>{index + 1}</td>
                   <td>{carSize.size}</td>
                   <td>{carSize.description}</td>
                   <td>
@@ -269,7 +274,6 @@ const AdminCarSize = ({ permission }) => {
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => {
-                      setErrors([]);
                       setOpenAddCarSizeForm(false);
                     }}
                   >
@@ -333,7 +337,6 @@ const AdminCarSize = ({ permission }) => {
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => {
-                      setErrors([]);
                       setEditItem(null);
                     }}
                   >
