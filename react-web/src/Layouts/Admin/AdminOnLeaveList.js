@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import {
-  GetOnLeavePersonal,
-  UpdateOnLeave,
+  ApproveOnLeave,
   DeleteOnLeave,
-  PostAddOnLeavePersonal,
+  GetAllOnLeave,
+  GetAllStaff,
+  PostAddOnLeave,
+  UpdateOnLeave,
   GetAllOnLeaveType,
 } from "../Api";
 
-const AdminOnLeavePersonal = ({ permission }) => {
+const AdminOnLeave = ({permission}) => {
+  const [staff, setStaff] = useState([]);
   const [onLeaveList, setOnLeaveList] = useState([]);
-  const [onLeaveType, setOnLeaveType] = useState([]);
   const [editItem, setEditItem] = useState(null);
+  const [onLeaveType, setOnLeaveType] = useState([]);
 
   const fetchOnLeaveList = () => {
-    GetOnLeavePersonal().then((data) => {
+    GetAllOnLeave().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setOnLeaveList(msg);
@@ -22,7 +25,17 @@ const AdminOnLeavePersonal = ({ permission }) => {
       }
     });
   };
+
   useEffect(() => {
+    GetAllStaff().then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        setStaff(msg);
+      } else {
+        console.log(data);
+      }
+    });
+    fetchOnLeaveList();
     GetAllOnLeaveType().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
@@ -31,19 +44,19 @@ const AdminOnLeavePersonal = ({ permission }) => {
         console.log(data);
       }
     });
-    fetchOnLeaveList();
   }, []);
 
   const handleAddOnLeave = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      on_leave_type_id: data.get("on_leave_type_id"),
+      staff_id: data.get("staff_id"),
       start_date: data.get("start_date"),
       end_date: data.get("end_date"),
       reason: data.get("reason"),
+      on_leave_type_id: data.get("on_leave_type_id"),
     };
-    PostAddOnLeavePersonal(jsonData).then((data) => {
+    PostAddOnLeave(jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         fetchOnLeaveList();
@@ -62,7 +75,7 @@ const AdminOnLeavePersonal = ({ permission }) => {
     const data = new FormData(event.currentTarget);
     const jsonData = {
       id: editItem.id,
-      staff_id: editItem.staff_id,
+      staff_id: data.get("staff_id"),
       on_leave_type_id: data.get("on_leave_type_id"),
       start_date:
         data.get("start_date").length == 0
@@ -100,13 +113,40 @@ const AdminOnLeavePersonal = ({ permission }) => {
       }
     });
   };
+
+  const handleApprovedOnLeave = (event) => {
+    event.preventDefault();
+    const { value } = event.target;
+    const [id, on_leave_type_id] = value.split(",");
+    const jsonData = {
+      id: id,
+      on_leave_type_id: on_leave_type_id,
+    };
+    ApproveOnLeave(jsonData).then((data) => {
+      const { status, msg } = data;
+      if (status == "SUCCESS") {
+        fetchOnLeaveList();
+      } else {
+        console.log(data);
+      }
+    });
+  };
+
   return (
     <>
       <div className="ml-80 mt-16">
-        <div className="text-lg bg-yellow-100 mb-5 ">On Leave</div>
+        <div className="text-lg bg-yellow-100 mb-5 ">On Leave List</div>
 
-        {permission && permission.includes("2") && onLeaveType && (
+        {staff && permission && permission.includes("2") && (
           <form onSubmit={handleAddOnLeave}>
+            <label>Staff</label>
+            <select name="staff_id">
+              {staff.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
             <label>type</label>
             <select name="on_leave_type_id">
               {onLeaveType.map((item) => (
@@ -128,6 +168,7 @@ const AdminOnLeavePersonal = ({ permission }) => {
           <table className="table table-lg">
             <thead>
               <tr>
+                <td>staff_id</td>
                 <td>start_date</td>
                 <td>end_date</td>
                 <td>on_leave_type</td>
@@ -135,11 +176,13 @@ const AdminOnLeavePersonal = ({ permission }) => {
                 <td>status</td>
                 {permission && permission.includes("3") && <td>Edit</td>}
                 {permission && permission.includes("4") && <td>Delete</td>}
+                {permission && permission.includes("5") && <td>Approve</td>}
               </tr>
             </thead>
             <tbody>
               {onLeaveList.map((item) => (
-                <tr key={item.id}>
+                <tr>
+                  <td>{item.staff_id}</td>
                   <td>{String(item.start_date).split("T")[0]}</td>
                   <td>{String(item.end_date).split("T")[0]}</td>
                   <td>
@@ -176,6 +219,20 @@ const AdminOnLeavePersonal = ({ permission }) => {
                       </button>
                     </td>
                   )}
+                  {permission && permission.includes("5") && (
+                    <td>
+                      <button
+                        className="btn"
+                        onClick={handleApprovedOnLeave}
+                        value={[item.id, item.on_leave_type_id]}
+                        disabled={item.is_approved == 1}
+                      >
+                        {item.is_approved == 1
+                          ? "Approved"
+                          : "Click to approve"}
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
@@ -183,6 +240,14 @@ const AdminOnLeavePersonal = ({ permission }) => {
         )}
         {permission && permission.includes("3") && editItem && (
           <form onSubmit={handleEditOnLeave}>
+            <label>Staff</label>
+            <select name="staff_id" defaultValue={editItem.staff_id}>
+              {staff.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
             <label>type</label>
             <select
               name="on_leave_type_id"
@@ -216,4 +281,4 @@ const AdminOnLeavePersonal = ({ permission }) => {
   );
 };
 
-export default AdminOnLeavePersonal;
+export default AdminOnLeave;

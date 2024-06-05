@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { GetPermission } from "../Api";
+import AdminFirstPage from "./AdminFirstPage";
+import AdminMasterTable from "./AdminMasterTable";
+import AdminStatus from "./AdminStatus";
 
 function SidebarAdmin() {
   const [permission, setPermission] = useState(null);
+  const [isFirstPage, setIsFirstPage] = useState(true);
+  const [isMasterTable, setIsMasterTable] = useState(false);
+  const [isStatus, setIsStatus] = useState(false);
   useEffect(() => {
     GetPermission().then((data) => {
       const { status, msg } = data;
@@ -13,6 +19,14 @@ function SidebarAdmin() {
       }
     });
   }, []);
+
+  const handleSelectedContent = (event) => {
+    event.preventDefault();
+    const value = event.currentTarget.getAttribute("data-value");
+    setIsFirstPage(value == "firstPage" ? true : false);
+    setIsMasterTable(value == "masterTable" ? true : false);
+    setIsStatus(value == "status" ? true : false);
+  };
   return (
     <div>
       <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -115,7 +129,8 @@ function SidebarAdmin() {
           <ul class="space-y-2 font-medium">
             <li>
               <a
-                href="/admin"
+                onClick={handleSelectedContent}
+                data-value="firstPage"
                 class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <svg
@@ -131,7 +146,7 @@ function SidebarAdmin() {
                 <span class="ms-3">Home</span>
               </a>
             </li>
-            {permission && permission["have_schedule_access"].includes("1") && (
+            {/* {permission && permission["have_schedule_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/schedule"
@@ -150,8 +165,8 @@ function SidebarAdmin() {
                   <span class="ms-3">Schedule</span>
                 </a>
               </li>
-            )}
-            {permission && permission["have_booking_access"].includes("1") && (
+            )} */}
+            {/* {permission && permission["have_booking_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/booking"
@@ -170,8 +185,8 @@ function SidebarAdmin() {
                   <span class="ms-3">Booking</span>
                 </a>
               </li>
-            )}
-            {permission &&
+            )} */}
+            {/* {permission &&
               (permission["have_staff_access"].includes("1") ||
                 permission["have_customer_access"].includes("1")) && (
                 <li>
@@ -192,8 +207,8 @@ function SidebarAdmin() {
                     <span class="ms-3">User</span>
                   </a>
                 </li>
-              )}
-            {permission && permission["have_car_size_access"].includes("1") && (
+              )} */}
+            {/* {permission && permission["have_car_size_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/carsize"
@@ -212,8 +227,8 @@ function SidebarAdmin() {
                   <span class="ms-3">Car size</span>
                 </a>
               </li>
-            )}
-            {permission && permission["have_car_size_access"].includes("1") && (
+            )} */}
+            {/* {permission && permission["have_car_size_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/service"
@@ -232,9 +247,9 @@ function SidebarAdmin() {
                   <span class="ms-3">Service</span>
                 </a>
               </li>
-            )}
+            )} */}
 
-            {permission && permission["have_role_access"].includes("1") && (
+            {/* {permission && permission["have_role_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/role"
@@ -253,8 +268,8 @@ function SidebarAdmin() {
                   <span class="ms-3">Role</span>
                 </a>
               </li>
-            )}
-            {permission && permission["have_account_access"].includes("1") && (
+            )} */}
+            {/* {permission && permission["have_account_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/account"
@@ -273,9 +288,9 @@ function SidebarAdmin() {
                   <span class="ms-3">Account Management</span>
                 </a>
               </li>
-            )}
+            )} */}
 
-            {permission && permission["have_payment_access"].includes("1") && (
+            {/* {permission && permission["have_payment_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/payment"
@@ -294,8 +309,8 @@ function SidebarAdmin() {
                   <span class="ms-3">Payment</span>
                 </a>
               </li>
-            )}
-            {permission &&
+            )} */}
+            {/* {permission &&
               permission["have_on_leave_personal_access"].includes("1") && (
                 <li>
                   <a
@@ -315,8 +330,8 @@ function SidebarAdmin() {
                     <span class="ms-3">On Leave</span>
                   </a>
                 </li>
-              )}
-            {permission &&
+              )} */}
+            {/* {permission &&
               permission["have_on_leave_list_access"].includes("1") && (
                 <li>
                   <a
@@ -336,8 +351,8 @@ function SidebarAdmin() {
                     <span class="ms-3">On Leave List</span>
                   </a>
                 </li>
-              )}
-            {permission &&
+              )} */}
+            {/* {permission &&
               permission["have_day_off_list_access"].includes("1") && (
                 <li>
                   <a
@@ -357,8 +372,8 @@ function SidebarAdmin() {
                     <span class="ms-3">Day Off List</span>
                   </a>
                 </li>
-              )}
-            {permission && permission["have_channel_access"].includes("1") && (
+              )} */}
+            {/* {permission && permission["have_channel_access"].includes("1") && (
               <li>
                 <a
                   href="/admin/channel"
@@ -377,13 +392,14 @@ function SidebarAdmin() {
                   <span class="ms-3">Channel</span>
                 </a>
               </li>
-            )}
+            )} */}
             {permission &&
               (permission["have_on_leave_type_access"].includes("1") ||
                 permission["have_payment_type_access"].includes("1")) && (
                 <li>
                   <a
-                    href="/admin/master-table"
+                    onClick={handleSelectedContent}
+                    data-value="masterTable"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                   >
                     <svg
@@ -403,7 +419,8 @@ function SidebarAdmin() {
             {permission && permission["have_status_access"].includes("1") && (
               <li>
                 <a
-                  href="/admin/status"
+                  onClick={handleSelectedContent}
+                  data-value="status"
                   class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >
                   <svg
@@ -423,6 +440,19 @@ function SidebarAdmin() {
           </ul>
         </div>
       </aside>
+      {isFirstPage && <AdminFirstPage />}
+      {isMasterTable && (
+        <div className="ml-80 mt-16">
+          <div className="text-lg bg-yellow-100 mb-5 ">Master Table</div>
+          <AdminMasterTable permission={permission}/>
+        </div>
+      )}
+      {isStatus && (
+        <div className="ml-80 mt-16">
+          <div className="text-lg bg-yellow-100 mb-5 ">Status</div>
+          <AdminStatus permission={permission}/>
+        </div>
+      )}
     </div>
   );
 }

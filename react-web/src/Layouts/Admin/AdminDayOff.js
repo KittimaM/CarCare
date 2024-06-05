@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { GetAllDayOff, GetAllStaff, UpdateDayOff } from "../Api";
 import { getDatesForCurrentWeek } from "../Module";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
-
-const AdminDayOff = () => {
+const AdminDayOff = ({ permisison }) => {
   const [staff, setStaff] = useState([]);
   const [dayOffList, setDayOffList] = useState([]);
   const [editItem, setEditItem] = useState();
@@ -76,147 +73,143 @@ const AdminDayOff = () => {
 
   return (
     <>
-        <SidebarAdmin />
+      <div className="ml-80 mt-16">
+        <div className="text-lg bg-yellow-100 mb-5 "> Day off page</div>
 
-    <div className="ml-80 mt-16">
-      <div className="text-lg bg-yellow-100 mb-5 "> Day off page</div>
-
-      {dayOffList && (
-        <table >
-          <thead>
-            <tr>
-              {dates.map((date, index) => (
-                <td key={index}>{date}</td>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {dayOffList.map((item) =>
-              staff.map((staff_item) => (
-                <tr>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Sunday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Monday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Tuesday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Wednesday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Thursday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Friday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                  <td>
-                    {staff_item.id == item.staff_id &&
-                      item.day_off == "Saturday" && (
-                        <button
-                          className="btn"
-                          onClick={() => handleSelectEditId(item)}
-                        >
-                          {staff_item.username}
-                        </button>
-                      )}
-                  </td>
-                </tr>
-              ))
-            )}
-            {dayCount && (
+        {dayOffList && (
+          <table>
+            <thead>
               <tr>
-                <td>Sunday : {dayCount["Sunday"]}</td>
-                <td>Monday : {dayCount["Monday"]}</td>
-                <td>Tuesday : {dayCount["Tuesday"]}</td>
-                <td>Wednesday : {dayCount["Wednesday"]}</td>
-                <td>Thursday : {dayCount["Thursday"]}</td>
-                <td>Friday : {dayCount["Friday"]}</td>
-                <td>Saturday : {dayCount["Saturday"]}</td>
+                {dates && dates.map((date, index) => (
+                  <td key={index}>{date}</td>
+                ))}
               </tr>
+            </thead>
+            <tbody>
+              {dayOffList.map((item) =>
+                staff.map((staff_item) => (
+                  <tr>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Sunday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Monday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Tuesday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Wednesday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Thursday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Friday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                    <td>
+                      {staff_item.id == item.staff_id &&
+                        item.day_off == "Saturday" && (
+                          <button
+                            className="btn"
+                            onClick={() => handleSelectEditId(item)}
+                          >
+                            {staff_item.username}
+                          </button>
+                        )}
+                    </td>
+                  </tr>
+                ))
+              )}
+              {dayCount && (
+                <tr>
+                  <td>Sunday : {dayCount["Sunday"]}</td>
+                  <td>Monday : {dayCount["Monday"]}</td>
+                  <td>Tuesday : {dayCount["Tuesday"]}</td>
+                  <td>Wednesday : {dayCount["Wednesday"]}</td>
+                  <td>Thursday : {dayCount["Thursday"]}</td>
+                  <td>Friday : {dayCount["Friday"]}</td>
+                  <td>Saturday : {dayCount["Saturday"]}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        )}
+        {editItem && (
+          <form onSubmit={handleEditDayOff}>
+            {staff.map(
+              (item) =>
+                item.id == editItem.staff_id && (
+                  <label>
+                    username <b>{item.username}</b>
+                  </label>
+                )
             )}
-          </tbody>
-        </table>
-      )}
-      {editItem && (
-        <form onSubmit={handleEditDayOff}>
-          {staff.map(
-            (item) =>
-              item.id == editItem.staff_id && (
-                <label>
-                  username <b>{item.username}</b>
-                </label>
-              )
-          )}
-          <label>Day Off</label>
-          <select name="day_off" defaultValue={editItem.day_off}>
-            <option value="Sunday">Sunday</option>
-            <option value="Monday">Monday</option>
-            <option value="Tuesday">Tuesday</option>
-            <option value="Wednesday">Wednesday</option>
-            <option value="Thursday">Thursday</option>
-            <option value="Friday">Friday</option>
-            <option value="Saturday">Saturday</option>
-          </select>
-          <button className="btn" type="submit">
-            Submit Edit
-          </button>
-        </form>
-      )}
-
-    </div>
+            <label>Day Off</label>
+            <select name="day_off" defaultValue={editItem.day_off}>
+              <option value="Sunday">Sunday</option>
+              <option value="Monday">Monday</option>
+              <option value="Tuesday">Tuesday</option>
+              <option value="Wednesday">Wednesday</option>
+              <option value="Thursday">Thursday</option>
+              <option value="Friday">Friday</option>
+              <option value="Saturday">Saturday</option>
+            </select>
+            <button className="btn" type="submit">
+              Submit Edit
+            </button>
+          </form>
+        )}
+      </div>
     </>
-    
   );
 };
 

@@ -9,14 +9,10 @@ import {
 } from "../Api";
 import URLList from "../Url/URLList";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
-
-const AdminService = () => {
+const AdminService = ({ permission }) => {
   const [carSize, setCarSize] = useState();
   const [service, setService] = useState();
   const [editItem, setEditItem] = useState(null);
-  const [permission, setPermission] = useState(null);
 
   const fetchService = () => {
     GetAllService().then((data) => {
@@ -43,14 +39,6 @@ const AdminService = () => {
   useEffect(() => {
     fetchService();
     fetchCarSize();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_service_access"]);
-      } else {
-        console.log(data);
-      }
-    });
   }, []);
 
   const handleAdminAddService = (event) => {
@@ -120,7 +108,6 @@ const AdminService = () => {
 
   return (
     <>
-      <SidebarAdmin />
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 "> Service page</div>
 

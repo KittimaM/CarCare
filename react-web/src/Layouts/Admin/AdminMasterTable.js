@@ -1,31 +1,46 @@
-import React, { useEffect, useState } from "react";
-import SidebarAdmin from "./SidebarAdmin";
-import { Button } from "../Module";
-import { GetPermission } from "../Api";
+import React, { useState } from "react";
+import AdminOnLeaveType from "./AdminOnLeaveType";
+import AdminPaymentType from "./AdminPaymentType";
 
-const AdminMasterTable = () => {
-  const [permission, setPermission] = useState(null);
-  useEffect(() => {
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg);
-      } else {
-        console.log(data);
-      }
-    });
-  }, []);
+const AdminMasterTable = ({ onLeaveTypePermission, paymentTypePermission }) => {
+  const [isOnLeaveType, setIsOnLeaveType] = useState(false);
+  const [isPaymentType, setIsPaymentType] = useState(false);
+
+  const handleSelectedContent = (event) => {
+    event.preventDefault();
+    const value = event.currentTarget.getAttribute("data-value");
+    setIsOnLeaveType(value == "onLeaveType" ? true : false);
+    setIsPaymentType(value == "paymentType" ? true : false);
+  };
   return (
     <div>
-      <SidebarAdmin />
       <div className="ml-80 mt-16">
-        <div className="text-lg bg-yellow-100 mb-5">Master Table</div>
-        {permission &&
-          permission["have_on_leave_type_access"].includes("1") && (
-            <Button to="/admin/onleave-type" name="onleave type"></Button>
-          )}
-        {permission && permission["have_payment_type_access"].includes("1") && (
-          <Button to="/admin/paymenttype" name="payment type"></Button>
+        <div className="text-lg bg-yellow-100 mb-5 ">Master Table</div>
+        {onLeaveTypePermission && onLeaveTypePermission.includes("1") && (
+          <button
+            onClick={handleSelectedContent}
+            data-value="onLeaveType"
+            className="btn"
+            disabled={isOnLeaveType}
+          >
+            OnLeave Type
+          </button>
+        )}
+        {paymentTypePermission && paymentTypePermission.includes("1") && (
+          <button
+            onClick={handleSelectedContent}
+            data-value="paymentType"
+            className="btn"
+            disabled={isPaymentType}
+          >
+            paymentType
+          </button>
+        )}
+        {isOnLeaveType && (
+          <AdminOnLeaveType permission={onLeaveTypePermission} />
+        )}
+        {isPaymentType && (
+          <AdminPaymentType permission={paymentTypePermission} />
         )}
       </div>
     </div>

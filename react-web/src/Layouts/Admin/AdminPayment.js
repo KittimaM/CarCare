@@ -1,24 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { GetAllBooking } from "../Api";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
-
 const AdminPayment = () => {
   const [paidList, setPaidList] = useState([]);
   useEffect(() => {
-    GetAllBooking('WHERE processing_status = "Paid"').then((response) => {
-      const { status, msg } = response;
+    GetAllBooking('WHERE processing_status = "Paid"').then((data) => {
+      const { status, msg } = data;
       if (status == "SUCCESS") {
         setPaidList(msg);
       } else {
-        console.log("status : ", status, " , msg: ", msg);
+        console.log(data);
       }
     });
   }, []);
   return (
     <>
-         <SidebarAdmin />
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 "> Payment page</div>
 
@@ -47,7 +43,6 @@ const AdminPayment = () => {
         </table>
       </div>
     </>
-   
   );
 };
 

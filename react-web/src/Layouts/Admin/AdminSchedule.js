@@ -3,29 +3,17 @@ import {
   GetAllBooking,
   PostAddAccount,
   PostUpDateBookingStatus,
-  GetPermission,
 } from "../Api";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
 
-const AdminSchedule = () => {
+const AdminSchedule = ({permission}) => {
   const [todaySchedule, setTodaySchedule] = useState([]);
-  const [permission, setPermission] = useState(null);
 
   useEffect(() => {
     GetAllBooking().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setTodaySchedule(msg);
-      } else {
-        console.log(data);
-      }
-    });
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_schedule_access"]);
       } else {
         console.log(data);
       }
@@ -97,7 +85,7 @@ const AdminSchedule = () => {
 
   return (
     <>
-     <SidebarAdmin />
+
     <div className="ml-80 mt-16">
 
       <div className="text-lg bg-yellow-100 mb-5 "> Schedule page</div>

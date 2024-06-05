@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import SidebarAdmin from "./SidebarAdmin";
 import {
   DeleteChannel,
   GetAllService,
   GetChannel,
-  GetPermission,
   PostAddChannel,
   UpdateChannel,
 } from "../Api";
 
-const AdminChannel = () => {
+const AdminChannel = ({ permission }) => {
   const [openAddChannelForm, setOpenAddChannelForm] = useState(false);
-  const [permission, setPermission] = useState();
   const [channel, setChannel] = useState();
   const [editItem, setEditItem] = useState(null);
   const [service, setService] = useState();
@@ -29,14 +26,6 @@ const AdminChannel = () => {
   };
   useEffect(() => {
     fetchChannel();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_channel_access"]);
-      } else {
-        console.log(data);
-      }
-    });
     GetAllService().then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
@@ -151,7 +140,6 @@ const AdminChannel = () => {
   };
   return (
     <div>
-      <SidebarAdmin />
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 ">Channel</div>
         {permission && permission.includes("2") && (
