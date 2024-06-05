@@ -28,7 +28,7 @@ const AdminOnLeave = ({permission}) => {
   };
 
   useEffect(() => {
-    GetAllStaff().then((data) => {
+    GetAllStaff(URLList.AdminStaff).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setStaff(msg);

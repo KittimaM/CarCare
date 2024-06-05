@@ -6,6 +6,7 @@ import {
   UpdateStaffUser,
   PostAddStaffUser,
 } from "../../Api";
+import URLList from "../../Url/URLList";
 
 const AdminStaff = ({ permission }) => {
   const [user, setUser] = useState(null);
@@ -26,7 +27,7 @@ const AdminStaff = ({ permission }) => {
   }, []);
 
   const fetchStaff = () => {
-    GetAllStaff().then((data) => {
+    GetAllStaff(URLList.AdminStaff).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setUser(msg);
@@ -45,7 +46,7 @@ const AdminStaff = ({ permission }) => {
       password: data.get("password"),
       role_id: data.get("role_id"),
     };
-    PostAddStaffUser(jsonData).then((data) => {
+    PostAddStaffUser(URLList.AdminStaff, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setOpenAddUserForm(false);
@@ -60,7 +61,7 @@ const AdminStaff = ({ permission }) => {
     const jsonData = {
       id: event.target.value,
     };
-    DeleteStaffUser(jsonData).then((data) => {
+    DeleteStaffUser(URLList.AdminStaff, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         fetchStaff();
@@ -84,7 +85,7 @@ const AdminStaff = ({ permission }) => {
       password: data.get("password"),
       role_id: data.get("role_id"),
     };
-    UpdateStaffUser(jsonData).then((data) => {
+    UpdateStaffUser(URLList.AdminStaff, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         fetchStaff();
