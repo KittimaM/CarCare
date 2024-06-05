@@ -8,6 +8,7 @@ import {
   UpdateOnLeave,
   GetAllOnLeaveType,
 } from "../Api";
+import URLList from "../Url/URLList";
 
 const AdminOnLeave = ({permission}) => {
   const [staff, setStaff] = useState([]);
@@ -36,7 +37,7 @@ const AdminOnLeave = ({permission}) => {
       }
     });
     fetchOnLeaveList();
-    GetAllOnLeaveType().then((data) => {
+    GetAllOnLeaveType(URLList.AdminOnLeaveType).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setOnLeaveType(msg);

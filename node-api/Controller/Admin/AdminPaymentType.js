@@ -1,7 +1,4 @@
-var bcrypt = require("bcrypt");
-var jwt = require("jsonwebtoken");
 const Conn = require("../../db");
-const secret = process.env.SECRET_WORD;
 
 const AdminGetAllPaymentType = (req, res, next) => {
   Conn.execute("SELECT * FROM payment_type", function (error, results) {
@@ -17,10 +14,10 @@ const AdminGetAllPaymentType = (req, res, next) => {
 };
 
 const AdminAddPaymentType = (req, res, next) => {
-  const { payment_type } = req.body;
+  const { type, is_available } = req.body;
   Conn.execute(
-    "INSERT INTO payment_type(payment_type) VALUES (?)",
-    [payment_type],
+    "INSERT INTO payment_type(type, is_available) VALUES (?,?)",
+    [type, is_available],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
@@ -33,10 +30,10 @@ const AdminAddPaymentType = (req, res, next) => {
 };
 
 const AdminUpdatePaymentType = (req, res, next) => {
-  const { id, payment_type, is_available } = req.body;
+  const { id, type, is_available } = req.body;
   Conn.execute(
-    "UPDATE payment_type SET payment_type = ?, is_available = ? WHERE id = ?",
-    [payment_type, is_available, id],
+    "UPDATE payment_type SET type = ?, is_available = ? WHERE id = ?",
+    [type, is_available, id],
     function (error, result) {
       if (error) {
         res.json({ status: "ERROR", msg: error });
