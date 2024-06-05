@@ -3,16 +3,11 @@ import {
   AddOnLeaveType,
   DeleteOnLeaveType,
   GetAllOnLeaveType,
-  GetPermission,
   UpdateOnLeaveType,
 } from "../Api";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
-
-const AdminOnLeaveType = () => {
+const AdminOnLeaveType = ({ permission }) => {
   const [onLeaveType, setOnLeaveType] = useState(null);
-  const [permission, setPermission] = useState(null);
   const [editItem, setEditItem] = useState(null);
 
   const fetchOnLeaveType = () => {
@@ -28,14 +23,6 @@ const AdminOnLeaveType = () => {
 
   useEffect(() => {
     fetchOnLeaveType();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_on_leave_type_access"]);
-      } else {
-        console.log(data);
-      }
-    });
   }, []);
 
   const handleAddOnLeaveType = (event) => {
@@ -97,10 +84,6 @@ const AdminOnLeaveType = () => {
   };
   return (
     <>
-      <SidebarAdmin />
-    <div className="ml-80 mt-16">
-      <div className="text-lg bg-yellow-100 mb-5 "> On Leave page</div>
-
       {permission && permission.includes("2") && onLeaveType && (
         <form onSubmit={handleAddOnLeaveType}>
           <label>type</label>
@@ -183,9 +166,7 @@ const AdminOnLeaveType = () => {
           </button>
         </form>
       )}
-    </div>
     </>
-    
   );
 };
 

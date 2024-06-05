@@ -4,27 +4,14 @@ import {
   GetAllPaymentType,
   PostAddPaymentType,
   UpdatePaymentType,
-  GetPermission,
 } from "../Api";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
-
-const AdminPaymentType = () => {
+const AdminPaymentType = ({ permission }) => {
   const [paymentType, setPaymentType] = useState([]);
   const [editItem, setEditItem] = useState();
-  const [permission, setPermission] = useState(null);
 
   useEffect(() => {
     fetchPaymentType();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_payment_type_access"]);
-      } else {
-        console.log(data);
-      }
-    });
   }, []);
 
   const fetchPaymentType = () => {
@@ -90,10 +77,6 @@ const AdminPaymentType = () => {
 
   return (
     <>
-       <SidebarAdmin />
-      <div className="ml-80 mt-16">
-        <div className="text-lg bg-yellow-100 mb-5 "> Payment Type page</div>
-
       {permission && permission.includes("2") && (
         <form onSubmit={handleAddPaymentType}>
           <label>Payment Type</label>
@@ -167,9 +150,7 @@ const AdminPaymentType = () => {
           </button>
         </form>
       )}
-    </div>
     </>
-    
   );
 };
 

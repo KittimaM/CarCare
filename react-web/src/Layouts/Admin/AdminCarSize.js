@@ -7,13 +7,11 @@ import {
   GetPermission,
 } from "../Api";
 import URLList from "../Url/URLList";
-import SidebarAdmin from "./SidebarAdmin";
 import Notification from "../Notification/Notification";
 
-const AdminCarSize = () => {
+const AdminCarSize = ({ permission }) => {
   const [carSizeList, setCarSizeList] = useState(null);
   const [editItem, setEditItem] = useState(null);
-  const [permission, setPermission] = useState(null);
   const [openAddCarSizeForm, setOpenAddCarSizeForm] = useState(false);
   const [errors, setErrors] = useState([]);
   const [showNotification, setShowNotification] = useState(false);
@@ -41,14 +39,6 @@ const AdminCarSize = () => {
 
   useEffect(() => {
     fetchCarSize();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_car_size_access"]);
-      } else {
-        console.log(data);
-      }
-    });
   }, []);
 
   const validateData = (data) => {
@@ -163,7 +153,6 @@ const AdminCarSize = () => {
 
   return (
     <>
-      <SidebarAdmin />
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 "> Car size page</div>
         {showNotification && (

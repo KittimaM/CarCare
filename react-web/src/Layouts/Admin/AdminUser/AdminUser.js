@@ -1,60 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { GetPermission } from "../../Api";
-import SidebarAdmin from "../SidebarAdmin";
+import React, { useState } from "react";
 import AdminCustomer from "./AdminCustomer";
 import AdminStaff from "./AdminStaff";
 import AdminCustomerCar from "./AdminCustomerCar";
 
-const AdminUser = () => {
-  const [staffPermission, setStaffPermission] = useState(null);
-  const [customerPermission, setCustomerPermission] = useState();
+const AdminUser = ({ staffPermission, customerPermission }) => {
   const [isSelectedStaff, setIsSelectedStaff] = useState(false);
   const [isSelectedCustomer, setSelectedCustomer] = useState(false);
   const [isSelectedCustomerCar, setIsSelectedCustomerCar] = useState(false);
 
-  useEffect(() => {
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setStaffPermission(msg["have_staff_access"]);
-        setCustomerPermission(msg["have_customer_access"]);
-      } else {
-        console.log(data);
-      }
-    });
-  }, []);
-
-  const handleSelectedStaff = (event) => {
+  const handleSelectedContent = (event) => {
     event.preventDefault();
-    setIsSelectedStaff(true);
-    setSelectedCustomer(false);
-    setIsSelectedCustomerCar(false);
-  };
-
-  const handleSelectedCustomer = (event) => {
-    event.preventDefault();
-    setSelectedCustomer(true);
-    setIsSelectedStaff(false);
-    setIsSelectedCustomerCar(false);
-  };
-
-  const handleSelectedCustomerCar = (event) => {
-    event.preventDefault();
-    setIsSelectedCustomerCar(true);
-    setSelectedCustomer(false);
-    setIsSelectedStaff(false);
+    const value = event.currentTarget.getAttribute("data-value");
+    setIsSelectedStaff(value == "staff" ? true : false);
+    setIsSelectedCustomerCar(value == "customerCar" ? true : false);
+    setSelectedCustomer(value == "customer" ? true : false);
   };
 
   return (
     <>
-      <SidebarAdmin />
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-50 mb-5 ">Admin User page </div>
         {staffPermission && staffPermission.includes("1") && (
           <button
+            data-value="staff"
             className="btn"
             disabled={isSelectedStaff}
-            onClick={handleSelectedStaff}
+            onClick={handleSelectedContent}
           >
             Staff
           </button>
@@ -62,16 +33,18 @@ const AdminUser = () => {
         {customerPermission && customerPermission.includes("1") && (
           <div>
             <button
+              data-value="customer"
               className="btn"
               disabled={isSelectedCustomer}
-              onClick={handleSelectedCustomer}
+              onClick={handleSelectedContent}
             >
               Customer
             </button>
             <button
+              data-value="customerCar"
               className="btn"
               disabled={isSelectedCustomerCar}
-              onClick={handleSelectedCustomerCar}
+              onClick={handleSelectedContent}
             >
               Customer's Car
             </button>

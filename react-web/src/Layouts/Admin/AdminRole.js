@@ -1,31 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  DeleteRole,
-  GetAllRole,
-  PostAddRole,
-  UpdateRole,
-  GetPermission,
-} from "../Api";
+import { DeleteRole, GetAllRole, PostAddRole, UpdateRole } from "../Api";
 
-//-----------
-import SidebarAdmin from "./SidebarAdmin";
-
-const AdminRole = () => {
+const AdminRole = ({ permission }) => {
   const [role, setRole] = useState();
   const [roleAccess, setRoleAccess] = useState();
   const [editItem, setEditItem] = useState(null);
-  const [permission, setPermission] = useState(null);
 
   useEffect(() => {
     fetchRole();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_role_access"]);
-      } else {
-        console.log(data);
-      }
-    });
   }, []);
   const fetchRole = () => {
     GetAllRole().then((data) => {
@@ -325,8 +307,6 @@ const AdminRole = () => {
 
   return (
     <>
-      <SidebarAdmin />
-
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 "> Role page</div>
 

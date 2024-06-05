@@ -62,9 +62,6 @@ app.use("/api/admin/paymenttype", AdminPaymentTypeRoute);
 const AdminCarSizeRoute = require("./Routes/Admin/AdminCarSize");
 app.use("/api/admin/carsize", AdminCarSizeRoute);
 
-const AdminRegisterRoute = require("./Routes/Admin/AdminRegister");
-app.use("/api/admin/register", AdminRegisterRoute);
-
 const AdminLoginRoute = require("./Routes/Admin/AdminLogin");
 app.use("/api/admin/login", AdminLoginRoute);
 

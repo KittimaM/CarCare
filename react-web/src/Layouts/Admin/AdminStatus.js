@@ -3,16 +3,13 @@ import {
   DeleteStatus,
   GetAllStatus,
   GetAllStatusGroup,
-  GetPermission,
   PostAddStatus,
   UpdateStatus,
 } from "../Api";
-import SidebarAdmin from "./SidebarAdmin";
 
-const AdminStatus = () => {
+const AdminStatus = ({ permission }) => {
   const [statusGroups, setStatusGroups] = useState();
   const [statuses, setStatuses] = useState();
-  const [permission, setPermission] = useState();
   const [editItem, setEditItem] = useState(null);
 
   const fetchAllStatus = () => {
@@ -35,14 +32,6 @@ const AdminStatus = () => {
   };
   useEffect(() => {
     fetchAllStatus();
-    GetPermission().then((data) => {
-      const { status, msg } = data;
-      if (status == "SUCCESS") {
-        setPermission(msg["have_status_access"]);
-      } else {
-        console.log(data);
-      }
-    });
   }, []);
 
   const handleAddStatus = (event) => {
@@ -104,9 +93,8 @@ const AdminStatus = () => {
 
   return (
     <div>
-      <SidebarAdmin />
       <div className="ml-80 mt-16">
-        <div className="text-lg bg-yellow-100 mb-5 "> Status</div>
+        <div className="text-lg bg-yellow-100 mb-5 ">Status</div>
         {permission && permission.includes("2") && (
           <div>
             <form onSubmit={handleAddStatus}>
@@ -115,11 +103,12 @@ const AdminStatus = () => {
               <label>description</label>
               <input type="text" name="description" />
               <select name="status_group_id">
-                {statusGroups.map((statusGroup) => (
-                  <option key={statusGroup.id} value={statusGroup.id}>
-                    {statusGroup.code}
-                  </option>
-                ))}
+                {statusGroups &&
+                  statusGroups.map((statusGroup) => (
+                    <option key={statusGroup.id} value={statusGroup.id}>
+                      {statusGroup.code}
+                    </option>
+                  ))}
               </select>
               <button className="btn" type="submit">
                 Add

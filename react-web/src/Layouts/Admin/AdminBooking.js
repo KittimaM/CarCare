@@ -8,9 +8,6 @@ import {
 } from "../Api";
 import URLList from "../Url/URLList";
 
-//-------------------
-import SidebarAdmin from "./SidebarAdmin";
-
 const AdminBooking = () => {
   const defaultTime = new Date();
   const [service, setService] = useState();
@@ -217,8 +214,6 @@ const AdminBooking = () => {
 
   return (
     <>
-      <SidebarAdmin />
-
       <div className="ml-80 mt-16">
         <div className="text-lg bg-yellow-100 mb-5 "> Booking page</div>
 
