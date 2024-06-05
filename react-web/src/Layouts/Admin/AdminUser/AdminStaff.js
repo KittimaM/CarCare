@@ -107,7 +107,6 @@ const AdminStaff = ({ permission }) => {
         <table className="table table-lg">
           <thead>
             <tr>
-              <td>No.</td>
               <td>username</td>
               <td>name</td>
               {permission && permission.includes("3") && <td>Edit</td>}
@@ -115,9 +114,8 @@ const AdminStaff = ({ permission }) => {
             </tr>
           </thead>
           <tbody>
-            {user.map((item, index) => (
+            {user.map((item) => (
               <tr key={item.id}>
-                <td>{index + 1}</td>
                 <td>{item.username}</td>
                 <td>{item.name}</td>
                 {permission && permission.includes("3") && (
@@ -186,18 +184,16 @@ const AdminStaff = ({ permission }) => {
                 <label className="block text-gray-700 text-sm font-bold mb-2">
                   role
                 </label>
-                {
-                  <select
-                    name="role_id"
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  >
-                    {allRole.map((item) => (
-                      <option value={item.id} key={item.id}>
-                        {item.role}
-                      </option>
-                    ))}
-                  </select>
-                }
+                <select
+                  name="role_id"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                >
+                  {allRole.map((item) => (
+                    <option value={item.id} key={item.id}>
+                      {item.role}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div className="flex items-center justify-between">
                 <button

@@ -146,20 +146,20 @@ export const UpdateCarSize = (url, jsonData) => {
   return putApi(url, jsonData);
 };
 
-export const GetAllService = () => {
-  return getApi("admin/service");
+export const GetAllService = (url) => {
+  return getApi(url);
 };
 
-export const PostAddService = (jsonData) => {
-  return postApi("admin/service", jsonData);
+export const PostAddService = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
-export const DeleteService = (jsonData) => {
-  return deleteApi("admin/service", jsonData);
+export const DeleteService = (url, jsonData) => {
+  return deleteApi(url, jsonData);
 };
 
-export const UpdateService = (jsonData) => {
-  return putApi("admin/service", jsonData);
+export const UpdateService = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
 export const DeleteRole = (jsonData) => {
