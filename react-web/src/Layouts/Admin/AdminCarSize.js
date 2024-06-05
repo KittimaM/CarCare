@@ -80,16 +80,17 @@ const AdminCarSize = ({ permission }) => {
           setNotificationStatus(status);
           handleShowNotification();
           setOpenAddCarSizeForm(false);
-
           fetchCarSize();
-        } else {
+        } else if (status == "ERROR") {
           let errorMsg = {};
           if (msg.code == "ER_DUP_ENTRY") {
-            errorMsg["size"] = "duplicate";
+            errorMsg["size"] = "duplicated";
             setErrors(errorMsg);
           } else {
             console.log(data);
           }
+        } else {
+          console.log(data);
         }
       });
     }
@@ -145,14 +146,16 @@ const AdminCarSize = ({ permission }) => {
           handleShowNotification();
           setEditItem(null);
           fetchCarSize();
-        } else {
+        } else if (status == "ERROR") {
           let errorMsg = {};
           if (msg.code == "ER_DUP_ENTRY") {
-            errorMsg["size"] = "duplicate";
+            errorMsg["size"] = "duplicated";
             setErrors(errorMsg);
           } else {
             console.log(data);
           }
+        } else {
+          console.log(data);
         }
       });
     }
@@ -274,6 +277,7 @@ const AdminCarSize = ({ permission }) => {
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => {
+                      setErrors([]);
                       setOpenAddCarSizeForm(false);
                     }}
                   >
@@ -337,6 +341,7 @@ const AdminCarSize = ({ permission }) => {
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => {
+                      setErrors([]);
                       setEditItem(null);
                     }}
                   >

@@ -211,20 +211,20 @@ export const PostAddAdminBooking = (jsonData) => {
   return postApi("admin/booking", jsonData, isUseToken);
 };
 
-export const PostAddPaymentType = (jsonData) => {
-  return postApi("admin/paymenttype", jsonData);
+export const PostAddPaymentType = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
-export const GetAllPaymentType = () => {
-  return getApi("admin/paymenttype");
+export const GetAllPaymentType = (url) => {
+  return getApi(url);
 };
 
-export const UpdatePaymentType = (jsonData) => {
-  return putApi("admin/paymenttype", jsonData);
+export const UpdatePaymentType = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
-export const DeletePaymentType = (jsonData) => {
-  return deleteApi("admin/paymenttype", jsonData);
+export const DeletePaymentType = (url, jsonData) => {
+  return deleteApi(url, jsonData);
 };
 
 export const GetAllAccount = () => {
@@ -282,20 +282,20 @@ export const UpdateDayOff = (jsonData) => {
   return putApi("admin/dayoff", jsonData);
 };
 
-export const GetAllOnLeaveType = () => {
-  return getApi("admin/onleave-type");
+export const GetAllOnLeaveType = (url) => {
+  return getApi(url);
 };
 
-export const DeleteOnLeaveType = (jsonData) => {
-  return deleteApi("admin/onleave-type", jsonData);
+export const DeleteOnLeaveType = (url, jsonData) => {
+  return deleteApi(url, jsonData);
 };
 
-export const UpdateOnLeaveType = (jsonData) => {
-  return putApi("admin/onleave-type", jsonData);
+export const UpdateOnLeaveType = (url, jsonData) => {
+  return putApi(url, jsonData);
 };
 
-export const AddOnLeaveType = (jsonData) => {
-  return postApi("admin/onleave-type", jsonData);
+export const AddOnLeaveType = (url, jsonData) => {
+  return postApi(url, jsonData);
 };
 
 export const GetAllProvince = (url) => {

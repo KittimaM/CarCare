@@ -148,7 +148,7 @@ const AdminStaff = ({ permission }) => {
       {openAddUserForm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl mb-4">New User</h2>
+            <h2 className="text-2xl mb-4">New Staff</h2>
             <form onSubmit={handleAddUser}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -217,7 +217,7 @@ const AdminStaff = ({ permission }) => {
       {editItem && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h2 className="text-2xl mb-4">Edit User</h2>
+            <h2 className="text-2xl mb-4">Edit Staff</h2>
             <form onSubmit={handleEditUser}>
               <div className="mb-4">
                 <label className="block text-gray-700 text-sm font-bold mb-2">

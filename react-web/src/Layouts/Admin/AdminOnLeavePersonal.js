@@ -6,6 +6,7 @@ import {
   PostAddOnLeavePersonal,
   GetAllOnLeaveType,
 } from "../Api";
+import URLList from "../Url/URLList";
 
 const AdminOnLeavePersonal = ({ permission }) => {
   const [onLeaveList, setOnLeaveList] = useState([]);
@@ -23,7 +24,7 @@ const AdminOnLeavePersonal = ({ permission }) => {
     });
   };
   useEffect(() => {
-    GetAllOnLeaveType().then((data) => {
+    GetAllOnLeaveType(URLList.AdminOnLeaveType).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setOnLeaveType(msg);

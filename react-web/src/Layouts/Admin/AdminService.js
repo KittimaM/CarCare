@@ -96,15 +96,17 @@ const AdminService = ({ permission }) => {
           setNotificationMessage(`success add service = ${jsonData.service}`);
           setNotificationStatus(status);
           handleShowNotification();
-
           setOpenAddForm(false);
           fetchService();
-        } else {
+        } else if (status == "ERROR") {
           let errorMsg = {};
           if (msg.code == "ER_DUP_ENTRY") {
             errorMsg["service"] = "duplicated";
             setErrors(errorMsg);
+          } else {
+            console.log(data);
           }
+        } else {
           console.log(data);
         }
       });
@@ -139,14 +141,16 @@ const AdminService = ({ permission }) => {
           setNotificationStatus(status);
           handleShowNotification();
           setEditItem(null);
-
           fetchService();
-        } else {
+        } else if (status == "ERROR") {
           let errorMsg = {};
           if (msg.code == "ER_DUP_ENTRY") {
             errorMsg["service"] = "duplicated";
             setErrors(errorMsg);
+          } else {
+            console.log(data);
           }
+        } else {
           console.log(data);
         }
       });
@@ -357,6 +361,7 @@ const AdminService = ({ permission }) => {
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => {
+                      setErrors([]);
                       setOpenAddForm(false);
                     }}
                   >
@@ -370,7 +375,7 @@ const AdminService = ({ permission }) => {
         {editItem && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-              <h2 className="text-2xl mb-4">New Service</h2>
+              <h2 className="text-2xl mb-4">Edit Service</h2>
               <form onSubmit={handleEditService}>
                 <div className="mb-4">
                   <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -475,6 +480,7 @@ const AdminService = ({ permission }) => {
                     type="button"
                     className="ml-4 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     onClick={() => {
+                      setErrors([]);
                       setEditItem(null);
                     }}
                   >
