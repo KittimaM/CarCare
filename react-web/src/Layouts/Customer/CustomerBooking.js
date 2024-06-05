@@ -11,6 +11,7 @@ import {
   PostAddCustomerBooking,
   GetAllPaymentType,
 } from "../Api";
+import URLList from "../Url/URLList";
 
 const CustomerBooking = () => {
   const [car, setCar] = useState();
@@ -78,7 +79,7 @@ const CustomerBooking = () => {
       size: size,
       color: color,
     };
-    GetAllService().then((data) => {
+    GetAllService(URLList.AdminService).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         const availableService = msg.filter(
@@ -102,9 +103,7 @@ const CustomerBooking = () => {
     if (checked) {
       setSelectedService((item) => [...item, value]);
     } else {
-      setSelectedService((item) =>
-        item.filter((item) => item !== value)
-      );
+      setSelectedService((item) => item.filter((item) => item !== value));
     }
   };
 
@@ -305,8 +304,8 @@ const CustomerBooking = () => {
           {item}
         </button>
       ))
-    )
-  }
+    );
+  };
 
   const paymentContent = () => {
     return (
@@ -328,8 +327,8 @@ const CustomerBooking = () => {
           </button>
         </form>
       )
-    )
-  }
+    );
+  };
 
   const handleCancelBooking = (event) => {
     event.preventDefault();
@@ -344,7 +343,6 @@ const CustomerBooking = () => {
 
   return (
     <>
-
       <div className="navbar bg-neutral text-neutral-content">
         <div className="flex-1">
           <a className="btn btn-ghost text-xl">Carcare</a>
@@ -393,7 +391,6 @@ const CustomerBooking = () => {
         </div>
       </div>
 
-
       <label name="plate_no">plate_no</label>
       {car ? (
         <form onSubmit={handleSubmitSelectedCar}>
@@ -429,11 +426,11 @@ const CustomerBooking = () => {
           Submit Booking
         </button>
       )}
-      {booking.length != 0 && 
+      {booking.length != 0 && (
         <button onClick={handleCancelBooking} className="btn">
           Cancel Booking
         </button>
-      }
+      )}
     </>
   );
 };

@@ -6,6 +6,7 @@ import {
   PostAddChannel,
   UpdateChannel,
 } from "../Api";
+import URLList from "../Url/URLList";
 
 const AdminChannel = ({ permission }) => {
   const [openAddChannelForm, setOpenAddChannelForm] = useState(false);
@@ -15,7 +16,7 @@ const AdminChannel = ({ permission }) => {
   const [editService, setEditService] = useState();
 
   const fetchChannel = () => {
-    GetChannel().then((data) => {
+    GetChannel(URLList.AdminChannel).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         setChannel(msg);
@@ -26,7 +27,7 @@ const AdminChannel = ({ permission }) => {
   };
   useEffect(() => {
     fetchChannel();
-    GetAllService().then((data) => {
+    GetAllService(URLList.AdminService).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         msg.map((item) => {
@@ -115,7 +116,7 @@ const AdminChannel = ({ permission }) => {
     const jsonData = {
       id: event.target.value,
     };
-    DeleteChannel(jsonData).then((data) => {
+    DeleteChannel(URLList.AdminChannel, jsonData).then((data) => {
       const { status, msg } = data;
       if (status == "SUCCESS") {
         fetchChannel();
